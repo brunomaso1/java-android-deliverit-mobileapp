@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:weightSum="4"
+    android:background="@color/background">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scaleType="fitXY"
+        android:src="@drawable/logoconborde" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.2"
+        android:weightSum="2"
+        android:padding="60dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/nombreUsuario_et"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:paddingLeft="5dp"
+            android:background="#FFFFFF"
+            android:text="Nombre de Usuario" />
+
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:paddingLeft="5dp"
+            android:background="#FFFFFF"
+            android:layout_marginTop="20dp"
+            android:text="Contraseña"
+            android:inputType="textPassword"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:weightSum="2"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/ingresar_btn"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/titlebar_bg"
+            android:text="@string/ingresar_texto"
+            android:textColor="@color/background"/>
+
+        <TextView
+            android:id="@+id/olvidoPassword_tv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="¿Has olvidado tu contraseña?"
+            android:textColor="@color/colorPrimaryDark"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

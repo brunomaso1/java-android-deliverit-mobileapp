@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DeliverIT</string>
+    <string name="ingresar_texto">Ingresar</string>
+    <string name="guardar">Guardar</string>
+    <string name="registrarse_texto">Registrarme</string>
+    <string name="no_existe_delivery">No existe Delivery con los datos ingrresados</string>
+    <string name="nombre_usuario_vacio">No existe Delivery con los datos ingrresados</string>
+    <string name="no_tiene_camara">Este dispositivo no cuenta con una cámara</string>
+    <string name="camara_no_disponible">Cámara no diponible</string>
+</resources>

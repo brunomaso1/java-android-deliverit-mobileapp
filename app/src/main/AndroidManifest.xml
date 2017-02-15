@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="proyecto.ucu.deliverit">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <service
+            android:enabled="true"
+            android:name=".servicios.ConsultaViajes"></service>
+
+        <service
+            android:enabled="true"
+            android:name=".servicios.MessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
+            </intent-filter>
+        </service>
+
+        <service
+            android:enabled="true"
+            android:name=".servicios.InstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"></action>
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".inicializacion.SplashScreenActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".inicializacion.HomeActivity"
+            android:label="@string/app_name"/>
+
+        <activity
+            android:name=".inicializacion.OlvidoPasswordActivity"
+            android:label="@string/app_name"/>
+
+        <activity
+            android:name=".inicializacion.LoginActivity"
+            android:label="@string/app_name"/>
+
+        <activity
+            android:name=".inicializacion.RegistroActivity"
+            android:label="@string/app_name"/>
+
+        <activity android:name=".main.MainActivity"
+            android:label="@string/app_name" />
+
+        <uses-feature android:name="android.hardware.camera" android:required="false" />
+        <uses-feature android:name="android.hardware.camera.front" android:required="false" />
+    </application>
+
+</manifest>

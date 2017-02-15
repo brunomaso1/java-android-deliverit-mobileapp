@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "398788728458",
+    "firebase_url": "https://deliveritfirebase.firebaseio.com",
+    "project_id": "deliveritfirebase",
+    "storage_bucket": "deliveritfirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398788728458:android:e0290fc97dff1721",
+        "android_client_info": {
+          "package_name": "proyecto.ucu.deliverit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398788728458-4o7rlpsh45131t9h0o8ecpfsnhdomdg3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6hr6ublNwsnEq2jLfqsKE7kU3xQpdttc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

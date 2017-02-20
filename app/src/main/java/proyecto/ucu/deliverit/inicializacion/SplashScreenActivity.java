@@ -27,8 +27,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         this.getSupportActionBar().hide();
         setContentView(R.layout.splash_screen);
 
-        System.out.println("***** token = " + FirebaseInstanceId.getInstance().getToken());
-
         TimerTask task = new TimerTask() {
             @Override
             public void run() {

@@ -25,6 +25,9 @@ public class HomeActivity extends AppCompatActivity {
         this.getSupportActionBar().hide();
         setContentView(R.layout.home);
 
+        registrarse_btn = (Button) findViewById(R.id.registrarse_btn);
+        ingresar_btn = (Button) findViewById(R.id.ingresar_btn);
+
         // Creo la base de datos
         DataBase db = new DataBase(getApplicationContext());
 
@@ -39,8 +42,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // Si nadie se logueó
         if (SharedPref.getIdDelivery(getApplicationContext()) == 0) {
-            registrarse_btn = (Button) findViewById(R.id.registrarse_btn);
-            ingresar_btn = (Button) findViewById(R.id.ingresar_btn);
 
             registrarse_btn.setOnClickListener(new View.OnClickListener() {
                 @Override

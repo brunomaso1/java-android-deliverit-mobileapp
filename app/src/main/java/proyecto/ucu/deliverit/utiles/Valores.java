@@ -22,4 +22,26 @@ public class Valores {
     public static String DESCIPRCION_ERROR_PASSWORD_SIN_CARACTER_ESPECIAL
             = "La contraseña debe contener al menos un caracter especial";
     public static String DESCIPRCION_ERROR_TELEFONO = "El celular ingresado no es válido";
+
+    public static int NOTIFICATION_ID = 1;
+    public static String NOTIFICATOIN_ID_TEXTO = "notificationID";
+    public static String VIAJE = "viaje";
+
+    public static String DIRECCION_ID = "id";
+    public static String DIRECCION_CALLE = "calle";
+    public static String DIRECCION_NRO_PUERTA = "nroPuerta";
+    public static String DIRECCION_ESQUINA = "esquina";
+    public static String DIRECCION_LATITUD = "latitud";
+    public static String DIRECCION_LONGITUD = "longitud";
+
+    public static String RESTARURAN_ID = "id";
+    public static String RESTAURANT_RUT = "rut";
+    public static String RESTAURANT_RAZON_SOCIAL = "razonSocial";
+
+    public static String SUCURSAL_ID = "id";
+    public static String SUCURSAL_DIRECCION = "direccion";
+    public static String SUCURSAL_RESTAURANT = "restaurant";
+    public static String SUCURSAL_SUCURSAL_PK = "sucursalPK";
+
+    public static String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
 }

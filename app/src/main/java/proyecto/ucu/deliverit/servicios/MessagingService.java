@@ -10,32 +10,79 @@ import android.support.v7.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
+
 import proyecto.ucu.deliverit.R;
+import proyecto.ucu.deliverit.entidades.Direccion;
+import proyecto.ucu.deliverit.entidades.Restaurant;
+import proyecto.ucu.deliverit.entidades.Sucursal;
+import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
+import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
  * Created by Juancho on 15/02/2017.
  */
 
 public class MessagingService extends FirebaseMessagingService {
-    private int notificationID = 1;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
-        String sender = message.getFrom();
-        crearNotificacion(message);
+        Map<String, String> datos = message.getData();
+
+        Viaje viaje = new Viaje();
+        JSONObject viajeJSON;
+
+        String viajeString = datos.get(Valores.VIAJE);
+
+        try {
+            viajeJSON = new JSONObject(viajeString);
+
+            JSONObject sucursalJSON = viajeJSON.getJSONObject(Viaje.SUCURSAL);
+            JSONObject direccionJSON = sucursalJSON.getJSONObject(Valores.SUCURSAL_DIRECCION);
+            JSONObject restaurantJSON = sucursalJSON.getJSONObject(Valores.SUCURSAL_RESTAURANT);
+
+            Direccion direccion = new Direccion();
+            direccion.setId(direccionJSON.getInt(Valores.DIRECCION_ID));
+            direccion.setCalle(direccionJSON.getString(Valores.DIRECCION_CALLE));
+            direccion.setEsquina(direccionJSON.getString(Valores.DIRECCION_ESQUINA));
+            direccion.setLatitud(direccionJSON.getDouble(Valores.DIRECCION_LATITUD));
+            direccion.setLongitud(direccionJSON.getDouble(Valores.DIRECCION_LONGITUD));
+
+            Restaurant restaurant = new Restaurant();
+            restaurant.setId(restaurantJSON.getInt(Valores.RESTARURAN_ID));
+            restaurant.setRazonSocial(restaurantJSON.getString(Valores.RESTAURANT_RAZON_SOCIAL));
+            restaurant.setRut(restaurantJSON.getInt(Valores.RESTAURANT_RUT));
+
+            Sucursal sucursal = new Sucursal();
+            sucursal.setId(sucursalJSON.getJSONObject(Valores.SUCURSAL_SUCURSAL_PK).getInt(Valores.SUCURSAL_ID));
+            sucursal.setDireccion(direccion);
+            sucursal.setRestaurant(restaurant);
+
+            viaje.setId(viajeJSON.getInt(Viaje.ID));
+            viaje.setPrecio(viajeJSON.getInt(Viaje.PRECIO));
+            viaje.setSucursal(sucursal);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        crearNotificacion(viaje);
     }
 
-    private void crearNotificacion(RemoteMessage mensaje) {
+    private void crearNotificacion(Viaje viaje) {
         Intent i = new Intent(this, NotificacionActivity.class);
-        i.putExtra("notificationID", notificationID);
+        i.putExtra(Valores.NOTIFICATOIN_ID_TEXTO, Valores.NOTIFICATION_ID);
+        i.putExtra(Valores.VIAJE, viaje.getId());
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
         NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-        CharSequence ticker ="Ver Viaje";
-        CharSequence contentTitle = "SekthDroid";                       // Nombre Restaurant: " tiene un viaje para ti"
-        CharSequence contentText = "Visita ahora SekthDroid!";          // Dirección Sucursal
+        CharSequence ticker = "Ver Viaje";
+        CharSequence contentTitle = viaje.getSucursal().getRestaurant().getRazonSocial();
+        CharSequence contentText = Valores.VIAJE_PARA_TI;
         Notification notificacion = new NotificationCompat.Builder(this)
                 .setContentIntent(pendingIntent)
                 .setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/facebook_ringtone_pop"))
@@ -46,6 +93,6 @@ public class MessagingService extends FirebaseMessagingService {
                 .addAction(R.drawable.ic_launcher, ticker, pendingIntent)
                 .setVibrate(new long[] {100, 250, 100, 500})
                 .build();
-        nm.notify(notificationID, notificacion);
+        nm.notify(Valores.NOTIFICATION_ID, notificacion);
     }
 }

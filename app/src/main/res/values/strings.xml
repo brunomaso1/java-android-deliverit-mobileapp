@@ -3,8 +3,13 @@
     <string name="ingresar_texto">Ingresar</string>
     <string name="guardar">Guardar</string>
     <string name="registrarse_texto">Registrarme</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="rechazar">Rechazar</string>
+    <string name="no_se_pudieron_obtener_datos_base">No se pudieron obtener los datos de la base de datos</string>
+    <string name="no_se_recibio_ningun_viaje">No se recibió ningún viaje</string>
     <string name="no_existe_delivery">No existe Delivery con los datos ingrresados</string>
     <string name="nombre_usuario_vacio">No existe Delivery con los datos ingrresados</string>
     <string name="no_tiene_camara">Este dispositivo no cuenta con una cámara</string>
     <string name="camara_no_disponible">Cámara no diponible</string>
+    <string name="no_se_pudo_insertar_en_la_base">No se pudo insertar los datos en la base de datos</string>
 </resources>

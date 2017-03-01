@@ -1,10 +1,15 @@
 package proyecto.ucu.deliverit.entidades;
 
+import android.provider.BaseColumns;
+
 /**
- * Created by JMArtegoytia on 20/02/2017.
+ * Created by DeliverIT on 20/02/2017.
  */
 
-public class Restaurant {
+public class Restaurant implements BaseColumns {
+    public static final String TABLE_NAME = "restaurant";
+    public static final String COLUMN_NAME_RUT = "rut";
+    public static final String COLUMN_NAME_RAZON_SOCIAL = "razonSocial";
 
     private Integer id;
     private Integer rut;

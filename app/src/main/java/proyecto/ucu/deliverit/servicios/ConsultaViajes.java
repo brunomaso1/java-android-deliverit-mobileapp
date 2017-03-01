@@ -16,7 +16,7 @@ import okhttp3.Response;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
- * Created by Juan on 12/02/2017.
+ * Created by DeliverIT on 12/02/2017.
  */
 
 public class ConsultaViajes extends IntentService {

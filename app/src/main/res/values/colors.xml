@@ -6,4 +6,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="titlebar_bg">#FC6900</color>
     <color name="background">#ECECEC</color>
+    <color name="cancelar">#888888</color>
 </resources>

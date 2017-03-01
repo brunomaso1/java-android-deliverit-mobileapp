@@ -1,7 +1,7 @@
 package proyecto.ucu.deliverit.utiles;
 
 /**
- * Created by Juancho on 31/01/2017.
+ * Created by DeliverIT on 31/01/2017.
  */
 
 public class Valores {
@@ -26,6 +26,7 @@ public class Valores {
     public static int NOTIFICATION_ID = 1;
     public static String NOTIFICATOIN_ID_TEXTO = "notificationID";
     public static String VIAJE = "viaje";
+    public static String PEDIDOS = "pedidos";
 
     public static String DIRECCION_ID = "id";
     public static String DIRECCION_CALLE = "calle";
@@ -33,6 +34,7 @@ public class Valores {
     public static String DIRECCION_ESQUINA = "esquina";
     public static String DIRECCION_LATITUD = "latitud";
     public static String DIRECCION_LONGITUD = "longitud";
+    public static String DIRECCION_APARTAMENTO = "apartamento";
 
     public static String RESTARURAN_ID = "id";
     public static String RESTAURANT_RUT = "rut";

@@ -1,7 +1,7 @@
 package proyecto.ucu.deliverit.utiles;
 
 /**
- * Created by Juancho on 31/01/2017.
+ * Created by DeliverIT on 31/01/2017.
  */
 
 public class Retorno {

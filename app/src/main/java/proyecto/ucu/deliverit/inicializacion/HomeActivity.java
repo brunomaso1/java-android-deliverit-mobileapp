@@ -7,13 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
+import proyecto.ucu.deliverit.entidades.Direccion;
 import proyecto.ucu.deliverit.main.MainActivity;
 
 /**
- * Created by Juan on 01/02/2017.
+ * Created by DeliverIT on 01/02/2017.
  */
 
 public class HomeActivity extends AppCompatActivity {
@@ -27,18 +30,6 @@ public class HomeActivity extends AppCompatActivity {
 
         registrarse_btn = (Button) findViewById(R.id.registrarse_btn);
         ingresar_btn = (Button) findViewById(R.id.ingresar_btn);
-
-        // Creo la base de datos
-        DataBase db = new DataBase(getApplicationContext());
-
-        long id;
-        try {
-            id = db.agregarDelivery ("juan", "a12345678.", "Juan Martin Artegoytia", "juanmartegoytia@gmail.com", "099994974",
-                    2020, null);
-            System.out.println("***** id = " + id + " *****");
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        }
 
         // Si nadie se logueó
         if (SharedPref.getIdDelivery(getApplicationContext()) == 0) {
@@ -58,7 +49,9 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-        } else {
+        }
+        // Si ya existe un Usuario logueado va directo a la activity principal
+        else {
             Intent intent = new Intent(HomeActivity.this, MainActivity.class);
             startActivity(intent);
         }

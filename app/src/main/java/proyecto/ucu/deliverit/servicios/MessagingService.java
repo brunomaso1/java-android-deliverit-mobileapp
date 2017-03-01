@@ -4,8 +4,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -16,6 +18,7 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import proyecto.ucu.deliverit.R;
+import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.entidades.Direccion;
 import proyecto.ucu.deliverit.entidades.Restaurant;
 import proyecto.ucu.deliverit.entidades.Sucursal;
@@ -24,7 +27,7 @@ import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
- * Created by Juancho on 15/02/2017.
+ * Created by DeliverIT on 15/02/2017.
  */
 
 public class MessagingService extends FirebaseMessagingService {
@@ -39,6 +42,7 @@ public class MessagingService extends FirebaseMessagingService {
         String viajeString = datos.get(Valores.VIAJE);
 
         try {
+
             viajeJSON = new JSONObject(viajeString);
 
             JSONObject sucursalJSON = viajeJSON.getJSONObject(Viaje.SUCURSAL);
@@ -49,6 +53,8 @@ public class MessagingService extends FirebaseMessagingService {
             direccion.setId(direccionJSON.getInt(Valores.DIRECCION_ID));
             direccion.setCalle(direccionJSON.getString(Valores.DIRECCION_CALLE));
             direccion.setEsquina(direccionJSON.getString(Valores.DIRECCION_ESQUINA));
+            direccion.setNroPuerta(direccionJSON.getInt(Valores.DIRECCION_NRO_PUERTA));
+            direccion.setApartamento((short)direccionJSON.getInt(Valores.DIRECCION_APARTAMENTO));
             direccion.setLatitud(direccionJSON.getDouble(Valores.DIRECCION_LATITUD));
             direccion.setLongitud(direccionJSON.getDouble(Valores.DIRECCION_LONGITUD));
 
@@ -65,6 +71,16 @@ public class MessagingService extends FirebaseMessagingService {
             viaje.setId(viajeJSON.getInt(Viaje.ID));
             viaje.setPrecio(viajeJSON.getInt(Viaje.PRECIO));
             viaje.setSucursal(sucursal);
+
+            try {
+                DataBase db = new DataBase(MessagingService.this);
+                db.insertarDireccion(direccion);
+                db.insertarRestaurant(restaurant);
+                db.insertarSucursal(sucursal);
+                db.insertarViaje(viaje);
+            } catch (SQLiteException e) {
+                Toast.makeText(MessagingService.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

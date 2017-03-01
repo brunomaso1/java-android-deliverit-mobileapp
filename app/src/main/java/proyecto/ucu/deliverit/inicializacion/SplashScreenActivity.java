@@ -14,7 +14,7 @@ import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.servicios.InstanceIDService;
 
 /**
- * Created by Juan on 31/01/2017.
+ * Created by DeliverIT on 31/01/2017.
  */
 
 public class SplashScreenActivity extends AppCompatActivity {

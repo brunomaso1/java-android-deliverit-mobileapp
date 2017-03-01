@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by Juan on 31/01/2017.
+ * Created by deliverIT on 31/01/2017.
  */
 
 public class SharedPref {

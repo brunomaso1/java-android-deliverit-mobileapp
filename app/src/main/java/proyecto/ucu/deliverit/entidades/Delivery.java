@@ -3,7 +3,7 @@ package proyecto.ucu.deliverit.entidades;
 import android.provider.BaseColumns;
 
 /**
- * Created by Juancho on 31/01/2017.
+ * Created by DeliverIT on 31/01/2017.
  */
 
 public class Delivery implements BaseColumns {

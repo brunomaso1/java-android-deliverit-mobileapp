@@ -1,10 +1,16 @@
 package proyecto.ucu.deliverit.entidades;
 
+import android.provider.BaseColumns;
+
 /**
- * Created by JMArtegoytia on 20/02/2017.
+ * Created by DeliverIT on 20/02/2017.
  */
 
-public class Sucursal {
+public class Sucursal implements BaseColumns {
+    public static final String TABLE_NAME = "sucursal";
+    public static final String COLUMN_NOMBRE = "nombre";
+    public static final String COLUMN_NAME_DIRECCION = "direccion";
+    public static final String COLUMN_NAME_RESTAURANT = "restaurant";
 
     private Integer id;
     private String nombre;

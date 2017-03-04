@@ -4,8 +4,10 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Viaje;
@@ -30,11 +32,16 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.44:8080/BackCore/ws/viaje/aceptarViaje/" + this.idViaje + "/"
-                + this.idDelivery;
+        String url = "http://192.168.1.43:8080/BackCore/ws/viaje/aceptarViaje";
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("somParam", "someValue")
+                .build();
 
         Request request = new Request.Builder()
                 .url(url)
+                .method("POST", RequestBody.create(null, new byte[0]))
+                .post(requestBody)
                 .build();
 
         Response response;

@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         ingresar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!nombreUsuario_Et.getText().toString().equals("")) {
+              /*  if (!nombreUsuario_Et.getText().toString().equals("")) {
                     DataBase db = new DataBase(LoginActivity.this);
                     long idDelivery = db.login(nombreUsuario_Et.getText().toString(), password_et.getText().toString());
 
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(LoginActivity.this, R.string.nombre_usuario_vacio, Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }

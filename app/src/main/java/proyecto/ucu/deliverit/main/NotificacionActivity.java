@@ -88,14 +88,14 @@ public class NotificacionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Se ha solicitado el viaje", Toast.LENGTH_LONG).show();
-                finish();
-                //new AceptarViajeTask(NotificacionActivity.this,
-                //        (int)SharedPref.getIdDelivery(NotificacionActivity.this), viaje.getId()).execute();
+                new AceptarViajeTask(NotificacionActivity.this,
+                        (int)SharedPref.getIdDelivery(NotificacionActivity.this), viaje.getId()).execute();
             }
         });
     }
 
     public void aceptarTaskRetorno(Integer retorno) {
+        System.out.println("***** retorno = " + retorno);
         finish();
     }
 }

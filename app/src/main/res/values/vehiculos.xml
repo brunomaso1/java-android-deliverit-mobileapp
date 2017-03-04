@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="vehiculos_array">
+        <item>Automotor</item>
+        <item>Ciclomotor</item>
+        <item>Bicileta</item>
+        <item>Skate</item>
+        <item>Rollers</item>
+        <item>Ninguno</item>
+    </string-array>
+</resources>

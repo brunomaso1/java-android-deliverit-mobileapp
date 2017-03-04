@@ -29,7 +29,7 @@
                 android:layout_weight="0.5"
                 android:paddingLeft="5dp"
                 android:background="#FFFFFF"
-                android:text="Nombre de Usuario" />
+                android:hint="Nombre de Usuario" />
 
             <EditText
                 android:id="@+id/password_et"
@@ -39,7 +39,8 @@
                 android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
                 android:background="#FFFFFF"
-                android:text="Contraseña" />
+                android:inputType="textPassword"
+                android:hint="Contraseña" />
 
             <EditText
                 android:id="@+id/nombre_et"
@@ -49,7 +50,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
                 android:background="#FFFFFF"
-                android:text="Nombre Completo" />
+                android:hint="Nombre Completo" />
 
             <EditText
                 android:id="@+id/mail_et"
@@ -60,7 +61,7 @@
                 android:paddingLeft="5dp"
                 android:background="#FFFFFF"
                 android:inputType="textEmailAddress"
-                android:text="Correo Electrónico" />
+                android:hint="Correo Electrónico" />
 
             <EditText
                 android:id="@+id/telefono_et"
@@ -70,7 +71,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
                 android:background="#FFFFFF"
-                android:text="Celular"
+                android:hint="Celular"
                 android:maxLength="9"
                 android:inputType="phone"/>
 
@@ -83,11 +84,17 @@
                 android:paddingLeft="5dp"
                 android:background="#FFFFFF"
                 android:inputType="number"
-                android:text="Correo Electrónico" />
+                android:hint="Cuenta de RedPagos" />
+
+            <Spinner
+                android:id="@+id/vehiculos_sp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"/>
 
         </LinearLayout>
 
-        <LinearLayout
+        <!--LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.5"
@@ -114,7 +121,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:textColor="@color/black"/>
 
-        </LinearLayout>
+        </LinearLayout-->
 
         <Button
             android:id="@+id/registrarse_btn"

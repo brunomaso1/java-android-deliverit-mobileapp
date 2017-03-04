@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.entidades.Cliente;
 import proyecto.ucu.deliverit.entidades.Delivery;
@@ -14,6 +17,8 @@ import proyecto.ucu.deliverit.entidades.Direccion;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Restaurant;
 import proyecto.ucu.deliverit.entidades.Sucursal;
+import proyecto.ucu.deliverit.entidades.Usuario;
+import proyecto.ucu.deliverit.entidades.Vehiculo;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Retorno;
@@ -40,16 +45,23 @@ public class DataBase extends SQLiteOpenHelper {
 
     private static final String NOT_NULL = " NOT NULL";
 
+    private static final String SQL_CREATE_TABLE_USUARIO
+            = "CREAR TABLE " + Usuario.TABLE_NAME + " (" +
+                    Usuario._ID + TYPE_INTEGER + PRIMARY_KEY + ","
+                    + Usuario.COLUMN_NAME_NOMBRE_USUARIO + TYPE_TEXT + NOT_NULL + ","
+                    + Usuario.COLUMN_NAME_PASSWORD + TYPE_TEXT + NOT_NULL + ","
+                    + Usuario.COLUMN_NAME_MAIL + TYPE_TEXT + ","
+                    + Usuario.COLUMN_NAME_TELEFONO + TYPE_INTEGER + NOT_NULL + ","
+                    + Usuario.COLUMN_NAME_CUENTA_RED_PAGOS + TYPE_INTEGER + NOT_NULL + ","
+                    + Usuario.COLUMN_NAME_FOTO_PERFIL + TYPE_BLOB + ")";
+
     private static final String SQL_CREATE_TABLE_DELIVERY
             = "CREATE TABLE " + Delivery.TABLE_NAME + " (" +
                     Delivery._ID + TYPE_INTEGER + PRIMARY_KEY + ","
-                    + Delivery.COLUMN_NAME_NOMBRE_USUARIO + TYPE_TEXT + NOT_NULL + ","
-                    + Delivery.COLUMN_NAME_PASSWORD + TYPE_TEXT + NOT_NULL + ","
-                    + Delivery.COLUMN_NAME_NOMBRE + TYPE_TEXT + ","
-                    + Delivery.COLUMN_NAME_MAIL + TYPE_TEXT + ","
-                    + Delivery.COLUMN_NAME_TELEFONO + TYPE_INTEGER + NOT_NULL + ","
-                    + Delivery.COLUMN_NAME_CUENTA_RED_PAGOS + TYPE_INTEGER + NOT_NULL + ","
-                    + Delivery.COLUMN_NAME_FOTO_PERFIL + TYPE_BLOB + ")";
+                    + Delivery.COLUMN_NAME_USUARIO + TYPE_INTEGER + NOT_NULL + ","
+                    + Delivery.COLUMN_NAME_TOKEN + TYPE_TEXT + ","
+                    + Delivery.COLUMN_NAME_UBICACION + TYPE_INTEGER + ","
+                    + Delivery.COLUMN_NAME_VEHICULO + TYPE_SMALLINT + ")";
 
     private static final String SQL_CREATE_TABLE_DIRECCION
             = "CREATE TABLE " + Direccion.TABLE_NAME + " (" +
@@ -100,13 +112,18 @@ public class DataBase extends SQLiteOpenHelper {
             + Pedido.COLUMN_NAME_CLIENTE + TYPE_INTEGER + NOT_NULL + ","
             + PRIMARY_KEY + " (" + Pedido._ID + ", " + Pedido.COLUMN_NAME_VIAJE + "))";
 
+    private static final String SQL_CREATE_TABLE_VEHICULO
+            = "CREATE TABLE " + Pedido.TABLE_NAME + " (" +
+            Vehiculo._ID + TYPE_SMALLINT + ","
+            + Vehiculo.COLUMN_NAME_DESCRIPCION + TYPE_TEXT + ")";
+
     public DataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL(SQL_CREATE_TABLE_USUARIO);
         db.execSQL(SQL_CREATE_TABLE_DELIVERY);
         db.execSQL(SQL_CREATE_TABLE_DIRECCION);
         db.execSQL(SQL_CREATE_TABLE_RESTAURANT);
@@ -114,6 +131,27 @@ public class DataBase extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_TABLE_VIAJE);
         db.execSQL(SQL_CREATE_TABLE_CLIENTE);
         db.execSQL(SQL_CREATE_TABLE_PEDIDO);
+        db.execSQL(SQL_CREATE_TABLE_VEHICULO);
+
+        ContentValues values = new ContentValues();
+
+        values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Automotor");
+        db.insert(Vehiculo.TABLE_NAME, null, values);
+
+        values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Ciclomotor");
+        db.insert(Vehiculo.TABLE_NAME, null, values);
+
+        values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Bicileta");
+        db.insert(Vehiculo.TABLE_NAME, null, values);
+
+        values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Skate");
+        db.insert(Vehiculo.TABLE_NAME, null, values);
+
+        values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Rollers");
+        db.insert(Vehiculo.TABLE_NAME, null, values);
+
+        values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Ninguno");
+        db.insert(Vehiculo.TABLE_NAME, null, values);
     }
 
     @Override
@@ -121,8 +159,33 @@ public class DataBase extends SQLiteOpenHelper {
 
     }
 
-    public long agregarDelivery (String nombreUsuario, String password, String nombre, String mail, String telefono,
-                                 int cuentaRedPagos, byte[] fotoPerfil) throws SQLiteException {
+    public long insertarUsuario (Usuario usuario) throws SQLiteException {
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Retorno retorno = Operaciones.validarDatos(usuario.getNombre(), usuario.getPassword(), usuario.getTelefono(),
+                usuario.getCuentaRedPagos());
+
+        long idNuevoUsuario = 0;
+
+        if (retorno.getCodigo().equals("0")) {
+            // Create a new map of values, where column names are the keys
+            ContentValues values = new ContentValues();
+            values.put(Usuario.COLUMN_NAME_NOMBRE_USUARIO, usuario.getNombre());
+            values.put(Usuario.COLUMN_NAME_PASSWORD, usuario.getPassword());
+            values.put(Usuario.COLUMN_NAME_MAIL, usuario.getMail());
+            values.put(Usuario.COLUMN_NAME_TELEFONO, usuario.getTelefono());
+            values.put(Usuario.COLUMN_NAME_CUENTA_RED_PAGOS, usuario.getCuentaRedPagos());
+            values.put(Usuario.COLUMN_NAME_FOTO_PERFIL, usuario.getFoto());
+
+            // Insert the new row, returning the primary key value of the new row
+            idNuevoUsuario = db.insert(Usuario.TABLE_NAME, null, values);
+        }
+        return idNuevoUsuario;
+    }
+
+    public long insertarDelivery (Delivery delivery) throws SQLiteException {
 
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
@@ -266,7 +329,7 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
 
-    public long login (String usuario, String password) throws SQLiteException {
+ /*   public long login (String usuario, String password) throws SQLiteException {
 
         long idDelivery = 0;
 
@@ -303,7 +366,7 @@ public class DataBase extends SQLiteOpenHelper {
         }
 
         return idDelivery;
-    }
+    }  */
 
     public Viaje getViaje(Integer idViaje) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -340,8 +403,77 @@ public class DataBase extends SQLiteOpenHelper {
         viaje.setRestaurant(restaurant);
 
         return viaje;
-
     }
+
+    public Vehiculo getVehiculo(String desc) throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Vehiculo._ID, Vehiculo.COLUMN_NAME_DESCRIPCION
+        };
+
+        String selection = Vehiculo.COLUMN_NAME_DESCRIPCION + " = ?";
+        String[] selectionArgs = { desc };
+
+        Cursor c = db.query(
+                Vehiculo.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        c.moveToFirst();
+        Short id = c.getShort(c.getColumnIndexOrThrow(Vehiculo._ID));
+        c.close();
+
+        Vehiculo vehiculo = new Vehiculo();
+        vehiculo.setId(id);
+        vehiculo.setDescripcion(desc);
+
+        return vehiculo;
+    }
+
+  /*  public List<Vehiculo> getVehiculos() throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Vehiculo._ID, Vehiculo.COLUMN_NAME_DESCRIPCION
+        };
+
+        String selection = "";
+        String[] selectionArgs = {};
+
+        Cursor c = db.query(
+                Viaje.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        List<Vehiculo> vehiculos = new ArrayList<>();
+        if (c.moveToFirst()) {
+            while (c.isAfterLast() == false) {
+                Short id = c.getShort((short)c.getColumnIndexOrThrow(Vehiculo._ID));
+                String descripcion = c.getColumnName(c.getColumnIndexOrThrow(Vehiculo.COLUMN_NAME_DESCRIPCION));
+                Vehiculo v = new Vehiculo();
+                v.setId(id);
+                v.setDescripcion(descripcion);
+                vehiculos.add(v);
+                c.moveToNext();
+            }
+        }
+
+        c.close();
+
+        return vehiculos;
+
+    } */
 
     public Restaurant getRestaurant(Integer idRestaurant) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();

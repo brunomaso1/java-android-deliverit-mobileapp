@@ -1,6 +1,10 @@
 package proyecto.ucu.deliverit.utiles;
 
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Created by DeliverIT on 31/01/2017.
  */

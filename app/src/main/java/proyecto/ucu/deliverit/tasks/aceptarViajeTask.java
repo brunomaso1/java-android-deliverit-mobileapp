@@ -32,7 +32,7 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.43:8080/BackCore/ws/viaje/aceptarViaje";
+        String url = "http://192.168.1.42:8080/BackCore/ws/viaje/aceptarViaje";
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("somParam", "someValue")

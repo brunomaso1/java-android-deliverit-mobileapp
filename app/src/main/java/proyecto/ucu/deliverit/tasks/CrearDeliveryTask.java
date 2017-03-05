@@ -32,7 +32,7 @@ public class CrearDeliveryTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.43:8080/BackCore/ws/delivery";
+        String url = "http://192.168.1.42:8080/BackCore/ws/delivery";
 
         Gson gson = new Gson();
         String objeto = gson.toJson(this.delivery);

@@ -32,7 +32,7 @@ public class CrearUsuarioTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.43:8080/BackCore/ws/usuario";
+        String url = "http://192.168.1.42:8080/BackCore/ws/usuario";
 
         Gson gson = new Gson();
         String objeto = gson.toJson(this.usuario);

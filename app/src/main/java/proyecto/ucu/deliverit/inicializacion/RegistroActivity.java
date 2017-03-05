@@ -126,8 +126,10 @@ public class RegistroActivity extends AppCompatActivity {
                     delivery.setToken(SharedPref.getToken(RegistroActivity.this));
                     delivery.setUsuario(usuario);
                     delivery.setVehiculo(vehiculoSeleccionado);
-                    delivery.setUbicacion(DB.getUbicacion());
-
+                    Ubicacion ubicacion = new Ubicacion();
+                    ubicacion.setLatitud(SharedPref.getLatitud(RegistroActivity.this));
+                    ubicacion.setLongitud(SharedPref.getLongitud(RegistroActivity.this));
+                    delivery.setUbicacion(ubicacion);
                     new CrearDeliveryTask(RegistroActivity.this, delivery).execute();
 
                 } catch (SQLiteException e) {
@@ -152,6 +154,7 @@ public class RegistroActivity extends AppCompatActivity {
 
                 try {
                     DB.insertarDelivery(delivery);
+                    DB.insertarUbicacion(delivery.getUbicacion());
                     finish();
                 } catch (SQLiteException e) {
                     Toast.makeText(RegistroActivity.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();

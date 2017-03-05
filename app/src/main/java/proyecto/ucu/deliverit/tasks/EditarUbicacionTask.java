@@ -10,7 +10,6 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.inicializacion.HomeActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
@@ -32,7 +31,7 @@ public class EditarUbicacionTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.43:8080/BackCore/ws/ubicacion/" + ubicacion.getId();
+        String url = "http://192.168.1.42:8080/BackCore/ws/ubicacion/" + ubicacion.getId();
 
         Gson gson = new Gson();
         String objeto = gson.toJson(this.ubicacion);

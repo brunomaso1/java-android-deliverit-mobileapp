@@ -7,6 +7,8 @@ import android.provider.BaseColumns;
  */
 
 public class Vehiculo implements BaseColumns {
+    public static final String VEHICULO_POR_DEFECTO_SPINNER = "Automotor";
+
     public static final String TABLE_NAME = "vehiculo";
     public static final String COLUMN_NAME_DESCRIPCION = "descripcion";
 

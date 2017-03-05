@@ -1,10 +1,8 @@
 package proyecto.ucu.deliverit.inicializacion;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteException;
-import android.hardware.Camera;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,13 +15,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Delivery;
+import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.entidades.Usuario;
 import proyecto.ucu.deliverit.entidades.Vehiculo;
 import proyecto.ucu.deliverit.tasks.CrearDeliveryTask;
@@ -43,7 +41,6 @@ public class RegistroActivity extends AppCompatActivity {
     Button registrarse_btn;
     Spinner vehiculos_sp;
 
-    private Camera camara;
     private Vehiculo vehiculoSeleccionado;
 
     DataBase DB;
@@ -62,9 +59,12 @@ public class RegistroActivity extends AppCompatActivity {
         mail_et = (EditText) findViewById(R.id.mail_et);
         telefono_et = (EditText) findViewById(R.id.telefono_et);
         cuentaRedPagos_et = (EditText) findViewById(R.id.cuentaRedPagos_et);
-        camara_ibtn = (ImageButton) findViewById(R.id.camara_ibtn);
         registrarse_btn = (Button) findViewById(R.id.registrarse_btn);
         vehiculos_sp = (Spinner) findViewById(R.id.vehiculos_sp);
+
+        // Seteamos el valor por defecto del spinner a: "Automotor"
+        vehiculos_sp.setSelection(0);
+        vehiculoSeleccionado = DB.getVehiculo(Vehiculo.VEHICULO_POR_DEFECTO_SPINNER);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.vehiculos_array, android.R.layout.simple_spinner_item);
@@ -107,68 +107,26 @@ public class RegistroActivity extends AppCompatActivity {
                 }
             }
         });
-
-        camara_ibtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkCameraHardware(getApplicationContext())) {
-                    try {
-                        int idCamara = findFrontFacingCamera();
-                        camara = Camera.open(idCamara);
-                    } catch (Exception e){
-                        Toast.makeText(RegistroActivity.this, R.string.camara_no_disponible, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(RegistroActivity.this, R.string.no_tiene_camara, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private int findFrontFacingCamera() {
-        int cameraId = 0;
-        // Search for the front facing camera
-        int numberOfCameras = Camera.getNumberOfCameras();
-        for (int i = 0; i < numberOfCameras; i++) {
-            cameraId = i;
-            Camera.CameraInfo info = new Camera.CameraInfo();
-            Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                break;
-            }
-        }
-        return cameraId;
-    }
-
-    /** Check if this device has a camera */
-    public static boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
     }
 
     public void crearUsuarioTaskRetorno(RespuestaGeneral respuesta) {
 
         if (respuesta != null) {
 
-            // Si se inserto el Usuario inserto el Delivery
+            // Si se inserto el Usuario en la base del sistema
             if (respuesta.getCodigo().equals(RespuestaGeneral.CODIGO_OK)) {
                 Gson gson = new Gson();
                 Usuario usuario = gson.fromJson(respuesta.getObjeto(), Usuario.class);
 
-
                 try {
+                    // Insertamos el usuario en la base del dispositivo
                     DB.insertarUsuario(usuario);
 
                     Delivery delivery = new Delivery();
                     delivery.setToken(SharedPref.getToken(RegistroActivity.this));
                     delivery.setUsuario(usuario);
                     delivery.setVehiculo(vehiculoSeleccionado);
-                    // setear ubicacion del delivery
+                    delivery.setUbicacion(DB.getUbicacion());
 
                     new CrearDeliveryTask(RegistroActivity.this, delivery).execute();
 
@@ -182,8 +140,6 @@ public class RegistroActivity extends AppCompatActivity {
         } else {
             Toast.makeText(RegistroActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_SHORT).show();
         }
-
-       // finish();
     }
 
     public void crearDeliveryTaskRetorno(RespuestaGeneral respuesta) {
@@ -195,9 +151,8 @@ public class RegistroActivity extends AppCompatActivity {
                 Delivery delivery = gson.fromJson(respuesta.getObjeto(), Delivery.class);
 
                 try {
-                    DB.insertarUsuario(usuario);
-
-
+                    DB.insertarDelivery(delivery);
+                    finish();
                 } catch (SQLiteException e) {
                     Toast.makeText(RegistroActivity.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
                 }

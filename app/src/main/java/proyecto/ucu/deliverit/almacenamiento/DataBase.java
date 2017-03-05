@@ -17,6 +17,7 @@ import proyecto.ucu.deliverit.entidades.Direccion;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Restaurant;
 import proyecto.ucu.deliverit.entidades.Sucursal;
+import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.entidades.Usuario;
 import proyecto.ucu.deliverit.entidades.Vehiculo;
 import proyecto.ucu.deliverit.entidades.Viaje;
@@ -46,7 +47,7 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String NOT_NULL = " NOT NULL";
 
     private static final String SQL_CREATE_TABLE_USUARIO
-            = "CREAR TABLE " + Usuario.TABLE_NAME + " (" +
+            = "CREATE TABLE " + Usuario.TABLE_NAME + " (" +
                     Usuario._ID + TYPE_INTEGER + PRIMARY_KEY + ","
                     + Usuario.COLUMN_NAME_NOMBRE_USUARIO + TYPE_TEXT + NOT_NULL + ","
                     + Usuario.COLUMN_NAME_PASSWORD + TYPE_TEXT + NOT_NULL + ","
@@ -113,9 +114,15 @@ public class DataBase extends SQLiteOpenHelper {
             + PRIMARY_KEY + " (" + Pedido._ID + ", " + Pedido.COLUMN_NAME_VIAJE + "))";
 
     private static final String SQL_CREATE_TABLE_VEHICULO
-            = "CREATE TABLE " + Pedido.TABLE_NAME + " (" +
+            = "CREATE TABLE " + Vehiculo.TABLE_NAME + " (" +
             Vehiculo._ID + TYPE_SMALLINT + ","
             + Vehiculo.COLUMN_NAME_DESCRIPCION + TYPE_TEXT + ")";
+
+    private static final String SQL_CREATE_TABLE_UBICACION
+            = "CREATE TABLE " + Ubicacion.TABLE_NAME + " (" +
+            Ubicacion._ID + TYPE_SMALLINT + PRIMARY_KEY + ","
+            + Ubicacion.COLUMN_NAME_LATITUD + TYPE_DOUBLE + NOT_NULL + ","
+            + Ubicacion.COLUMN_NAME_LONGITUD + TYPE_DOUBLE + NOT_NULL + ")";
 
     public DataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -132,24 +139,31 @@ public class DataBase extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_TABLE_CLIENTE);
         db.execSQL(SQL_CREATE_TABLE_PEDIDO);
         db.execSQL(SQL_CREATE_TABLE_VEHICULO);
+        db.execSQL(SQL_CREATE_TABLE_UBICACION);
 
         ContentValues values = new ContentValues();
 
+        values.put(Vehiculo._ID, 1);
         values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Automotor");
         db.insert(Vehiculo.TABLE_NAME, null, values);
 
+        values.put(Vehiculo._ID, 2);
         values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Ciclomotor");
         db.insert(Vehiculo.TABLE_NAME, null, values);
 
+        values.put(Vehiculo._ID, 3);
         values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Bicileta");
         db.insert(Vehiculo.TABLE_NAME, null, values);
 
+        values.put(Vehiculo._ID, 4);
         values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Skate");
         db.insert(Vehiculo.TABLE_NAME, null, values);
 
+        values.put(Vehiculo._ID, 5);
         values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Rollers");
         db.insert(Vehiculo.TABLE_NAME, null, values);
 
+        values.put(Vehiculo._ID, 6);
         values.put(Vehiculo.COLUMN_NAME_DESCRIPCION, "Ninguno");
         db.insert(Vehiculo.TABLE_NAME, null, values);
     }
@@ -157,6 +171,23 @@ public class DataBase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public void insertarUbicacion (Ubicacion ubicacion) throws SQLiteException {
+
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Retorno retorno = Operaciones.validarLatitudLongitud(ubicacion.getLatitud(), ubicacion.getLongitud());
+
+        if (retorno.getCodigo().equals(Valores.CODIGO_EXITO)) {
+            ContentValues values = new ContentValues();
+            values.put(Ubicacion._ID, ubicacion.getId());
+            values.put(Ubicacion.COLUMN_NAME_LATITUD, ubicacion.getLatitud());
+            values.put(Ubicacion.COLUMN_NAME_LONGITUD, ubicacion.getLongitud());
+
+            db.insert(Ubicacion.TABLE_NAME, null, values);
+        }
     }
 
     public long insertarUsuario (Usuario usuario) throws SQLiteException {
@@ -169,9 +200,10 @@ public class DataBase extends SQLiteOpenHelper {
 
         long idNuevoUsuario = 0;
 
-        if (retorno.getCodigo().equals("0")) {
+        if (retorno.getCodigo().equals(Valores.CODIGO_EXITO)) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
+            values.put(Usuario._ID, usuario.getId());
             values.put(Usuario.COLUMN_NAME_NOMBRE_USUARIO, usuario.getNombre());
             values.put(Usuario.COLUMN_NAME_PASSWORD, usuario.getPassword());
             values.put(Usuario.COLUMN_NAME_MAIL, usuario.getMail());
@@ -185,30 +217,18 @@ public class DataBase extends SQLiteOpenHelper {
         return idNuevoUsuario;
     }
 
-    public long insertarDelivery (Delivery delivery) throws SQLiteException {
-
-        // Gets the data repository in write mode
+    public void insertarDelivery (Delivery delivery) throws SQLiteException {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Retorno retorno = Operaciones.validarDatos(nombreUsuario, password, telefono, cuentaRedPagos);
+        ContentValues values = new ContentValues();
 
-        long idNuevoDelivery = 0;
+        values.put(Delivery._ID, delivery.getId());
+        values.put(Delivery.COLUMN_NAME_USUARIO, delivery.getUsuario().getId());
+        values.put(Delivery.COLUMN_NAME_TOKEN, delivery.getToken());
+        values.put(Delivery.COLUMN_NAME_UBICACION, delivery.getUbicacion().getId());
+        values.put(Delivery.COLUMN_NAME_VEHICULO, delivery.getVehiculo().getId());
 
-        if (retorno.getCodigo().equals("0")) {
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(Delivery.COLUMN_NAME_NOMBRE_USUARIO, nombreUsuario);
-            values.put(Delivery.COLUMN_NAME_PASSWORD, password);
-            values.put(Delivery.COLUMN_NAME_NOMBRE, nombre);
-            values.put(Delivery.COLUMN_NAME_MAIL, mail);
-            values.put(Delivery.COLUMN_NAME_TELEFONO, telefono);
-            values.put(Delivery.COLUMN_NAME_CUENTA_RED_PAGOS, cuentaRedPagos);
-            values.put(Delivery.COLUMN_NAME_FOTO_PERFIL, fotoPerfil);
-
-            // Insert the new row, returning the primary key value of the new row
-            idNuevoDelivery = db.insert(Delivery.TABLE_NAME, null, values);
-        }
-        return idNuevoDelivery;
+        db.insert(Delivery.TABLE_NAME, null, values);
     }
 
     public long insertarDireccion(Direccion direccion) throws SQLiteException {
@@ -328,45 +348,36 @@ public class DataBase extends SQLiteOpenHelper {
         return db.insert(Pedido.TABLE_NAME, null, values);
     }
 
+    public Ubicacion getUbicacion() throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
 
- /*   public long login (String usuario, String password) throws SQLiteException {
+        String[] projection = {
+                Ubicacion._ID, Ubicacion.COLUMN_NAME_LATITUD, Ubicacion.COLUMN_NAME_LONGITUD
+        };
 
-        long idDelivery = 0;
+        Cursor c = db.query(
+                Ubicacion.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                "",                                       // The columns for the WHERE clause
+                null,                                     // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
 
-        Retorno retornoPassword = Operaciones.validarPassword(password);
+        c.moveToFirst();
+        Short id = c.getShort(c.getColumnIndexOrThrow(Ubicacion._ID));
+        Double latitud = c.getDouble(c.getColumnIndexOrThrow(Ubicacion.COLUMN_NAME_LATITUD));
+        Double longitud = c.getDouble(c.getColumnIndexOrThrow(Ubicacion.COLUMN_NAME_LONGITUD));
+        c.close();
 
-        // Si la contraseña es válida busco un delivery con los datos ingresados
-        if (retornoPassword.getCodigo().equals(Valores.CODIGO_EXITO)) {
-            SQLiteDatabase db = this.getReadableDatabase();
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setId(id);
+        ubicacion.setLatitud(latitud);
+        ubicacion.setLongitud(longitud);
 
-            // Columna que voy a retornar en la query
-            String[] projection = {
-                    Delivery._ID
-            };
-
-            // Condición del WHERE
-            String selection = Delivery.COLUMN_NAME_NOMBRE_USUARIO + " = ? AND " + Delivery.COLUMN_NAME_PASSWORD + " = ?";
-            String[] selectionArgs = { usuario, password };
-
-            Cursor c = db.query(
-                    Delivery.TABLE_NAME,                      // The table to query
-                    projection,                               // The columns to return
-                    selection,                                // The columns for the WHERE clause
-                    selectionArgs,                            // The values for the WHERE clause
-                    null,                                     // don't group the rows
-                    null,                                     // don't filter by row groups
-                    null                                      // The sort order
-            );
-
-            c.moveToFirst();
-            idDelivery = c.getLong(
-                    c.getColumnIndexOrThrow(Delivery._ID)
-            );
-            c.close();
-        }
-
-        return idDelivery;
-    }  */
+        return ubicacion;
+    }
 
     public Viaje getViaje(Integer idViaje) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -436,21 +447,18 @@ public class DataBase extends SQLiteOpenHelper {
         return vehiculo;
     }
 
-  /*  public List<Vehiculo> getVehiculos() throws SQLiteException {
+    public List<Vehiculo> getVehiculos() throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
                 Vehiculo._ID, Vehiculo.COLUMN_NAME_DESCRIPCION
         };
 
-        String selection = "";
-        String[] selectionArgs = {};
-
         Cursor c = db.query(
-                Viaje.TABLE_NAME,                      // The table to query
+                Vehiculo.TABLE_NAME,                      // The table to query
                 projection,                               // The columns to return
-                selection,                                // The columns for the WHERE clause
-                selectionArgs,                            // The values for the WHERE clause
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 null                                      // The sort order
@@ -472,8 +480,7 @@ public class DataBase extends SQLiteOpenHelper {
         c.close();
 
         return vehiculos;
-
-    } */
+    }
 
     public Restaurant getRestaurant(Integer idRestaurant) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -575,4 +582,24 @@ public class DataBase extends SQLiteOpenHelper {
 
         return direccion;
     }
+
+    public void actualizarUbicacion(Ubicacion ubicacion) throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(Ubicacion.COLUMN_NAME_LATITUD, ubicacion.getLatitud());
+        values.put(Ubicacion.COLUMN_NAME_LONGITUD, ubicacion.getLongitud());
+
+        // Which row to update, based on the title
+        String selection = Ubicacion._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(ubicacion.getId()) };
+
+        db.update(
+                Ubicacion.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+    }
+
 }

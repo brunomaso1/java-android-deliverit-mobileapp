@@ -83,6 +83,26 @@ public class Operaciones {
         return retorno;
     }
 
+    public static Retorno validarLatitudLongitud (Double latitud, Double longitud) {
+        Retorno retorno = new Retorno();
+
+        if (latitud == null || longitud == null) {
+            retorno.setCodigo(Valores.CODIGO_ERROR_NULO_O_VACIO);
+            retorno.setMensaje(Valores.MENSAJE_ERROR);
+            retorno.setDescripcion(Valores.DESCRIPCION_ERROR_VACIO_O_NULO);
+        } else if (latitud >= 0 || longitud >= 0) {
+            retorno.setCodigo(Valores.CODIGO_ERROR_VALOR_INCORRECTO);
+            retorno.setMensaje(Valores.MENSAJE_ERROR);
+            retorno.setDescripcion(Valores.DESCRIPCION_ERROR_VALOR_INCORRECTO);
+        } else {
+            retorno.setCodigo(Valores.CODIGO_EXITO);
+            retorno.setMensaje(Valores.MENSAJE_EXITO);
+            retorno.setDescripcion(Valores.DESCRIPCION_EXITO);
+        }
+
+        return retorno;
+    }
+
     public static boolean tieneNumero(String cadena) {
         return cadena.matches(".*\\d+.*");
     }

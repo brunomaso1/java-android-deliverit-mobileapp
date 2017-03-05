@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import proyecto.ucu.deliverit.R;
+import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.servicios.InstanceIDService;
 

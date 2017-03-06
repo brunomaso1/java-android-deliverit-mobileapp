@@ -48,8 +48,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         this.getSupportActionBar().hide();
         setContentView(R.layout.home);
 
-        System.out.println("***** passwordhasheada = " + Operaciones.hashearPassword("abc") + " *****");
-
         apiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addConnectionCallbacks(this)

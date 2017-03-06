@@ -1,5 +1,6 @@
 package proyecto.ucu.deliverit.inicializacion;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -24,6 +25,7 @@ import proyecto.ucu.deliverit.entidades.Delivery;
 import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.entidades.Usuario;
 import proyecto.ucu.deliverit.entidades.Vehiculo;
+import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.tasks.CrearDeliveryTask;
 import proyecto.ucu.deliverit.tasks.CrearUsuarioTask;
 import proyecto.ucu.deliverit.utiles.Operaciones;
@@ -155,6 +157,11 @@ public class RegistroActivity extends AppCompatActivity {
                 try {
                     DB.insertarDelivery(delivery);
                     DB.insertarUbicacion(delivery.getUbicacion());
+                    SharedPref.guardarIdDelivery(RegistroActivity.this, delivery.getId());
+
+                    Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
+                    startActivity(intent);
+
                     finish();
                 } catch (SQLiteException e) {
                     Toast.makeText(RegistroActivity.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();

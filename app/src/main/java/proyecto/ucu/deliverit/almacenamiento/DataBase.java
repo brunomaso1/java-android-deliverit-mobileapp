@@ -235,7 +235,9 @@ public class DataBase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (getDireccion(direccion.getId()) == null) {
+        Direccion d = getDireccion(direccion.getId());
+
+        if (d == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Direccion._ID, direccion.getId());
@@ -276,7 +278,7 @@ public class DataBase extends SQLiteOpenHelper {
         Restaurant r = getRestaurant(restaurant.getId());
 
         // Si el restaurant no existe lo inserto
-        if (r == null) {
+        if (r.getRazonSocial() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Restaurant._ID, restaurant.getId());
@@ -295,7 +297,9 @@ public class DataBase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (getSucursal(sucursal.getId()) == null) {
+        Sucursal suc = getSucursal(sucursal.getId());
+
+        if (suc.getRestaurant() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(sucursal._ID, sucursal.getId());
@@ -315,7 +319,9 @@ public class DataBase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (getViaje(viaje.getId()) == null) {
+        Viaje v = getViaje(viaje.getId());
+
+        if (v.getRestaurant() == null && v.getSucursal() == null && v.getPrecio() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Viaje._ID, viaje.getId());
@@ -399,14 +405,26 @@ public class DataBase extends SQLiteOpenHelper {
                 null                                      // The sort order
         );
 
-        c.moveToFirst();
-        Integer precio = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
-        Integer idRestaurant = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_RESTAURANT));
-        Integer idSucursal = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_SUCURSAL));
+        Integer precio = null;
+        Integer idRestaurant = null;
+        Integer idSucursal = null;
+        while (c.moveToNext()) {
+            precio = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
+            idRestaurant = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_RESTAURANT));
+            idSucursal = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_SUCURSAL));
+        }
         c.close();
 
-        Restaurant restaurant = getRestaurant(idRestaurant);
-        Sucursal sucursal = getSucursal(idSucursal);
+        Restaurant restaurant = null;
+        Sucursal sucursal = null;
+        if (idRestaurant != null) {
+            restaurant = getRestaurant(idRestaurant);
+        }
+
+        if (idSucursal != null) {
+            sucursal = getSucursal(idSucursal);
+        }
+
         Viaje viaje = new Viaje();
         viaje.setId(idViaje);
         viaje.setPrecio(precio);
@@ -486,7 +504,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Restaurant.COLUMN_NAME_RAZON_SOCIAL
+                Restaurant._ID, Restaurant.COLUMN_NAME_RAZON_SOCIAL
         };
 
         String selection = Restaurant._ID + " = ?";
@@ -502,8 +520,13 @@ public class DataBase extends SQLiteOpenHelper {
                 null                                      // The sort order
         );
 
-        c.moveToFirst();
-        String razonSocial = c.getString(c.getColumnIndexOrThrow(Restaurant.COLUMN_NAME_RAZON_SOCIAL));
+        String razonSocial = null;
+        Integer id = null;
+
+        while (c.moveToNext()) {
+            razonSocial = c.getString(c.getColumnIndexOrThrow(Restaurant.COLUMN_NAME_RAZON_SOCIAL));
+        }
+
         c.close();
 
         Restaurant restaurant = new Restaurant();
@@ -517,7 +540,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Sucursal.COLUMN_NAME_DIRECCION, Sucursal.COLUMN_NOMBRE
+                Sucursal.COLUMN_NAME_DIRECCION, Sucursal.COLUMN_NOMBRE, Sucursal.COLUMN_NAME_RESTAURANT
         };
 
         String selection = Sucursal._ID + " = ?";
@@ -533,17 +556,32 @@ public class DataBase extends SQLiteOpenHelper {
                 null                                      // The sort order
         );
 
-        c.moveToFirst();
-        String nombre = c.getString(c.getColumnIndexOrThrow(Sucursal.COLUMN_NOMBRE));
-        Integer idDireccion = c.getInt(c.getColumnIndexOrThrow(Sucursal.COLUMN_NAME_DIRECCION));
+        String nombre = null;
+        Integer idDireccion = null;
+        Integer idRestaurant = null;
+        while (c.moveToNext()) {
+            nombre = c.getString(c.getColumnIndexOrThrow(Sucursal.COLUMN_NOMBRE));
+            idDireccion = c.getInt(c.getColumnIndexOrThrow(Sucursal.COLUMN_NAME_DIRECCION));
+            idRestaurant = c.getInt(c.getColumnIndexOrThrow(Sucursal.COLUMN_NAME_RESTAURANT));
+        }
         c.close();
 
-        Direccion direccion = getDireccion(idDireccion);
+        Direccion direccion = null;
+        Restaurant restaurant = null;
+
+        if (idDireccion != null) {
+            direccion = getDireccion(idDireccion);
+        }
+
+        if (idRestaurant != null) {
+            restaurant = getRestaurant(idRestaurant);
+        }
 
         Sucursal sucursal = new Sucursal();
         sucursal.setId(idSucursal);
         sucursal.setNombre(nombre);
         sucursal.setDireccion(direccion);
+        sucursal.setRestaurant(restaurant);
 
         return sucursal;
     }

@@ -15,6 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyANs732jcd-p7Uh3xF3T-xLWM3RgoA1pzA"/>
+
         <service
             android:enabled="true"
             android:name=".servicios.ConsultaViajes"></service>

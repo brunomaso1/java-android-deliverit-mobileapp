@@ -87,7 +87,6 @@ public class NotificacionActivity extends AppCompatActivity {
         aceptar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Se ha solicitado el viaje", Toast.LENGTH_LONG).show();
                 new AceptarViajeTask(NotificacionActivity.this,
                         (int)SharedPref.getIdDelivery(NotificacionActivity.this), viaje.getId()).execute();
             }
@@ -95,7 +94,11 @@ public class NotificacionActivity extends AppCompatActivity {
     }
 
     public void aceptarTaskRetorno(Integer retorno) {
-        System.out.println("***** retorno = " + retorno);
+        if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
+            Toast.makeText(NotificacionActivity.this, "**** Viaje asignado ****", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(NotificacionActivity.this, "**** El viaje ya fue tomado ****", Toast.LENGTH_LONG).show();
+        }
         finish();
     }
 }

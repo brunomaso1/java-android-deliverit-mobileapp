@@ -2,8 +2,11 @@ package proyecto.ucu.deliverit.tasks;
 
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -12,6 +15,7 @@ import okhttp3.Response;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
+import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 
 /**
  * Created by JMArtegoytia on 24/02/2017.
@@ -32,22 +36,18 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.42:8080/BackCore/ws/viaje/aceptarViaje";
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("somParam", "someValue")
-                .build();
+        String url = "http://192.168.1.47:8080/BackCore/ws/viaje/aceptarViaje/" + idViaje + "/" + idDelivery;
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "");
 
         Request request = new Request.Builder()
                 .url(url)
-                .method("POST", RequestBody.create(null, new byte[0]))
-                .post(requestBody)
+                .post(body)
                 .build();
 
-        Response response;
         try {
-            response = client.newCall(request).execute();
-            activityPadre.aceptarTaskRetorno(Integer.parseInt(response.body().toString()));
+            client.newCall(request).execute();
+            activityPadre.aceptarTaskRetorno(0);
         } catch (IOException e) {
             e.printStackTrace();
             activityPadre.aceptarTaskRetorno(-1);

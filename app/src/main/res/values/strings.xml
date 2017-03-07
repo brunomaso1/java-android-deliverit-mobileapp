@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DeliverIT</string>
     <string name="ingresar_texto">Ingresar</string>
+    <string name="finalizar_texto">Finalizar</string>
     <string name="guardar">Guardar</string>
     <string name="registrarse_texto">Registrarme</string>
     <string name="aceptar">Aceptar</string>

@@ -95,7 +95,8 @@ public class NotificacionActivity extends AppCompatActivity {
 
     public void aceptarTaskRetorno(Integer retorno) {
         if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
-            Toast.makeText(NotificacionActivity.this, "**** Viaje asignado ****", Toast.LENGTH_LONG).show();
+            SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
+
         } else {
             Toast.makeText(NotificacionActivity.this, "**** El viaje ya fue tomado ****", Toast.LENGTH_LONG).show();
         }

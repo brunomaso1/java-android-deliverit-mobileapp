@@ -22,6 +22,8 @@ public class SharedPref {
 
     private static final String CONTADOR_NOTIFICACION = "contador_notificacion";
 
+    private static final String VIAJE_EN_CURSO = "viaje_en_curso";
+
     public static long getIdDelivery (Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         long idDelivery = sharedPref.getLong(ID_DELIVERY, 0);
@@ -79,6 +81,18 @@ public class SharedPref {
     public static void guardarContadorNotificacion (Context context, Integer contador) {
         SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE).edit();
         editor.putInt(CONTADOR_NOTIFICACION, contador);
+        editor.commit();
+    }
+
+    public static Integer getViajeEnCurso (Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        Integer viajeEnCurso = sharedPref.getInt(VIAJE_EN_CURSO, 0);
+        return viajeEnCurso;
+    }
+
+    public static void guardarViajeEnCurso (Context context, Integer viajeEnCurso) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE).edit();
+        editor.putInt(VIAJE_EN_CURSO, viajeEnCurso);
         editor.commit();
     }
 }

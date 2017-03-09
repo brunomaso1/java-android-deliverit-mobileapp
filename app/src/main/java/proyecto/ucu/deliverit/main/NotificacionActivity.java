@@ -53,7 +53,7 @@ public class NotificacionActivity extends AppCompatActivity {
         aceptar_btn = (Button) findViewById(R.id.aceptar_btn);
         rechazar_btn = (Button) findViewById(R.id.rechazar_btn);
 
-        Intent intent = getIntent();
+        Intent intent =  getIntent();
         Integer idViaje = intent.getIntExtra(Valores.VIAJE, 0);
 
         if (idViaje != 0) {

@@ -19,6 +19,7 @@ public class Delivery implements BaseColumns {
     private Vehiculo vehiculo;
     private Usuario usuario;
     private Ubicacion ubicacion;
+    private Short calificacion;
 
     public Integer getId() {
         return id;
@@ -58,5 +59,13 @@ public class Delivery implements BaseColumns {
 
     public void setUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;
+    }
+
+    public Short getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Short calificacion) {
+        this.calificacion = calificacion;
     }
 }

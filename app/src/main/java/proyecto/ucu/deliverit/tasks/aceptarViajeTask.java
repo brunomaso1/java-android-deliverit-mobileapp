@@ -36,7 +36,7 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.47:8080/BackCore/ws/viaje/aceptarViaje/" + idViaje + "/" + idDelivery;
+        String url = "http://192.168.1.45:8080/BackCore/ws/viaje/aceptarViaje/" + idViaje + "/" + idDelivery;
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "");
 

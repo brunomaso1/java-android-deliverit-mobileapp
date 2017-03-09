@@ -237,7 +237,7 @@ public class DataBase extends SQLiteOpenHelper {
 
         Direccion d = getDireccion(direccion.getId());
 
-        if (d == null) {
+        if (d.getCalle() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Direccion._ID, direccion.getId());
@@ -606,10 +606,14 @@ public class DataBase extends SQLiteOpenHelper {
                 null                                      // The sort order
         );
 
-        c.moveToFirst();
-        String calle = c.getString(c.getColumnIndexOrThrow(Direccion.COLUMN_NAME_CALLE));
-        Integer nroPuerta = c.getInt(c.getColumnIndexOrThrow(Direccion.COLUMN_NAME_NRO_PUERTA));
-        String esquina = c.getString(c.getColumnIndexOrThrow(Direccion.COLUMN_NAME_ESQUINA));
+        String calle = null;
+        Integer nroPuerta = null;
+        String esquina = null;
+        while (c.moveToNext()) {
+            calle = c.getString(c.getColumnIndexOrThrow(Direccion.COLUMN_NAME_CALLE));
+            nroPuerta = c.getInt(c.getColumnIndexOrThrow(Direccion.COLUMN_NAME_NRO_PUERTA));
+            esquina = c.getString(c.getColumnIndexOrThrow(Direccion.COLUMN_NAME_ESQUINA));
+        }
         c.close();
 
         Direccion direccion = new Direccion();

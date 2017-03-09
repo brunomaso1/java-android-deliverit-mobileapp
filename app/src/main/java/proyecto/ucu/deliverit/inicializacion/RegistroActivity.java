@@ -127,6 +127,7 @@ public class RegistroActivity extends AppCompatActivity {
                     Delivery delivery = new Delivery();
                     delivery.setToken(SharedPref.getToken(RegistroActivity.this));
                     delivery.setUsuario(usuario);
+                    delivery.setCalificacion((short)5);
                     delivery.setVehiculo(vehiculoSeleccionado);
                     Ubicacion ubicacion = new Ubicacion();
                     ubicacion.setLatitud(SharedPref.getLatitud(RegistroActivity.this));

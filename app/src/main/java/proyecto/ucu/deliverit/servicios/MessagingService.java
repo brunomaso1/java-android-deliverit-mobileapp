@@ -19,6 +19,7 @@ import java.util.Map;
 
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
+import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Direccion;
 import proyecto.ucu.deliverit.entidades.Restaurant;
 import proyecto.ucu.deliverit.entidades.Sucursal;
@@ -74,6 +75,7 @@ public class MessagingService extends FirebaseMessagingService {
 
             try {
                 DataBase db = new DataBase(MessagingService.this);
+
                 db.insertarDireccion(direccion);
                 db.insertarRestaurant(restaurant);
                 db.insertarSucursal(sucursal);
@@ -89,11 +91,14 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     private void crearNotificacion(Viaje viaje) {
-        Intent i = new Intent(this, NotificacionActivity.class);
+        Intent i = new Intent(getApplicationContext(), NotificacionActivity.class);
         i.putExtra(Valores.NOTIFICATOIN_ID_TEXTO, Valores.NOTIFICATION_ID);
         i.putExtra(Valores.VIAJE, viaje.getId());
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
+        Integer contadorNotificaciones = SharedPref.getContadorNotificacion(getApplicationContext());
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, contadorNotificaciones, i, 0);
+        SharedPref.guardarContadorNotificacion(getApplicationContext(), contadorNotificaciones + 1);
         NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
         CharSequence ticker = "Ver Viaje";
@@ -101,7 +106,7 @@ public class MessagingService extends FirebaseMessagingService {
         CharSequence contentText = Valores.VIAJE_PARA_TI;
         Notification notificacion = new NotificationCompat.Builder(this)
                 .setContentIntent(pendingIntent)
-                .setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/facebook_ringtone_pop"))
+                .setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/jingle"))
                 .setTicker(ticker)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)

@@ -13,6 +13,7 @@ import okhttp3.RequestBody;
 import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.inicializacion.HomeActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
+import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
  * Created by JMArtegoytia on 04/03/2017.
@@ -31,7 +32,7 @@ public class EditarUbicacionTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.45:8080/BackCore/ws/ubicacion/" + ubicacion.getId();
+        String url = Valores.URL_WS + ubicacion.getClass().getName().toLowerCase() + Valores.BARRA_DIAGONAL + ubicacion.getId();
 
         Gson gson = new Gson();
         String objeto = gson.toJson(this.ubicacion);

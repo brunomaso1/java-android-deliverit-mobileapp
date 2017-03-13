@@ -15,6 +15,7 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.sql.SQLOutput;
+import java.util.List;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -23,6 +24,7 @@ import okhttp3.Response;
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
+import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.tasks.AceptarViajeTask;
 import proyecto.ucu.deliverit.utiles.Valores;
@@ -101,5 +103,9 @@ public class NotificacionActivity extends AppCompatActivity {
             Toast.makeText(NotificacionActivity.this, "**** El viaje ya fue tomado ****", Toast.LENGTH_LONG).show();
         }
         finish();
+    }
+
+    public void obtenerPedidosPorViajeTaskRetorno(List<Pedido> pedidos) {
+
     }
 }

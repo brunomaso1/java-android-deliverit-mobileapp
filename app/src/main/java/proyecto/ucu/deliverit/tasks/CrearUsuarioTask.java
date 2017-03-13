@@ -14,6 +14,7 @@ import okhttp3.Response;
 import proyecto.ucu.deliverit.entidades.Usuario;
 import proyecto.ucu.deliverit.inicializacion.RegistroActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
+import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
  * Created by DeliverIT on 03/03/2017.
@@ -32,7 +33,7 @@ public class CrearUsuarioTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://192.168.1.45:8080/BackCore/ws/usuario";
+        String url = Valores.URL_WS + usuario.getClass().getName().toLowerCase();
 
         Gson gson = new Gson();
         String objeto = gson.toJson(this.usuario);

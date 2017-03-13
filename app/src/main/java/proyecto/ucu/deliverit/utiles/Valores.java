@@ -48,4 +48,10 @@ public class Valores {
     public static final String SUCURSAL_SUCURSAL_PK = "sucursalPK";
 
     public static final String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
+
+    public static final String URL_WS = "http://192.168.43.171:8080/BackCore/ws/";
+    public static final String URL_ACEPAR_VIAJE = URL_WS + " viaje/aceptarViaje/";
+    public static final String URL_FINALIZAR_VIAJE = URL_WS + "viaje/finalizarViaje/";
+    public static final String URL_OBTENER_PEDIDOS_POR_VIAJE = URL_WS + "findPedidosPorViaje/";
+    public static final String BARRA_DIAGONAL = "/";
 }

@@ -5,31 +5,28 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import proyecto.ucu.deliverit.almacenamiento.SharedPref;
-import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
- * Created by JMArtegoytia on 24/02/2017.
+ * Created by DeliverIT on 13/03/2017.
  */
 
-public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
+public class ObtenerPedidosPorViajeTask extends AsyncTask<Void, Void, Void> {
     NotificacionActivity activityPadre;
-    Integer idDelivery;
     Integer idViaje;
 
-    public AceptarViajeTask(NotificacionActivity activityPadre, Integer idDelivery, Integer idViaje) {
+    public ObtenerPedidosPorViajeTask(NotificacionActivity activityPadre, Integer idViaje) {
         this.activityPadre = activityPadre;
-        this.idDelivery = idDelivery;
         this.idViaje = idViaje;
     }
 
@@ -37,7 +34,7 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = Valores.URL_ACEPAR_VIAJE + idViaje + Valores.BARRA_DIAGONAL + idDelivery;
+        String url = Valores.URL_OBTENER_PEDIDOS_POR_VIAJE + idViaje;
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "");
 
@@ -46,12 +43,16 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
                 .post(body)
                 .build();
 
+        Response response;
         try {
-            client.newCall(request).execute();
-            activityPadre.aceptarTaskRetorno(0);
+            response = client.newCall(request).execute();
+            Gson gson = new Gson();
+            List<Pedido> pedidos = gson.fromJson(response.body().string(), List.class);
+
+            activityPadre.obtenerPedidosPorViajeTaskRetorno(pedidos);
         } catch (IOException e) {
             e.printStackTrace();
-            activityPadre.aceptarTaskRetorno(-1);
+            activityPadre.obtenerPedidosPorViajeTaskRetorno(null);
         }
         return null;
     }

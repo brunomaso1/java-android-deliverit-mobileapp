@@ -16,4 +16,5 @@
     <string name="no_se_pudo_obtener_vehiculos">No se pudo obtener vehículos de la base de datos</string>
     <string name="no_se_pudo_realizar_la_operacion">No se pudo realizar la operación</string>
     <string name="problema_de_conexion_con_google">Se produjo un problema en la conexión con los servicios de Google</string>
+    <string name="viaje_tomado">Este Viaje ya fue tomado</string>
 </resources>

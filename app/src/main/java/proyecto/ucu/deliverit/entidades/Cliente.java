@@ -14,7 +14,7 @@ public class Cliente implements BaseColumns {
 
     private Integer id;
     private String nombre;
-    private Integer direccion;
+    private Direccion direccion;
     private String telefono;
 
     public String getNombre() {
@@ -23,14 +23,6 @@ public class Cliente implements BaseColumns {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Integer getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(Integer direccion) {
-        this.direccion = direccion;
     }
 
     public String getTelefono() {
@@ -47,6 +39,14 @@ public class Cliente implements BaseColumns {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Direccion getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Direccion direccion) {
+        this.direccion = direccion;
     }
 }
 

@@ -23,6 +23,7 @@ import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Direccion;
 import proyecto.ucu.deliverit.entidades.Restaurant;
 import proyecto.ucu.deliverit.entidades.Sucursal;
+import proyecto.ucu.deliverit.entidades.Usuario;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.Valores;
@@ -49,6 +50,11 @@ public class MessagingService extends FirebaseMessagingService {
             JSONObject sucursalJSON = viajeJSON.getJSONObject(Viaje.SUCURSAL);
             JSONObject direccionJSON = sucursalJSON.getJSONObject(Valores.SUCURSAL_DIRECCION);
             JSONObject restaurantJSON = sucursalJSON.getJSONObject(Valores.SUCURSAL_RESTAURANT);
+            JSONObject usuarioJSON = restaurantJSON.getJSONObject(Valores.RESTAURANT_USUARIO);
+
+            Usuario usuario = new Usuario();
+            usuario.setId(usuarioJSON.getInt(Valores.USUARIO_ID));
+            usuario.setTelefono(usuarioJSON.getString(Valores.USUARIO_TELEFONO));
 
             Direccion direccion = new Direccion();
             direccion.setId(direccionJSON.getInt(Valores.DIRECCION_ID));
@@ -63,6 +69,7 @@ public class MessagingService extends FirebaseMessagingService {
             restaurant.setId(restaurantJSON.getInt(Valores.RESTARURAN_ID));
             restaurant.setRazonSocial(restaurantJSON.getString(Valores.RESTAURANT_RAZON_SOCIAL));
             restaurant.setRut(restaurantJSON.getInt(Valores.RESTAURANT_RUT));
+            restaurant.setUsuario(usuario);
 
             Sucursal sucursal = new Sucursal();
             sucursal.setId(sucursalJSON.getJSONObject(Valores.SUCURSAL_SUCURSAL_PK).getInt(Valores.SUCURSAL_ID));
@@ -76,6 +83,7 @@ public class MessagingService extends FirebaseMessagingService {
             try {
                 DataBase db = new DataBase(MessagingService.this);
 
+                db.insertarUsuario(usuario);
                 db.insertarDireccion(direccion);
                 db.insertarRestaurant(restaurant);
                 db.insertarSucursal(sucursal);

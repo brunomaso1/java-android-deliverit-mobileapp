@@ -78,7 +78,8 @@ public class DataBase extends SQLiteOpenHelper {
             = "CREATE TABLE " + Restaurant.TABLE_NAME + " (" +
             Restaurant._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Restaurant.COLUMN_NAME_RUT + TYPE_BIG_INT + NOT_NULL + ","
-            + Restaurant.COLUMN_NAME_RAZON_SOCIAL + TYPE_TEXT + ")";
+            + Restaurant.COLUMN_NAME_RAZON_SOCIAL + TYPE_TEXT + ","
+            + Restaurant.COLUMN_NAME_USUARIO + TYPE_INTEGER + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_SUCURSAL
             = "CREATE TABLE " + Sucursal.TABLE_NAME + " (" +
@@ -237,7 +238,8 @@ public class DataBase extends SQLiteOpenHelper {
 
         Direccion d = getDireccion(direccion.getId());
 
-        if (d.getCalle() == null) {
+        // Si la dirección no existe se la inserta
+        if (d.getId() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Direccion._ID, direccion.getId());
@@ -260,15 +262,22 @@ public class DataBase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(Cliente._ID, cliente.getId());
-        values.put(Cliente.COLUMN_NAME_NOMBRE, cliente.getNombre());
-        values.put(Cliente.COLUMN_NAME_DIRECCION, cliente.getDireccion());
-        values.put(Cliente.COLUMN_NAME_TELEFONO, cliente.getTelefono());
+        Cliente c = getCliente(cliente.getId());
 
-        // Insert the new row, returning the primary key value of the new row
-        return db.insert(Cliente.TABLE_NAME, null, values);
+        // Si el cliente no existe se lo inserta
+        if (c.getId() == null) {
+            // Create a new map of values, where column names are the keys
+            ContentValues values = new ContentValues();
+            values.put(Cliente._ID, cliente.getId());
+            values.put(Cliente.COLUMN_NAME_NOMBRE, cliente.getNombre());
+            values.put(Cliente.COLUMN_NAME_DIRECCION, cliente.getDireccion().getId());
+            values.put(Cliente.COLUMN_NAME_TELEFONO, cliente.getTelefono());
+
+            // Insert the new row, returning the primary key value of the new row
+            return db.insert(Cliente.TABLE_NAME, null, values);
+        } else {
+            return 0;
+        }
     }
 
     public long insertarRestaurant(Restaurant restaurant) throws SQLiteException {
@@ -277,8 +286,8 @@ public class DataBase extends SQLiteOpenHelper {
 
         Restaurant r = getRestaurant(restaurant.getId());
 
-        // Si el restaurant no existe lo inserto
-        if (r.getRazonSocial() == null) {
+        // Si el restaurant no existe se lo inserta
+        if (r.getId() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Restaurant._ID, restaurant.getId());
@@ -299,7 +308,8 @@ public class DataBase extends SQLiteOpenHelper {
 
         Sucursal suc = getSucursal(sucursal.getId());
 
-        if (suc.getRestaurant() == null) {
+        // Si la sucursal no existe se la inserta
+        if (suc.getId() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(sucursal._ID, sucursal.getId());
@@ -321,7 +331,8 @@ public class DataBase extends SQLiteOpenHelper {
 
         Viaje v = getViaje(viaje.getId());
 
-        if (v.getRestaurant() == null && v.getSucursal() == null && v.getPrecio() == null) {
+        // Si el viaje no existe se lo inserta
+        if (v.getId() == null) {
             // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Viaje._ID, viaje.getId());
@@ -342,16 +353,66 @@ public class DataBase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(Pedido._ID, pedido.getId());
-        values.put(Pedido.COLUMN_NAME_CLIENTE, pedido.getCliente().getId());
-        values.put(Pedido.COLUMN_NAME_DETALLE, pedido.getDetalle());
-        values.put(Pedido.COLUMN_NAME_FORMA_PAGO, pedido.getFormaPago());
-        values.put(Pedido.COLUMN_NAME_VIAJE, pedido.getViaje().getId());
+        Pedido p = getPedido(pedido.getId());
 
-        // Insert the new row, returning the primary key value of the new row
-        return db.insert(Pedido.TABLE_NAME, null, values);
+        // Si el pedido no existe se lo inserta
+        if (p.getId() == null) {
+
+            // Create a new map of values, where column names are the keys
+            ContentValues values = new ContentValues();
+            values.put(Pedido._ID, pedido.getId());
+            values.put(Pedido.COLUMN_NAME_CLIENTE, pedido.getCliente().getId());
+            values.put(Pedido.COLUMN_NAME_DETALLE, pedido.getDetalle());
+            values.put(Pedido.COLUMN_NAME_FORMA_PAGO, pedido.getFormaPago());
+            values.put(Pedido.COLUMN_NAME_VIAJE, pedido.getViaje().getId());
+
+            // Insert the new row, returning the primary key value of the new row
+            return db.insert(Pedido.TABLE_NAME, null, values);
+        } else {
+            return 0;
+        }
+    }
+
+    public void eliminarViaje(Integer idViaje) throws SQLiteException {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = Viaje._ID + " = ?";
+
+        // Specify arguments in placeholder order.
+        String[] selectionArgs = { String.valueOf(idViaje) };
+
+        // Issue SQL statement.
+        db.delete(Viaje.TABLE_NAME, selection, selectionArgs);
+
+    }
+
+    public void eliminarPedido(Integer idPedido) throws SQLiteException {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selection = Pedido._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(idPedido) };
+        db.delete(Pedido.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public void eliminarCliente(Integer idCliente) throws SQLiteException {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selection = Cliente._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(idCliente) };
+        db.delete(Cliente.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public void eliminarDireccion(Integer idDireccion) throws SQLiteException {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selection = Direccion._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(idDireccion) };
+        db.delete(Direccion.TABLE_NAME, selection, selectionArgs);
     }
 
     public Ubicacion getUbicacion() throws SQLiteException {
@@ -389,7 +450,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_RESTAURANT, Viaje.COLUMN_NAME_SUCURSAL
+                Viaje._ID, Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_RESTAURANT, Viaje.COLUMN_NAME_SUCURSAL
         };
 
         String selection = Viaje._ID + " = ?";
@@ -434,6 +495,61 @@ public class DataBase extends SQLiteOpenHelper {
         return viaje;
     }
 
+    public Pedido getPedido(Integer idPedido) throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Pedido._ID, Pedido.COLUMN_NAME_DETALLE, Pedido.COLUMN_NAME_VIAJE, Pedido.COLUMN_NAME_CLIENTE,
+                Pedido.COLUMN_NAME_FORMA_PAGO
+        };
+
+        String selection = Pedido._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(idPedido) };
+
+        Cursor c = db.query(
+                Pedido.TABLE_NAME,                        // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        String detalle = null;
+        String formaPàgo = null;
+        Integer idViaje = null;
+        Integer idCliente = null;
+        while (c.moveToNext()) {
+            detalle = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_DETALLE));
+            formaPàgo = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_FORMA_PAGO));
+            idViaje = c.getInt(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_VIAJE));
+            idCliente = c.getInt(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_CLIENTE));
+        }
+        c.close();
+
+        Viaje viaje = null;
+
+        if (idViaje != null) {
+            viaje = getViaje(idViaje);
+        }
+
+        Cliente cliente = null;
+
+        if (idCliente != null) {
+            cliente = getCliente(idCliente);
+        }
+
+        Pedido pedido = new Pedido();
+        pedido.setId(idPedido);
+        pedido.setDetalle(detalle);
+        pedido.setFormaPago(formaPàgo);
+        pedido.setViaje(viaje);
+        pedido.setCliente(cliente);
+
+        return pedido;
+    }
+
     public Vehiculo getVehiculo(String desc) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -463,6 +579,51 @@ public class DataBase extends SQLiteOpenHelper {
         vehiculo.setDescripcion(desc);
 
         return vehiculo;
+    }
+
+    public Cliente getCliente(Integer idCliente) throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Cliente._ID, Cliente.COLUMN_NAME_NOMBRE, Cliente.COLUMN_NAME_TELEFONO, Cliente.COLUMN_NAME_DIRECCION
+        };
+
+        String selection = Cliente._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(idCliente) };
+
+        Cursor c = db.query(
+                Cliente.TABLE_NAME,                       // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        String nombre = null;
+        String telefono = null;
+        Integer idDireccion = null;
+        while (c.moveToNext()) {
+            nombre = c.getString(c.getColumnIndexOrThrow(Cliente.COLUMN_NAME_NOMBRE));
+            telefono = c.getString(c.getColumnIndexOrThrow(Cliente.COLUMN_NAME_TELEFONO));
+            idDireccion = c.getInt(c.getColumnIndexOrThrow(Cliente.COLUMN_NAME_DIRECCION));
+        }
+        c.close();
+
+        Direccion direccion = null;
+
+        if (idDireccion != null) {
+            direccion = getDireccion(idDireccion);
+        }
+
+        Cliente cliente = new Cliente();
+        cliente.setId(idCliente);
+        cliente.setNombre(nombre);
+        cliente.setTelefono(telefono);
+        cliente.setDireccion(direccion);
+
+        return cliente;
     }
 
     public List<Vehiculo> getVehiculos() throws SQLiteException {
@@ -540,7 +701,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Sucursal.COLUMN_NAME_DIRECCION, Sucursal.COLUMN_NOMBRE, Sucursal.COLUMN_NAME_RESTAURANT
+                Sucursal._ID, Sucursal.COLUMN_NAME_DIRECCION, Sucursal.COLUMN_NOMBRE, Sucursal.COLUMN_NAME_RESTAURANT
         };
 
         String selection = Sucursal._ID + " = ?";
@@ -590,7 +751,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Direccion.COLUMN_NAME_CALLE, Direccion.COLUMN_NAME_NRO_PUERTA, Direccion.COLUMN_NAME_ESQUINA
+                Direccion._ID, Direccion.COLUMN_NAME_CALLE, Direccion.COLUMN_NAME_NRO_PUERTA, Direccion.COLUMN_NAME_ESQUINA
         };
 
         String selection = Direccion._ID + " = ?";

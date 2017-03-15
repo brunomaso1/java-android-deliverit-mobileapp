@@ -8,48 +8,57 @@
 
     <include layout="@layout/default_layout_con_icono_mapa"/>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="10"
-        android:padding="10dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
-            android:weightSum="3"
+            android:layout_height="match_parent"
+            android:weightSum="10"
+            android:padding="10dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/razonSocial_tv"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:text="Razón Social"
-                android:textSize="20dp"
-                android:textColor="@color/black"/>
+                android:layout_weight="8"
+                android:weightSum="4"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/direccion_tv"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:text="Dirección"
-                android:textSize="20dp"
-                android:textColor="@color/black"/>
+                <ImageView
+                    android:id="@+id/restaurant_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
 
-            <TextView
-                android:id="@+id/precio_tv"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:text="Precio por viaje: "
-                android:textSize="20dp"
-                android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/razonSocial_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:text="Razón Social"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"/>
 
+                <TextView
+                    android:id="@+id/direccion_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:text="Dirección"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"/>
 
+                <TextView
+                    android:id="@+id/precio_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:text="Precio por viaje: "
+                    android:textSize="20dp"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -81,6 +90,10 @@
 
             </LinearLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+
 
 </LinearLayout>

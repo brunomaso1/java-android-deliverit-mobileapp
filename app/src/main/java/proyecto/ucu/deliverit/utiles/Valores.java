@@ -45,13 +45,18 @@ public class Valores {
     public static final String SUCURSAL_ID = "id";
     public static final String SUCURSAL_DIRECCION = "direccion";
     public static final String SUCURSAL_RESTAURANT = "restaurant";
+    public static final String RESTAURANT_USUARIO = "usuario";
     public static final String SUCURSAL_SUCURSAL_PK = "sucursalPK";
+
+    public static final String USUARIO_ID = "id";
+    public static final String USUARIO_TELEFONO = "telefono";
+    public static final String USUARIO_FOTO = "foto";
 
     public static final String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
 
     public static final String URL_WS = "http://192.168.43.171:8080/BackCore/ws/";
     public static final String URL_ACEPAR_VIAJE = URL_WS + " viaje/aceptarViaje/";
     public static final String URL_FINALIZAR_VIAJE = URL_WS + "viaje/finalizarViaje/";
-    public static final String URL_OBTENER_PEDIDOS_POR_VIAJE = URL_WS + "findPedidosPorViaje/";
+    public static final String URL_OBTENER_PEDIDOS_POR_VIAJE = URL_WS + "pedido/findPedidosPorViaje/";
     public static final String BARRA_DIAGONAL = "/";
 }

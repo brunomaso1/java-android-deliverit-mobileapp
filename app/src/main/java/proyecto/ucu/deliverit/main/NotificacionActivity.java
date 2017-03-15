@@ -8,6 +8,7 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import proyecto.ucu.deliverit.utiles.Valores;
 public class NotificacionActivity extends AppCompatActivity {
     TextView razonSocial_tv, direccion_tv, precio_tv;
     Button aceptar_btn, rechazar_btn;
+    ImageButton mapa_ibtn;
 
     DataBase DB;
 
@@ -54,6 +56,7 @@ public class NotificacionActivity extends AppCompatActivity {
         precio_tv = (TextView) findViewById(R.id.precio_tv);
         aceptar_btn = (Button) findViewById(R.id.aceptar_btn);
         rechazar_btn = (Button) findViewById(R.id.rechazar_btn);
+        mapa_ibtn = (ImageButton) findViewById(R.id.mapa_ibtn);
 
         Intent intent =  getIntent();
         Integer idViaje = intent.getIntExtra(Valores.VIAJE, 0);

@@ -38,7 +38,6 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String TYPE_TEXT = " TEXT";
     private static final String TYPE_INTEGER = " INTEGER";
     private static final String TYPE_BIG_INT = " BIGINT";
-    private static final String TYPE_BLOB = " BLOB";
     private static final String TYPE_SMALLINT = " SMALLINT";
     private static final String TYPE_DOUBLE = " DOUBLE";
 
@@ -54,7 +53,7 @@ public class DataBase extends SQLiteOpenHelper {
                     + Usuario.COLUMN_NAME_MAIL + TYPE_TEXT + ","
                     + Usuario.COLUMN_NAME_TELEFONO + TYPE_INTEGER + NOT_NULL + ","
                     + Usuario.COLUMN_NAME_CUENTA_RED_PAGOS + TYPE_INTEGER + NOT_NULL + ","
-                    + Usuario.COLUMN_NAME_FOTO_PERFIL + TYPE_BLOB + ")";
+                    + Usuario.COLUMN_NAME_FOTO_PERFIL + TYPE_TEXT + ")";
 
     private static final String SQL_CREATE_TABLE_DELIVERY
             = "CREATE TABLE " + Delivery.TABLE_NAME + " (" +
@@ -548,6 +547,57 @@ public class DataBase extends SQLiteOpenHelper {
         pedido.setCliente(cliente);
 
         return pedido;
+    }
+
+    public List<Pedido> getPedidos(Integer idViaje) throws SQLiteException {
+        List<Pedido> pedidos = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Pedido._ID, Pedido.COLUMN_NAME_DETALLE, Pedido.COLUMN_NAME_VIAJE, Pedido.COLUMN_NAME_CLIENTE,
+                Pedido.COLUMN_NAME_FORMA_PAGO
+        };
+
+        String selection = Pedido.COLUMN_NAME_VIAJE + " = ?";
+        String[] selectionArgs = { String.valueOf(idViaje) };
+
+        Cursor c = db.query(
+                Pedido.TABLE_NAME,                        // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        String detalle = null;
+        Integer idPedido = null;
+        String formaPàgo = null;
+        Integer idCliente = null;
+        while (c.moveToNext()) {
+            idPedido = c.getInt(c.getColumnIndexOrThrow(Pedido._ID));
+            detalle = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_DETALLE));
+            formaPàgo = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_FORMA_PAGO));
+            idCliente = c.getInt(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_CLIENTE));
+
+            Viaje viaje = getViaje(idViaje);
+            Cliente cliente = getCliente(idCliente);
+
+            Pedido pedido = new Pedido();
+            pedido.setId(idPedido);
+            pedido.setViaje(viaje);
+            pedido.setDetalle(detalle);
+            pedido.setFormaPago(formaPàgo);
+            pedido.setCliente(cliente);
+
+            pedidos.add(pedido);
+
+        }
+        c.close();
+
+        return pedidos;
     }
 
     public Vehiculo getVehiculo(String desc) throws SQLiteException {

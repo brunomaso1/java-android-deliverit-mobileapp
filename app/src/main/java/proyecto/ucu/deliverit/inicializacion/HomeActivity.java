@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
@@ -24,6 +25,7 @@ import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.main.MainActivity;
+import proyecto.ucu.deliverit.main.RecorridoActivity;
 import proyecto.ucu.deliverit.tasks.EditarUbicacionTask;
 import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
@@ -33,7 +35,7 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
  */
 
 public class HomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks {
+        GoogleApiClient.ConnectionCallbacks, LocationListener {
     private final int PETICION_PERMISO_LOCALIZACION = 1000;
 
     private DataBase DB;
@@ -120,6 +122,22 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
+    public void onLocationChanged(Location location) {
+        DB = new DataBase(HomeActivity.this);
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setLatitud(location.getLatitude());
+        ubicacion.setLongitud(location.getLongitude());
+
+        try {
+            DB.actualizarUbicacion(ubicacion);
+
+            new EditarUbicacionTask(HomeActivity.this, ubicacion).execute();
+        } catch (SQLiteException e) {
+            Toast.makeText(HomeActivity.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PETICION_PERMISO_LOCALIZACION) {
             if (grantResults.length == 1
@@ -159,36 +177,4 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             Toast.makeText(HomeActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_SHORT).show();
         }
     }
-
-  /*  private void enviarUbicacion(Location location) {
-        DataBase DB = new DataBase(HomeActivity.this);
-        Ubicacion ubicacion = DB.getUbicacion();
-        new EditarUbicacionTask(HomeActivity.this, ubicacion).execute();
-    }  */
-
-   /* public void crearUbicacionTaskRetorno(RespuestaGeneral respuesta) {
-        if (respuesta != null) {
-
-            // Si se inserto la Ubicación en la base del sistema
-            if (respuesta.getCodigo().equals(RespuestaGeneral.CODIGO_OK)) {
-                Gson gson = new Gson();
-                Ubicacion ubicacion = gson.fromJson(respuesta.getObjeto(), Ubicacion.class);
-
-                try {
-                    // Insertamos la ubicación en la base del dispositivo
-                    DB = new DataBase(HomeActivity.this);
-                    DB.insertarUbicacion(ubicacion);
-                } catch (SQLiteException e) {
-                    Toast.makeText(HomeActivity.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(HomeActivity.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
-                }
-
-            } else {
-                Toast.makeText(HomeActivity.this, respuesta.getMensaje(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(HomeActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_SHORT).show();
-        }
-    }  */
 }

@@ -21,7 +21,7 @@ public class Usuario implements BaseColumns {
     private String telefono;
     private String mail;
     private Integer cuentaRedPagos;
-    private byte[] foto;
+    private String foto;
 
 
     public Usuario() {
@@ -75,11 +75,11 @@ public class Usuario implements BaseColumns {
         this.nombre = nombre;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 }

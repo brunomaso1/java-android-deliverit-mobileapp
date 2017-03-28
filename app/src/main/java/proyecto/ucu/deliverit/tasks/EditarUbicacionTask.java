@@ -1,6 +1,8 @@
 package proyecto.ucu.deliverit.tasks;
 
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
@@ -16,7 +18,7 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
- * Created by JMArtegoytia on 04/03/2017.
+ * Created by DeliverIT on 04/03/2017.
  */
 
 public class EditarUbicacionTask extends AsyncTask<Void, Void, Void> {

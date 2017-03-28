@@ -1,9 +1,8 @@
 package proyecto.ucu.deliverit.utiles;
 
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import android.util.Base64;
+
 
 /**
  * Created by DeliverIT on 31/01/2017.
@@ -117,6 +116,10 @@ public class Operaciones {
 
     public static boolean tieneCaracteresEspeciales(String cadena) {
         return cadena.matches(".*[^a-z0-9].*");
+    }
+
+    public static byte[] decodeImage (String base64img) {
+        return Base64.decode(base64img, Base64.DEFAULT);
     }
 
 }

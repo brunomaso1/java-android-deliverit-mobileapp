@@ -20,10 +20,6 @@
             android:value="AIzaSyANs732jcd-p7Uh3xF3T-xLWM3RgoA1pzA"/>
 
         <service
-            android:enabled="true"
-            android:name=".servicios.ConsultaViajes"></service>
-
-        <service
             android:name=".servicios.InstanceIDService"
             android:exported="false">
             <intent-filter>

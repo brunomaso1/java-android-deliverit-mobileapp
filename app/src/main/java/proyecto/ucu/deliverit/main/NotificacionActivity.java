@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -15,23 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.List;
 
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.inicializacion.HomeActivity;
+import proyecto.ucu.deliverit.inicializacion.RegistroActivity;
 import proyecto.ucu.deliverit.tasks.AceptarViajeTask;
 import proyecto.ucu.deliverit.tasks.ObtenerPedidosPorViajeTask;
+import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 /**
@@ -84,10 +78,43 @@ public class NotificacionActivity extends AppCompatActivity {
         direccion_tv.setText("Dirección: " + viaje.getSucursal().getDireccion().getCalle()
             + " " + viaje.getSucursal().getDireccion().getNroPuerta() + " esq. " + viaje.getSucursal().getDireccion().getEsquina());
 
+
+        byte[] imgRestaurant = Operaciones.decodeImage(viaje.getRestaurant().getUsuario().getFoto());
+        Bitmap imgBitmap = BitmapFactory.decodeByteArray(imgRestaurant, 0, imgRestaurant.length);
+        restaurant_iv.setImageBitmap(imgBitmap);
+
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Cancelamos la Notificacion que hemos comenzado
         nm.cancel(getIntent().getExtras().getInt(Valores.NOTIFICATOIN_ID_TEXTO));
+
+        new ObtenerPedidosPorViajeTask(NotificacionActivity.this, viaje.getId()).execute();
+    }
+
+    public void aceptarTaskRetorno(Integer retorno) {
+        if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
+            SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
+
+        } else {
+            Toast.makeText(NotificacionActivity.this, R.string.viaje_tomado, Toast.LENGTH_LONG).show();
+        }
+        finish();
+    }
+
+    public void obtenerPedidosPorViajeTaskRetorno(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
+
+        for (Pedido p : this.pedidos) {
+            DB = new DataBase(NotificacionActivity.this);
+
+            try {
+                DB.insertarDireccion(p.getCliente().getDireccion());
+                DB.insertarCliente(p.getCliente());
+                DB.insertarPedido(p);
+            } catch (SQLiteException e) {
+                Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
+            }
+        }
 
         rechazar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,33 +139,14 @@ public class NotificacionActivity extends AppCompatActivity {
             }
         });
 
-        new ObtenerPedidosPorViajeTask(NotificacionActivity.this, viaje.getId()).execute();
-    }
-
-    public void obtenerPedidosPorViajeTaskRetorno(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
-
-        for (Pedido p : this.pedidos) {
-            DB = new DataBase(NotificacionActivity.this);
-
-            try {
-                DB.insertarDireccion(p.getCliente().getDireccion());
-                DB.insertarCliente(p.getCliente());
-                DB.insertarPedido(p);
-            } catch (SQLiteException e) {
-                Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
+        mapa_ibtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NotificacionActivity.this, RecorridoActivity.class);
+                intent.putExtra(Valores.VIAJE, viaje.getId());
+                startActivity(intent);
             }
-        }
-    }
-
-    public void aceptarTaskRetorno(Integer retorno) {
-        if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
-            SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
-
-        } else {
-            Toast.makeText(NotificacionActivity.this, R.string.viaje_tomado, Toast.LENGTH_LONG).show();
-        }
-        finish();
+        });
     }
 
     private void eliminarPedidosEnCascada () throws SQLiteException {

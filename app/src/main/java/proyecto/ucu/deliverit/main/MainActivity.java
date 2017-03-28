@@ -27,7 +27,6 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
     DataBase DB;
-    Button finalizarViaje_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +36,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        finalizarViaje_btn = (Button)findViewById(R.id.finalizarViaje_btn);
     }
 
     @Override
@@ -52,40 +49,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng ubicacionActual = new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud());
         map.addMarker(new MarkerOptions().position(ubicacionActual).title("Ubicación Actual"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionActual, 16.0f));
-
-        if (SharedPref.getViajeEnCurso(MainActivity.this) != 0) {
-            finalizarViaje_btn.setVisibility(View.VISIBLE);
-            finalizarViaje_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new FinalizarViajeTask(MainActivity.this, SharedPref.getViajeEnCurso(MainActivity.this)).execute();
-                }
-            });
-        } else {
-            finalizarViaje_btn.setVisibility(View.GONE);
-        }
     }
 
     public void finalizarViajeTaskRetorno (RespuestaGeneral respuesta) {
         if (respuesta.getCodigo().equals(RespuestaGeneral.CODIGO_OK)) {
             SharedPref.guardarViajeEnCurso(MainActivity.this, 0);
-        }
-        finalizarViaje_btn.setVisibility(View.GONE);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (SharedPref.getViajeEnCurso(MainActivity.this) != 0) {
-            finalizarViaje_btn.setVisibility(View.VISIBLE);
-            finalizarViaje_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new FinalizarViajeTask(MainActivity.this, SharedPref.getViajeEnCurso(MainActivity.this)).execute();
-                }
-            });
-        } else {
-            finalizarViaje_btn.setVisibility(View.GONE);
         }
     }
 }

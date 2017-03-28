@@ -59,4 +59,6 @@ public class Valores {
     public static final String URL_FINALIZAR_VIAJE = URL_WS + "viaje/finalizarViaje/";
     public static final String URL_OBTENER_PEDIDOS_POR_VIAJE = URL_WS + "pedido/findPedidosPorViaje/";
     public static final String BARRA_DIAGONAL = "/";
+
+    public static final String TU_UBICACION = "Estás aquí";
 }

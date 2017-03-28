@@ -21,8 +21,6 @@ import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
-import proyecto.ucu.deliverit.inicializacion.HomeActivity;
-import proyecto.ucu.deliverit.inicializacion.RegistroActivity;
 import proyecto.ucu.deliverit.tasks.AceptarViajeTask;
 import proyecto.ucu.deliverit.tasks.ObtenerPedidosPorViajeTask;
 import proyecto.ucu.deliverit.utiles.Operaciones;

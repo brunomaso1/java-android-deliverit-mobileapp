@@ -78,8 +78,9 @@ public class RecorridoActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void agregarMarkers(GoogleMap mapa, Ubicacion ubicacion, List<Pedido> pedidos) {
+
         LatLng ubicacionActual = new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud());
-        mapa.addMarker(new MarkerOptions().position(ubicacionActual).title("Ubicación Actual"));
+        mapa.addMarker(new MarkerOptions().position(ubicacionActual).title(Valores.TU_UBICACION));
         mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionActual, 16.0f));
 
         for (Pedido p : pedidos) {

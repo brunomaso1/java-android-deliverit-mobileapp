@@ -1,7 +1,7 @@
 package proyecto.ucu.deliverit.servicios;
 
-import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
@@ -36,9 +36,16 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
-        Map<String, String> datos = message.getData();
 
-        Viaje viaje = new Viaje();
+
+        try {
+            RemoteMessage.Notification viaje = message.get
+            String body = viaje.getBody();
+            System.out.println("***** body = " + body);
+        }   catch (Exception e) {
+            e.printStackTrace();
+        }
+      /*  Viaje viaje = new Viaje();
         JSONObject viajeJSON;
 
         String viajeString = datos.get(Valores.VIAJE);
@@ -95,7 +102,7 @@ public class MessagingService extends FirebaseMessagingService {
             e.printStackTrace();
         }
 
-        crearNotificacion(viaje);
+        crearNotificacion(viaje); */
     }
 
     private void crearNotificacion(Viaje viaje) {

@@ -102,13 +102,13 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
 
             // Si el usuario otorgo permisos ya existe una Ubicación en la base
-            // El valor true es para actualizar esa Ubicación
             Ubicacion ubicacion = null;
             try {
                 DB = new DataBase(HomeActivity.this);
                 ubicacion = DB.getUbicacion();
                 ubicacion.setLatitud(lastLocation.getLatitude());
                 ubicacion.setLongitud(lastLocation.getLongitude());
+
             } catch (SQLiteException e) {
 
             }

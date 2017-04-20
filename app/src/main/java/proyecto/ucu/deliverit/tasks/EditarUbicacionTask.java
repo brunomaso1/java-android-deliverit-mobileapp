@@ -34,7 +34,7 @@ public class EditarUbicacionTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = Valores.URL_WS + ubicacion.getClass().getName().toLowerCase() + Valores.BARRA_DIAGONAL + ubicacion.getId();
+        String url = Valores.URL_WS + Ubicacion.TABLE_NAME + Valores.BARRA_DIAGONAL + ubicacion.getId();
 
         Gson gson = new Gson();
         String objeto = gson.toJson(this.ubicacion);

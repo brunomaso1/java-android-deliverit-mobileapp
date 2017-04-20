@@ -53,7 +53,7 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, Void>  {
             respuesta.setCodigo(RespuestaGeneral.CODIGO_ERROR);
             e.printStackTrace();
         }
-        activityPadre.finalizarViajeTaskRetorno(respuesta);
+       // activityPadre.finalizarViajeTaskRetorno(respuesta);
         return null;
     }
 }

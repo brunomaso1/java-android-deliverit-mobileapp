@@ -33,7 +33,7 @@ public class CrearUsuarioTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = Valores.URL_WS + usuario.getClass().getName().toLowerCase();
+        String url = Valores.URL_WS + Usuario.TABLE_NAME;
 
         Gson gson = new Gson();
         String objeto = gson.toJson(this.usuario);

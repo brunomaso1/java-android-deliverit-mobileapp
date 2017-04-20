@@ -432,9 +432,15 @@ public class DataBase extends SQLiteOpenHelper {
         );
 
         c.moveToFirst();
-        Short id = c.getShort(c.getColumnIndexOrThrow(Ubicacion._ID));
-        Double latitud = c.getDouble(c.getColumnIndexOrThrow(Ubicacion.COLUMN_NAME_LATITUD));
-        Double longitud = c.getDouble(c.getColumnIndexOrThrow(Ubicacion.COLUMN_NAME_LONGITUD));
+        Short id = null;
+        Double latitud = null;
+        Double longitud = null;
+
+        while (c.moveToNext()) {
+            id = c.getShort(c.getColumnIndexOrThrow(Ubicacion._ID));
+            latitud = c.getDouble(c.getColumnIndexOrThrow(Ubicacion.COLUMN_NAME_LATITUD));
+            longitud = c.getDouble(c.getColumnIndexOrThrow(Ubicacion.COLUMN_NAME_LONGITUD));
+        }
         c.close();
 
         Ubicacion ubicacion = new Ubicacion();

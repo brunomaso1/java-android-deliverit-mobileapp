@@ -11,98 +11,65 @@ import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.IOException;
+import java.util.List;
 
-import java.util.Map;
-
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
-import proyecto.ucu.deliverit.entidades.Direccion;
-import proyecto.ucu.deliverit.entidades.Restaurant;
-import proyecto.ucu.deliverit.entidades.Sucursal;
-import proyecto.ucu.deliverit.entidades.Usuario;
+import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.Valores;
-
-/**
- * Created by DeliverIT on 15/02/2017.
- */
 
 public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
+        Integer idViaje = Integer.parseInt(message.getData().get(Valores.VIAJE));
 
+        OkHttpClient client = new OkHttpClient();
+        String url = Valores.URL_SOLICITAR_PEDIDOS + idViaje;
 
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        Response response;
         try {
-            RemoteMessage.Notification viaje = message.get
-            String body = viaje.getBody();
-            System.out.println("***** body = " + body);
-        }   catch (Exception e) {
+            response = client.newCall(request).execute();
+            Gson gson = new Gson();
+            List<Pedido> pedidos = gson.fromJson(response.body().string(), List.class);
+            guardarDatosPedidos(pedidos);
+
+            crearNotificacion(pedidos.get(0).getViaje());
+
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            Toast.makeText(MessagingService.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
         }
-      /*  Viaje viaje = new Viaje();
-        JSONObject viajeJSON;
+    }
 
-        String viajeString = datos.get(Valores.VIAJE);
+    private void guardarDatosPedidos(List<Pedido> pedidos) throws SQLiteException {
+        DataBase db = new DataBase(MessagingService.this);
 
-        try {
-
-            viajeJSON = new JSONObject(viajeString);
-
-            JSONObject sucursalJSON = viajeJSON.getJSONObject(Viaje.SUCURSAL);
-            JSONObject direccionJSON = sucursalJSON.getJSONObject(Valores.SUCURSAL_DIRECCION);
-            JSONObject restaurantJSON = sucursalJSON.getJSONObject(Valores.SUCURSAL_RESTAURANT);
-            JSONObject usuarioJSON = restaurantJSON.getJSONObject(Valores.RESTAURANT_USUARIO);
-
-            Usuario usuario = new Usuario();
-            usuario.setId(usuarioJSON.getInt(Valores.USUARIO_ID));
-            usuario.setTelefono(usuarioJSON.getString(Valores.USUARIO_TELEFONO));
-
-            Direccion direccion = new Direccion();
-            direccion.setId(direccionJSON.getInt(Valores.DIRECCION_ID));
-            direccion.setCalle(direccionJSON.getString(Valores.DIRECCION_CALLE));
-            direccion.setEsquina(direccionJSON.getString(Valores.DIRECCION_ESQUINA));
-            direccion.setNroPuerta(direccionJSON.getInt(Valores.DIRECCION_NRO_PUERTA));
-            direccion.setApartamento((short)direccionJSON.getInt(Valores.DIRECCION_APARTAMENTO));
-            direccion.setLatitud(direccionJSON.getDouble(Valores.DIRECCION_LATITUD));
-            direccion.setLongitud(direccionJSON.getDouble(Valores.DIRECCION_LONGITUD));
-
-            Restaurant restaurant = new Restaurant();
-            restaurant.setId(restaurantJSON.getInt(Valores.RESTARURAN_ID));
-            restaurant.setRazonSocial(restaurantJSON.getString(Valores.RESTAURANT_RAZON_SOCIAL));
-            restaurant.setRut(restaurantJSON.getInt(Valores.RESTAURANT_RUT));
-            restaurant.setUsuario(usuario);
-
-            Sucursal sucursal = new Sucursal();
-            sucursal.setId(sucursalJSON.getJSONObject(Valores.SUCURSAL_SUCURSAL_PK).getInt(Valores.SUCURSAL_ID));
-            sucursal.setDireccion(direccion);
-            sucursal.setRestaurant(restaurant);
-
-            viaje.setId(viajeJSON.getInt(Viaje.ID));
-            viaje.setPrecio(viajeJSON.getInt(Viaje.PRECIO));
-            viaje.setSucursal(sucursal);
-
-            try {
-                DataBase db = new DataBase(MessagingService.this);
-
-                db.insertarUsuario(usuario);
-                db.insertarDireccion(direccion);
-                db.insertarRestaurant(restaurant);
-                db.insertarSucursal(sucursal);
-                db.insertarViaje(viaje);
-            } catch (SQLiteException e) {
-                Toast.makeText(MessagingService.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < pedidos.size(); i++) {
+            if (i == 0) {
+                db.insertarRestaurant(pedidos.get(i).getViaje().getRestaurant());
+                db.insertarSucursal(pedidos.get(i).getViaje().getSucursal());
+                db.insertarViaje(pedidos.get(i).getViaje());
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            db.insertarPedido(pedidos.get(0));
         }
-
-        crearNotificacion(viaje); */
     }
 
     private void crearNotificacion(Viaje viaje) {
@@ -114,7 +81,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, contadorNotificaciones, i, 0);
         SharedPref.guardarContadorNotificacion(getApplicationContext(), contadorNotificaciones + 1);
-        NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         CharSequence ticker = "Ver Viaje";
         CharSequence contentTitle = viaje.getSucursal().getRestaurant().getRazonSocial();
@@ -127,7 +94,7 @@ public class MessagingService extends FirebaseMessagingService {
                 .setContentText(contentText)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .addAction(R.drawable.ic_launcher, ticker, pendingIntent)
-                .setVibrate(new long[] {100, 250, 100, 500})
+                .setVibrate(new long[]{100, 250, 100, 500})
                 .build();
         nm.notify(Valores.NOTIFICATION_ID, notificacion);
     }

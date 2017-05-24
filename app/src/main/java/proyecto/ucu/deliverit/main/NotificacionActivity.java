@@ -22,13 +22,8 @@ import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.tasks.AceptarViajeTask;
-import proyecto.ucu.deliverit.tasks.ObtenerPedidosPorViajeTask;
 import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Valores;
-
-/**
- * Created by DeliverIT on 20/02/2017.
- */
 
 public class NotificacionActivity extends AppCompatActivity {
     TextView razonSocial_tv, direccion_tv, precio_tv;
@@ -86,7 +81,7 @@ public class NotificacionActivity extends AppCompatActivity {
         // Cancelamos la Notificacion que hemos comenzado
         nm.cancel(getIntent().getExtras().getInt(Valores.NOTIFICATOIN_ID_TEXTO));
 
-        new ObtenerPedidosPorViajeTask(NotificacionActivity.this, viaje.getId()).execute();
+       // new ObtenerPedidosPorViajeTask(NotificacionActivity.this, viaje.getId()).execute();
     }
 
     public void aceptarTaskRetorno(Integer retorno) {

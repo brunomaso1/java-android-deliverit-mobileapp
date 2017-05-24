@@ -28,6 +28,8 @@ public class Valores {
     public static final int NOTIFICATION_ID = 1;
     public static final String NOTIFICATOIN_ID_TEXTO = "notificationID";
     public static final String VIAJE = "viaje";
+    public static final String VIAJE_ID = "id";
+
     public static final String PEDIDOS = "pedidos";
 
     public static final String DIRECCION_ID = "id";
@@ -54,8 +56,9 @@ public class Valores {
 
     public static final String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
 
-    public static final String URL_WS = "http://192.168.1.46:8080/BackCore/ws/";
+    public static final String URL_WS = "http://192.168.1.43:8080/BackCore/ws/";
     public static final String URL_ACEPAR_VIAJE = URL_WS + " viaje/aceptarViaje/";
+    public static final String URL_SOLICITAR_PEDIDOS = URL_WS + "pedido/solicitarPedidos/";
     public static final String URL_FINALIZAR_VIAJE = URL_WS + "viaje/finalizarViaje/";
     public static final String URL_OBTENER_PEDIDOS_POR_VIAJE = URL_WS + "pedido/findPedidosPorViaje/";
     public static final String BARRA_DIAGONAL = "/";

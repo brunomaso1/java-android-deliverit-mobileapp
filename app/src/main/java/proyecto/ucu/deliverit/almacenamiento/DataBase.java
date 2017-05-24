@@ -25,10 +25,6 @@ import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Retorno;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-/**
- * Created by DeliverIT on 31/01/2017.
- */
-
 public class DataBase extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
@@ -209,7 +205,6 @@ public class DataBase extends SQLiteOpenHelper {
             values.put(Usuario.COLUMN_NAME_MAIL, usuario.getMail());
             values.put(Usuario.COLUMN_NAME_TELEFONO, usuario.getTelefono());
             values.put(Usuario.COLUMN_NAME_CUENTA_RED_PAGOS, usuario.getCuentaRedPagos());
-            values.put(Usuario.COLUMN_NAME_FOTO_PERFIL, usuario.getFoto());
 
             // Insert the new row, returning the primary key value of the new row
             idNuevoUsuario = db.insert(Usuario.TABLE_NAME, null, values);
@@ -280,96 +275,53 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     public long insertarRestaurant(Restaurant restaurant) throws SQLiteException {
-
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Restaurant r = getRestaurant(restaurant.getId());
+        ContentValues values = new ContentValues();
+        values.put(Restaurant._ID, restaurant.getId());
+        values.put(Restaurant.COLUMN_NAME_RUT, restaurant.getRut());
+        values.put(Restaurant.COLUMN_NAME_RAZON_SOCIAL, restaurant.getRazonSocial());
 
-        // Si el restaurant no existe se lo inserta
-        if (r.getId() == null) {
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(Restaurant._ID, restaurant.getId());
-            values.put(Restaurant.COLUMN_NAME_RUT, restaurant.getRut());
-            values.put(Restaurant.COLUMN_NAME_RAZON_SOCIAL, restaurant.getRazonSocial());
-
-            // Insert the new row, returning the primary key value of the new row
-            return db.insert(Restaurant.TABLE_NAME, null, values);
-        } else {
-            return 0;
-        }
-
+        return db.insert(Restaurant.TABLE_NAME, null, values);
     }
 
     public long insertarSucursal(Sucursal sucursal) throws SQLiteException {
-
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Sucursal suc = getSucursal(sucursal.getId());
+        ContentValues values = new ContentValues();
+        values.put(sucursal._ID, sucursal.getId());
+        values.put(Sucursal.COLUMN_NOMBRE, sucursal.getNombre());
+        values.put(Sucursal.COLUMN_NAME_DIRECCION, sucursal.getDireccion().getId());
+        values.put(Sucursal.COLUMN_NAME_RESTAURANT, sucursal.getRestaurant().getId());
 
-        // Si la sucursal no existe se la inserta
-        if (suc.getId() == null) {
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(sucursal._ID, sucursal.getId());
-            values.put(Sucursal.COLUMN_NOMBRE, sucursal.getNombre());
-            values.put(Sucursal.COLUMN_NAME_DIRECCION, sucursal.getDireccion().getId());
-            values.put(Sucursal.COLUMN_NAME_RESTAURANT, sucursal.getRestaurant().getId());
-
-            // Insert the new row, returning the primary key value of the new row
-            return db.insert(Sucursal.TABLE_NAME, null, values);
-        } else {
-            return 0;
-        }
+        return db.insert(Sucursal.TABLE_NAME, null, values);
 
     }
 
     public long insertarViaje(Viaje viaje) throws SQLiteException {
-
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Viaje v = getViaje(viaje.getId());
+        ContentValues values = new ContentValues();
+        values.put(Viaje._ID, viaje.getId());
+        values.put(Viaje.COLUMN_NAME_CALIFICAION, viaje.getCalificacion());
+        values.put(Viaje.COLUMN_NAME_PRECIO, viaje.getPrecio());
+        values.put(Viaje.COLUMN_NAME_RESTAURANT, viaje.getSucursal().getRestaurant().getId());
+        values.put(Viaje.COLUMN_NAME_SUCURSAL, viaje.getSucursal().getId());
 
-        // Si el viaje no existe se lo inserta
-        if (v.getId() == null) {
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(Viaje._ID, viaje.getId());
-            values.put(Viaje.COLUMN_NAME_CALIFICAION, viaje.getCalificacion());
-            values.put(Viaje.COLUMN_NAME_PRECIO, viaje.getPrecio());
-            values.put(Viaje.COLUMN_NAME_RESTAURANT, viaje.getSucursal().getRestaurant().getId());
-            values.put(Viaje.COLUMN_NAME_SUCURSAL, viaje.getSucursal().getId());
-
-            // Insert the new row, returning the primary key value of the new row
-            return db.insert(Viaje.TABLE_NAME, null, values);
-        } else {
-            return 0;
-        }
-
+        return db.insert(Viaje.TABLE_NAME, null, values);
     }
 
     public long insertarPedido(Pedido pedido) throws SQLiteException {
-
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Pedido p = getPedido(pedido.getId());
+        ContentValues values = new ContentValues();
+        values.put(Pedido._ID, pedido.getId());
+        values.put(Pedido.COLUMN_NAME_CLIENTE, pedido.getCliente().getId());
+        values.put(Pedido.COLUMN_NAME_DETALLE, pedido.getDetalle());
+        values.put(Pedido.COLUMN_NAME_FORMA_PAGO, pedido.getFormaPago());
+        values.put(Pedido.COLUMN_NAME_VIAJE, pedido.getViaje().getId());
 
-        // Si el pedido no existe se lo inserta
-        if (p.getId() == null) {
-
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(Pedido._ID, pedido.getId());
-            values.put(Pedido.COLUMN_NAME_CLIENTE, pedido.getCliente().getId());
-            values.put(Pedido.COLUMN_NAME_DETALLE, pedido.getDetalle());
-            values.put(Pedido.COLUMN_NAME_FORMA_PAGO, pedido.getFormaPago());
-            values.put(Pedido.COLUMN_NAME_VIAJE, pedido.getViaje().getId());
-
-            // Insert the new row, returning the primary key value of the new row
-            return db.insert(Pedido.TABLE_NAME, null, values);
-        } else {
-            return 0;
-        }
+        return db.insert(Pedido.TABLE_NAME, null, values);
     }
 
     public void eliminarViaje(Integer idViaje) throws SQLiteException {
@@ -384,7 +336,6 @@ public class DataBase extends SQLiteOpenHelper {
 
         // Issue SQL statement.
         db.delete(Viaje.TABLE_NAME, selection, selectionArgs);
-
     }
 
     public void eliminarPedido(Integer idPedido) throws SQLiteException {
@@ -861,4 +812,21 @@ public class DataBase extends SQLiteOpenHelper {
                 selectionArgs);
     }
 
+    public void actualizarFoto(Integer id, String fotoBase64) throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(Usuario.COLUMN_NAME_FOTO_PERFIL, fotoBase64);
+
+        // Which row to update, based on the title
+        String selection = Usuario._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(id) };
+
+        db.update(
+                Usuario.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+    }
 }

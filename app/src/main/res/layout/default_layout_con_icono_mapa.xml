@@ -12,7 +12,7 @@
 
         <ImageView android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
+            android:layout_weight="0.9"
             android:layout_gravity="center_vertical|center_horizontal"
             android:src="@drawable/nombrelogo" />
 
@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:background="@color/titlebar_bg"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_weight="0.1"
             android:src="@drawable/icono_mapa" />
 
     </LinearLayout>

@@ -6,6 +6,15 @@
     android:background="@color/background"
     tools:context=".main.MainActivity">
 
-    <include layout="@layout/default_layout"/>
+    <include layout="@layout/default_layout_con_icono_mapa"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Menú Principal"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
 </LinearLayout>
 

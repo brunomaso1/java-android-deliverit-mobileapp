@@ -22,11 +22,5 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-
-        DB = new DataBase(MainActivity.this);
-
-        Ubicacion u = DB.getUbicacion();
-        System.out.println("ubicacion id = " + u.getId());
-
     }
 }

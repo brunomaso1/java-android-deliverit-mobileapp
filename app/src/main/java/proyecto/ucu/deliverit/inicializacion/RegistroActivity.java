@@ -156,8 +156,9 @@ public class RegistroActivity extends AppCompatActivity {
                 Delivery delivery = gson.fromJson(respuesta.getObjeto(), Delivery.class);
 
                 try {
-                    DB.insertarDelivery(delivery);
                     DB.insertarUbicacion(delivery.getUbicacion());
+                    DB.insertarDelivery(delivery);
+
                     SharedPref.guardarIdDelivery(RegistroActivity.this, delivery.getId());
 
                     Intent intent = new Intent(RegistroActivity.this, MainActivity.class);

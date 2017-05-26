@@ -1,9 +1,5 @@
 package proyecto.ucu.deliverit.utiles;
 
-/**
- * Created by DeliverIT on 31/01/2017.
- */
-
 public class Valores {
     public static long TIMEOUT_WS = 20;
     public static long TIMER_VIAJES = 60000;
@@ -56,11 +52,10 @@ public class Valores {
 
     public static final String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
 
-    public static final String URL_WS = "http://192.168.1.43:8080/BackCore/ws/";
-    public static final String URL_ACEPAR_VIAJE = URL_WS + " viaje/aceptarViaje/";
+    public static final String URL_WS = "http://192.168.1.44:8080/BackCore/ws/";
+    public static final String URL_ACEPAR_VIAJE = URL_WS + "viaje/aceptarViaje/";
     public static final String URL_SOLICITAR_PEDIDOS = URL_WS + "pedido/solicitarPedidos/";
     public static final String URL_FINALIZAR_VIAJE = URL_WS + "viaje/finalizarViaje/";
-    public static final String URL_OBTENER_PEDIDOS_POR_VIAJE = URL_WS + "pedido/findPedidosPorViaje/";
     public static final String BARRA_DIAGONAL = "/";
 
     public static final String TU_UBICACION = "Estás aquí";

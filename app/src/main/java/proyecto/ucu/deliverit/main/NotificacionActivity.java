@@ -8,12 +8,15 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import proyecto.ucu.deliverit.R;
@@ -22,7 +25,9 @@ import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.tasks.AceptarViajeTask;
+import proyecto.ucu.deliverit.tasks.FinalizarViajeTask;
 import proyecto.ucu.deliverit.utiles.Operaciones;
+import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class NotificacionActivity extends AppCompatActivity {
@@ -30,6 +35,7 @@ public class NotificacionActivity extends AppCompatActivity {
     ImageView restaurant_iv;
     Button aceptar_btn, rechazar_btn;
     ImageButton mapa_ibtn;
+    ListView pedidos_lv;
 
     DataBase DB;
 
@@ -51,14 +57,16 @@ public class NotificacionActivity extends AppCompatActivity {
         aceptar_btn = (Button) findViewById(R.id.aceptar_btn);
         rechazar_btn = (Button) findViewById(R.id.rechazar_btn);
         mapa_ibtn = (ImageButton) findViewById(R.id.mapa_ibtn);
+        pedidos_lv = (ListView) findViewById(R.id.pedidos_lv);
 
         Intent intent =  getIntent();
-        Integer idViaje = intent.getIntExtra(Valores.VIAJE, 0);
+        final Integer idViaje = intent.getIntExtra(Valores.VIAJE, 0);
 
         if (idViaje != 0) {
             try {
                 // Traigo los datos del Viaje para mostrar en pantalla
                 viaje = DB.getViaje(idViaje);
+                pedidos = DB.getPedidos(viaje.getId());
             } catch (SQLiteException e) {
                 Toast.makeText(NotificacionActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_SHORT).show();
             }
@@ -66,13 +74,34 @@ public class NotificacionActivity extends AppCompatActivity {
             Toast.makeText(NotificacionActivity.this, R.string.no_se_recibio_ningun_viaje, Toast.LENGTH_SHORT).show();
         }
 
-        razonSocial_tv.setText("Local: " + viaje.getRestaurant().getRazonSocial());
+        List<String> pedidosString = new ArrayList<String>();
+        for (Pedido p : pedidos) {
+            String pedido = "Rest: " + p.getViaje().getSucursal().getNombre()
+                    + "  Cliente: " + p.getCliente().getDireccion().getCalle()
+                    + " " + p.getCliente().getDireccion().getNroPuerta();
+            pedidosString.add(pedido);
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                pedidosString);
+
+        pedidos_lv.setAdapter(arrayAdapter);
+
+        razonSocial_tv.setText("Local: " + viaje.getSucursal().getRestaurant().getRazonSocial());
         precio_tv.setText("Precio: " + viaje.getPrecio());
         direccion_tv.setText("Dirección: " + viaje.getSucursal().getDireccion().getCalle()
             + " " + viaje.getSucursal().getDireccion().getNroPuerta() + " esq. " + viaje.getSucursal().getDireccion().getEsquina());
 
 
-        byte[] imgRestaurant = Operaciones.decodeImage(viaje.getRestaurant().getUsuario().getFoto());
+        byte[] imgRestaurant = null;
+
+        try {
+            imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getUsuario().getFoto());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Bitmap imgBitmap = BitmapFactory.decodeByteArray(imgRestaurant, 0, imgRestaurant.length);
         restaurant_iv.setImageBitmap(imgBitmap);
 
@@ -80,34 +109,6 @@ public class NotificacionActivity extends AppCompatActivity {
 
         // Cancelamos la Notificacion que hemos comenzado
         nm.cancel(getIntent().getExtras().getInt(Valores.NOTIFICATOIN_ID_TEXTO));
-
-       // new ObtenerPedidosPorViajeTask(NotificacionActivity.this, viaje.getId()).execute();
-    }
-
-    public void aceptarTaskRetorno(Integer retorno) {
-        if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
-            SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
-
-        } else {
-            Toast.makeText(NotificacionActivity.this, R.string.viaje_tomado, Toast.LENGTH_LONG).show();
-        }
-        finish();
-    }
-
-    public void obtenerPedidosPorViajeTaskRetorno(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
-
-        for (Pedido p : this.pedidos) {
-            DB = new DataBase(NotificacionActivity.this);
-
-            try {
-                DB.insertarDireccion(p.getCliente().getDireccion());
-                DB.insertarCliente(p.getCliente());
-                DB.insertarPedido(p);
-            } catch (SQLiteException e) {
-                Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
-            }
-        }
 
         rechazar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +128,7 @@ public class NotificacionActivity extends AppCompatActivity {
         aceptar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AceptarViajeTask(NotificacionActivity.this,
+               new AceptarViajeTask(NotificacionActivity.this,
                         (int)SharedPref.getIdDelivery(NotificacionActivity.this), viaje.getId()).execute();
             }
         });
@@ -141,6 +142,28 @@ public class NotificacionActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void aceptarTaskRetorno(Integer retorno) {
+        if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
+            SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
+
+            Button finalizar_btn = (Button)findViewById(R.id.aceptar_btn);
+            finalizar_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new FinalizarViajeTask(NotificacionActivity.this, viaje.getId()).execute();
+                }
+            });
+        } else {
+            Toast.makeText(NotificacionActivity.this, R.string.viaje_tomado, Toast.LENGTH_LONG).show();
+        }
+       // finish();
+    }
+
+    public void finalizarViajeTaskRetorno(RespuestaGeneral respuesta) {
+        finish();
+    }
+
 
     private void eliminarPedidosEnCascada () throws SQLiteException {
         DB = new DataBase(NotificacionActivity.this);

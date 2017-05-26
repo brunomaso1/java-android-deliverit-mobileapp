@@ -106,13 +106,15 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             try {
                 DB = new DataBase(HomeActivity.this);
                 ubicacion = DB.getUbicacion();
-                ubicacion.setLatitud(lastLocation.getLatitude());
-                ubicacion.setLongitud(lastLocation.getLongitude());
 
+                if (ubicacion != null) {
+                    ubicacion.setLatitud(lastLocation.getLatitude());
+                    ubicacion.setLongitud(lastLocation.getLongitude());
+                    new EditarUbicacionTask(HomeActivity.this, ubicacion).execute();
+                }
             } catch (SQLiteException e) {
 
             }
-            new EditarUbicacionTask(HomeActivity.this, ubicacion).execute();
         }
     }
 

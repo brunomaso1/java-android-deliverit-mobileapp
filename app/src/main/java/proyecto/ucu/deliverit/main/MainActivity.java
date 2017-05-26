@@ -5,6 +5,10 @@ import android.os.Bundle;
 
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
+import proyecto.ucu.deliverit.entidades.Restaurant;
+import proyecto.ucu.deliverit.entidades.Sucursal;
+import proyecto.ucu.deliverit.entidades.Ubicacion;
+import proyecto.ucu.deliverit.entidades.Usuario;
 
 /**
  * Created by DeliverIT on 31/01/2017.
@@ -18,5 +22,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+
+        DB = new DataBase(MainActivity.this);
+
+        Ubicacion u = DB.getUbicacion();
+        System.out.println("ubicacion id = " + u.getId());
+
     }
 }

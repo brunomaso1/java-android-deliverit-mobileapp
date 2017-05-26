@@ -47,7 +47,8 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
                 .build();
 
         try {
-            client.newCall(request).execute();
+            Response r = client.newCall(request).execute();
+
             activityPadre.aceptarTaskRetorno(0);
         } catch (IOException e) {
             e.printStackTrace();

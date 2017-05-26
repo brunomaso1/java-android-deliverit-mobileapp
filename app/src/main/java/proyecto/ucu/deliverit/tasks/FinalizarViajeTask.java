@@ -10,6 +10,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import proyecto.ucu.deliverit.main.MainActivity;
+import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
@@ -19,10 +20,10 @@ import proyecto.ucu.deliverit.utiles.Valores;
 
 public class FinalizarViajeTask extends AsyncTask<Void, Void, Void>  {
 
-    MainActivity activityPadre;
+    NotificacionActivity activityPadre;
     Integer idViaje;
 
-    public FinalizarViajeTask(MainActivity activityPadre, Integer idViaje) {
+    public FinalizarViajeTask(NotificacionActivity activityPadre, Integer idViaje) {
         this.activityPadre = activityPadre;
         this.idViaje = idViaje;
     }
@@ -53,7 +54,7 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, Void>  {
             respuesta.setCodigo(RespuestaGeneral.CODIGO_ERROR);
             e.printStackTrace();
         }
-       // activityPadre.finalizarViajeTaskRetorno(respuesta);
+        activityPadre.finalizarViajeTaskRetorno(respuesta);
         return null;
     }
 }

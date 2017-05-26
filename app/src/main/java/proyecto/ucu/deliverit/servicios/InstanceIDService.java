@@ -5,10 +5,6 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 
-/**
- * Created by Juancho on 15/02/2017.
- */
-
 public class InstanceIDService extends FirebaseInstanceIdService {
 
     @Override

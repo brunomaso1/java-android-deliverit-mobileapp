@@ -14,6 +14,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -46,7 +47,7 @@ public class MessagingService extends FirebaseMessagingService {
         try {
             response = client.newCall(request).execute();
             Gson gson = new Gson();
-            List<Pedido> pedidos = gson.fromJson(response.body().string(), List.class);
+            List<Pedido> pedidos = Arrays.asList(gson.fromJson(response.body().string(), Pedido[].class));
             guardarDatosPedidos(pedidos);
 
             crearNotificacion(pedidos.get(0).getViaje());
@@ -64,11 +65,15 @@ public class MessagingService extends FirebaseMessagingService {
 
         for (int i = 0; i < pedidos.size(); i++) {
             if (i == 0) {
-                db.insertarRestaurant(pedidos.get(i).getViaje().getRestaurant());
+                db.insertarUsuario(pedidos.get(i).getViaje().getSucursal().getRestaurant().getUsuario());
+                db.insertarRestaurant(pedidos.get(i).getViaje().getSucursal().getRestaurant());
+                db.insertarDireccion(pedidos.get(i).getViaje().getSucursal().getDireccion());
                 db.insertarSucursal(pedidos.get(i).getViaje().getSucursal());
                 db.insertarViaje(pedidos.get(i).getViaje());
             }
-            db.insertarPedido(pedidos.get(0));
+            db.insertarDireccion(pedidos.get(i).getCliente().getDireccion());
+            db.insertarCliente(pedidos.get(i).getCliente());
+            db.insertarPedido(pedidos.get(i));
         }
     }
 

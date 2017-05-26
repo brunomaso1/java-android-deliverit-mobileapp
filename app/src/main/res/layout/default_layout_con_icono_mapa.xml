@@ -19,6 +19,7 @@
         <ImageButton
             android:id="@+id/mapa_ibtn"
             android:layout_width="0dp"
+            android:background="@color/titlebar_bg"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:src="@drawable/icono_mapa" />

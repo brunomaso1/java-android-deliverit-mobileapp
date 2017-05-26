@@ -25,10 +25,6 @@ import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-/**
- * Created by DeliverIT on 25/03/2017.
- */
-
 public class RecorridoActivity extends FragmentActivity implements OnMapReadyCallback {
     DataBase DB;
 
@@ -37,7 +33,9 @@ public class RecorridoActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.recorrido);
+
+        DB = new DataBase(RecorridoActivity.this.getApplicationContext());
 
         Intent intent =  getIntent();
         Integer idViaje = intent.getIntExtra(Valores.VIAJE, 0);
@@ -59,7 +57,7 @@ public class RecorridoActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onMapReady(GoogleMap map) {
-        DB = new DataBase(RecorridoActivity.this);
+        DB = new DataBase(RecorridoActivity.this.getApplicationContext());
         Ubicacion ubicacion = null;
         try {
             ubicacion = DB.getUbicacion();
@@ -91,5 +89,9 @@ public class RecorridoActivity extends FragmentActivity implements OnMapReadyCal
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             }
         }
+        LatLng coordenadasSuc = new LatLng(pedidos.get(0).getViaje().getSucursal().getDireccion().getLatitud(),
+                pedidos.get(0).getViaje().getSucursal().getDireccion().getLongitud());
+        mapa.addMarker(new MarkerOptions().position(coordenadasSuc).title(pedidos.get(0).getViaje().getSucursal().getNombre())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
     }
 }

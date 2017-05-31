@@ -22,6 +22,7 @@ import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.utiles.MapUtils;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
@@ -63,7 +64,7 @@ public class RecorridoActivity extends FragmentActivity implements OnMapReadyCal
             ubicacion = DB.getUbicacion();
 
             List<Pedido> pedidos = DB.getPedidos(viaje.getId());
-            agregarMarkers(map, ubicacion, pedidos);
+            MapUtils.agregarMarkersRecorrido(map, ubicacion, pedidos);
         } catch (SQLiteException e) {
             Toast.makeText(RecorridoActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_SHORT).show();
         }
@@ -73,25 +74,5 @@ public class RecorridoActivity extends FragmentActivity implements OnMapReadyCal
         if (respuesta.getCodigo().equals(RespuestaGeneral.CODIGO_OK)) {
             SharedPref.guardarViajeEnCurso(RecorridoActivity.this, 0);
         }
-    }
-
-    private void agregarMarkers(GoogleMap mapa, Ubicacion ubicacion, List<Pedido> pedidos) {
-
-        LatLng ubicacionActual = new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud());
-        mapa.addMarker(new MarkerOptions().position(ubicacionActual).title(Valores.TU_UBICACION));
-        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionActual, 16.0f));
-
-        for (Pedido p : pedidos) {
-            if (p.getCliente().getDireccion().getLatitud() != null && p.getCliente().getDireccion().getLongitud() != null) {
-                LatLng coordenadasCliente = new LatLng(p.getCliente().getDireccion().getLatitud(),
-                        p.getCliente().getDireccion().getLongitud());
-                mapa.addMarker(new MarkerOptions().position(coordenadasCliente).title(p.getCliente().getNombre())
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-            }
-        }
-        LatLng coordenadasSuc = new LatLng(pedidos.get(0).getViaje().getSucursal().getDireccion().getLatitud(),
-                pedidos.get(0).getViaje().getSucursal().getDireccion().getLongitud());
-        mapa.addMarker(new MarkerOptions().position(coordenadasSuc).title(pedidos.get(0).getViaje().getSucursal().getNombre())
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
     }
 }

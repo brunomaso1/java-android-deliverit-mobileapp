@@ -8,10 +8,10 @@ import android.provider.BaseColumns;
 
 public class Viaje implements BaseColumns {
     public static final String TABLE_NAME = "viaje";
-    public static final String COLUMN_NAME_CALIFICAION = "calificacion";
     public static final String COLUMN_NAME_PRECIO = "precio";
     public static final String COLUMN_NAME_DELIVERY = "delivery";
     public static final String COLUMN_NAME_SUCURSAL = "sucursal";
+    public static final String COLUMN_NAME_ESTADO = "estado";
 
     public static String ID = "id";
     public static String PRECIO = "precio";
@@ -20,7 +20,7 @@ public class Viaje implements BaseColumns {
     private Integer id;
     private Integer precio;
     private Sucursal sucursal;
-    private Short calificacion;
+    private EstadoViaje estado;
 
     public Integer getId() {
         return id;
@@ -46,11 +46,11 @@ public class Viaje implements BaseColumns {
         this.sucursal = sucursal;
     }
 
-    public Short getCalificacion() {
-        return calificacion;
+    public EstadoViaje getEstado() {
+        return estado;
     }
 
-    public void setCalificacion(Short calificacion) {
-        this.calificacion = calificacion;
+    public void setEstado(EstadoViaje estado) {
+        this.estado = estado;
     }
 }

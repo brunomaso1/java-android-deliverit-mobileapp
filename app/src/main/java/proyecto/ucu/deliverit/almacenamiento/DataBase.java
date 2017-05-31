@@ -14,6 +14,7 @@ import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.entidades.Cliente;
 import proyecto.ucu.deliverit.entidades.Delivery;
 import proyecto.ucu.deliverit.entidades.Direccion;
+import proyecto.ucu.deliverit.entidades.EstadoViaje;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Restaurant;
 import proyecto.ucu.deliverit.entidades.Sucursal;
@@ -72,41 +73,35 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE_RESTAURANT
             = "CREATE TABLE " + Restaurant.TABLE_NAME + " (" +
             Restaurant._ID + TYPE_INTEGER + PRIMARY_KEY + ","
-            + Restaurant.COLUMN_NAME_RUT + TYPE_BIG_INT + NOT_NULL + ","
             + Restaurant.COLUMN_NAME_RAZON_SOCIAL + TYPE_TEXT + ","
-            + Restaurant.COLUMN_NAME_USUARIO + TYPE_INTEGER + NOT_NULL + ")";
+            + Restaurant.COLUMN_NAME_FOTO + TYPE_TEXT + ")";
 
     private static final String SQL_CREATE_TABLE_SUCURSAL
             = "CREATE TABLE " + Sucursal.TABLE_NAME + " (" +
-            Sucursal._ID + TYPE_SMALLINT + ","
-            + Sucursal.COLUMN_NOMBRE + TYPE_TEXT + ","
+            Sucursal._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Sucursal.COLUMN_NAME_DIRECCION + TYPE_INTEGER + NOT_NULL + ","
-            + Sucursal.COLUMN_NAME_RESTAURANT + TYPE_INTEGER + ","
-            + PRIMARY_KEY + " (" + Sucursal._ID + ", " + Sucursal.COLUMN_NAME_RESTAURANT + "))";
+            + Sucursal.COLUMN_NAME_RESTAURANT + TYPE_INTEGER + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_VIAJE
             = "CREATE TABLE " + Viaje.TABLE_NAME + " (" +
                     Viaje._ID + TYPE_INTEGER + PRIMARY_KEY + ","
-                    + Viaje.COLUMN_NAME_CALIFICAION + TYPE_SMALLINT + ","
-                    + Viaje.COLUMN_NAME_DELIVERY + TYPE_INTEGER + ","
                     + Viaje.PRECIO + TYPE_SMALLINT + ","
-                    + Viaje.COLUMN_NAME_SUCURSAL + TYPE_SMALLINT + ")";
+                    + Viaje.COLUMN_NAME_SUCURSAL + TYPE_SMALLINT + ","
+                    + Viaje.COLUMN_NAME_ESTADO + TYPE_SMALLINT  + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_CLIENTE
             = "CREATE TABLE " + Cliente.TABLE_NAME + " (" +
             Cliente._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Cliente.COLUMN_NAME_NOMBRE + TYPE_TEXT + ","
-            + Cliente.COLUMN_NAME_DIRECCION + TYPE_INTEGER + ","
+            + Cliente.COLUMN_NAME_DIRECCION + TYPE_INTEGER + NOT_NULL + ","
             + Cliente.COLUMN_NAME_TELEFONO + TYPE_TEXT + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_PEDIDO
             = "CREATE TABLE " + Pedido.TABLE_NAME + " (" +
-            Pedido._ID + TYPE_INTEGER + ","
+            Pedido._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Pedido.COLUMN_NAME_VIAJE + TYPE_INTEGER + ","
             + Pedido.COLUMN_NAME_DETALLE + TYPE_TEXT + ","
-            + Pedido.COLUMN_NAME_FORMA_PAGO + TYPE_TEXT + ","
-            + Pedido.COLUMN_NAME_CLIENTE + TYPE_INTEGER + NOT_NULL + ","
-            + PRIMARY_KEY + " (" + Pedido._ID + ", " + Pedido.COLUMN_NAME_VIAJE + "))";
+            + Pedido.COLUMN_NAME_CLIENTE + TYPE_INTEGER + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_VEHICULO
             = "CREATE TABLE " + Vehiculo.TABLE_NAME + " (" +
@@ -171,7 +166,6 @@ public class DataBase extends SQLiteOpenHelper {
 
     public void insertarUbicacion (Ubicacion ubicacion) throws SQLiteException {
 
-        // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
 
         Retorno retorno = Operaciones.validarLatitudLongitud(ubicacion.getLatitud(), ubicacion.getLongitud());
@@ -188,7 +182,6 @@ public class DataBase extends SQLiteOpenHelper {
 
     public long insertarUsuario (Usuario usuario) throws SQLiteException {
 
-        // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
 
         long idNuevoUsuario = 0;
@@ -198,7 +191,6 @@ public class DataBase extends SQLiteOpenHelper {
                     usuario.getCuentaRedPagos());
 
             if (retorno.getCodigo().equals(Valores.CODIGO_EXITO)) {
-                // Create a new map of values, where column names are the keys
                 ContentValues values = new ContentValues();
                 values.put(Usuario._ID, usuario.getId());
                 values.put(Usuario.COLUMN_NAME_NOMBRE_USUARIO, usuario.getNombre());
@@ -208,7 +200,6 @@ public class DataBase extends SQLiteOpenHelper {
                 values.put(Usuario.COLUMN_NAME_CUENTA_RED_PAGOS, usuario.getCuentaRedPagos());
                 values.put(Usuario.COLUMN_NAME_FOTO_PERFIL, usuario.getFoto());
 
-                // Insert the new row, returning the primary key value of the new row
                 idNuevoUsuario = db.insert(Usuario.TABLE_NAME, null, values);
             }
 
@@ -235,8 +226,6 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         if (getDireccion(direccion.getId()) == null) {
-
-            // Create a new map of values, where column names are the keys
             ContentValues values = new ContentValues();
             values.put(Direccion._ID, direccion.getId());
             values.put(Direccion.COLUMN_NAME_CALLE, direccion.getCalle());
@@ -246,7 +235,6 @@ public class DataBase extends SQLiteOpenHelper {
             values.put(Direccion.COLUMN_NAME_LATITUD, direccion.getLatitud());
             values.put(Direccion.COLUMN_NAME_LONGITUD, direccion.getLongitud());
 
-            // Insert the new row, returning the primary key value of the new row
             db.insert(Direccion.TABLE_NAME, null, values);
         }
     }
@@ -255,18 +243,13 @@ public class DataBase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cliente c = getCliente(cliente.getId());
-
-        // Si el cliente no existe se lo inserta
-        if (c == null) {
-            // Create a new map of values, where column names are the keys
+        if (getCliente(cliente.getId()) == null) {
             ContentValues values = new ContentValues();
             values.put(Cliente._ID, cliente.getId());
             values.put(Cliente.COLUMN_NAME_NOMBRE, cliente.getNombre());
             values.put(Cliente.COLUMN_NAME_DIRECCION, cliente.getDireccion().getId());
             values.put(Cliente.COLUMN_NAME_TELEFONO, cliente.getTelefono());
 
-            // Insert the new row, returning the primary key value of the new row
             db.insert(Cliente.TABLE_NAME, null, values);
         }
     }
@@ -277,9 +260,8 @@ public class DataBase extends SQLiteOpenHelper {
         if (getRestaurant(restaurant.getId()) == null) {
             ContentValues values = new ContentValues();
             values.put(Restaurant._ID, restaurant.getId());
-            values.put(Restaurant.COLUMN_NAME_RUT, restaurant.getRut());
             values.put(Restaurant.COLUMN_NAME_RAZON_SOCIAL, restaurant.getRazonSocial());
-            values.put(Restaurant.COLUMN_NAME_USUARIO, restaurant.getUsuario().getId());
+            values.put(Restaurant.COLUMN_NAME_FOTO, restaurant.getUsuario().getFoto());
             db.insert(Restaurant.TABLE_NAME, null, values);
         }
     }
@@ -290,7 +272,6 @@ public class DataBase extends SQLiteOpenHelper {
         if (getSucursal(sucursal.getId()) == null) {
             ContentValues values = new ContentValues();
             values.put(sucursal._ID, sucursal.getId());
-            values.put(Sucursal.COLUMN_NOMBRE, sucursal.getNombre());
             values.put(Sucursal.COLUMN_NAME_DIRECCION, sucursal.getDireccion().getId());
             values.put(Sucursal.COLUMN_NAME_RESTAURANT, sucursal.getRestaurant().getId());
 
@@ -298,29 +279,31 @@ public class DataBase extends SQLiteOpenHelper {
         }
     }
 
-    public long insertarViaje(Viaje viaje) throws SQLiteException {
+    public void insertarViaje(Viaje viaje) throws SQLiteException {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(Viaje._ID, viaje.getId());
-        values.put(Viaje.COLUMN_NAME_CALIFICAION, viaje.getCalificacion());
-        values.put(Viaje.COLUMN_NAME_PRECIO, viaje.getPrecio());
-        values.put(Viaje.COLUMN_NAME_SUCURSAL, viaje.getSucursal().getId());
-
-        return db.insert(Viaje.TABLE_NAME, null, values);
+        if (getViaje(viaje.getId()) == null) {
+            ContentValues values = new ContentValues();
+            values.put(Viaje._ID, viaje.getId());
+            values.put(Viaje.COLUMN_NAME_PRECIO, viaje.getPrecio());
+            values.put(Viaje.COLUMN_NAME_SUCURSAL, viaje.getSucursal().getId());
+            values.put(Viaje.COLUMN_NAME_ESTADO, viaje.getEstado().getId());
+            db.insert(Viaje.TABLE_NAME, null, values);
+        }
     }
 
     public void insertarPedido(Pedido pedido) throws SQLiteException {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(Pedido._ID, pedido.getId());
-        values.put(Pedido.COLUMN_NAME_CLIENTE, pedido.getCliente().getId());
-        values.put(Pedido.COLUMN_NAME_DETALLE, pedido.getDetalle());
-        values.put(Pedido.COLUMN_NAME_FORMA_PAGO, pedido.getFormaPago());
-        values.put(Pedido.COLUMN_NAME_VIAJE, pedido.getViaje().getId());
+        if (getPedido(pedido.getId()) == null) {
+            ContentValues values = new ContentValues();
+            values.put(Pedido._ID, pedido.getId());
+            values.put(Pedido.COLUMN_NAME_CLIENTE, pedido.getCliente().getId());
+            values.put(Pedido.COLUMN_NAME_DETALLE, pedido.getDetalle());
+            values.put(Pedido.COLUMN_NAME_VIAJE, pedido.getViaje().getId());
 
-        db.insert(Pedido.TABLE_NAME, null, values);
+            db.insert(Pedido.TABLE_NAME, null, values);
+        }
     }
 
     public void eliminarViaje(Integer idViaje) throws SQLiteException {
@@ -407,7 +390,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Viaje._ID, Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_SUCURSAL
+                Viaje._ID, Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_SUCURSAL, Viaje.COLUMN_NAME_ESTADO
         };
 
         String selection = Viaje._ID + " = ?";
@@ -426,25 +409,23 @@ public class DataBase extends SQLiteOpenHelper {
         Integer precio = null;
         Integer idSucursal = null;
         Integer id = null;
+        Integer estado = null;
         while (c.moveToNext()) {
             id = c.getInt(c.getColumnIndexOrThrow(Viaje._ID));
             precio = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
             idSucursal = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_SUCURSAL));
+            estado = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_ESTADO));
         }
         c.close();
 
-        Sucursal sucursal = null;
-        if (idSucursal != null) {
-            sucursal = getSucursal(idSucursal);
-        }
-
         Viaje viaje = null;
-
         if (id != null) {
+            Sucursal sucursal = getSucursal(idSucursal);
             viaje = new Viaje();
             viaje.setId(id);
             viaje.setPrecio(precio);
             viaje.setSucursal(sucursal);
+            viaje.setEstado(new EstadoViaje(estado));
         }
 
         return viaje;
@@ -506,8 +487,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Pedido._ID, Pedido.COLUMN_NAME_DETALLE, Pedido.COLUMN_NAME_VIAJE, Pedido.COLUMN_NAME_CLIENTE,
-                Pedido.COLUMN_NAME_FORMA_PAGO
+                Pedido._ID, Pedido.COLUMN_NAME_DETALLE, Pedido.COLUMN_NAME_VIAJE, Pedido.COLUMN_NAME_CLIENTE
         };
 
         String selection = Pedido._ID + " = ?";
@@ -524,35 +504,27 @@ public class DataBase extends SQLiteOpenHelper {
         );
 
         String detalle = null;
-        String formaPàgo = null;
         Integer idViaje = null;
         Integer idCliente = null;
+        Integer id = null;
         while (c.moveToNext()) {
+            id = c.getInt(c.getColumnIndexOrThrow(Pedido._ID));
             detalle = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_DETALLE));
-            formaPàgo = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_FORMA_PAGO));
             idViaje = c.getInt(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_VIAJE));
             idCliente = c.getInt(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_CLIENTE));
         }
         c.close();
 
-        Viaje viaje = null;
-
-        if (idViaje != null) {
-            viaje = getViaje(idViaje);
+        Pedido pedido = null;
+        if (id != null) {
+            Viaje viaje = getViaje(idViaje);
+            Cliente cliente = getCliente(idCliente);
+            pedido = new Pedido();
+            pedido.setId(id);
+            pedido.setDetalle(detalle);
+            pedido.setViaje(viaje);
+            pedido.setCliente(cliente);
         }
-
-        Cliente cliente = null;
-
-        if (idCliente != null) {
-            cliente = getCliente(idCliente);
-        }
-
-        Pedido pedido = new Pedido();
-        pedido.setId(idPedido);
-        pedido.setDetalle(detalle);
-        pedido.setFormaPago(formaPàgo);
-        pedido.setViaje(viaje);
-        pedido.setCliente(cliente);
 
         return pedido;
     }
@@ -563,8 +535,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Pedido._ID, Pedido.COLUMN_NAME_DETALLE, Pedido.COLUMN_NAME_VIAJE, Pedido.COLUMN_NAME_CLIENTE,
-                Pedido.COLUMN_NAME_FORMA_PAGO
+                Pedido._ID, Pedido.COLUMN_NAME_DETALLE, Pedido.COLUMN_NAME_VIAJE, Pedido.COLUMN_NAME_CLIENTE
         };
 
         String selection = Pedido.COLUMN_NAME_VIAJE + " = ?";
@@ -582,12 +553,10 @@ public class DataBase extends SQLiteOpenHelper {
 
         String detalle = null;
         Integer idPedido = null;
-        String formaPàgo = null;
         Integer idCliente = null;
         while (c.moveToNext()) {
             idPedido = c.getInt(c.getColumnIndexOrThrow(Pedido._ID));
             detalle = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_DETALLE));
-            formaPàgo = c.getString(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_FORMA_PAGO));
             idCliente = c.getInt(c.getColumnIndexOrThrow(Pedido.COLUMN_NAME_CLIENTE));
 
             Viaje viaje = getViaje(idViaje);
@@ -597,11 +566,9 @@ public class DataBase extends SQLiteOpenHelper {
             pedido.setId(idPedido);
             pedido.setViaje(viaje);
             pedido.setDetalle(detalle);
-            pedido.setFormaPago(formaPàgo);
             pedido.setCliente(cliente);
 
             pedidos.add(pedido);
-
         }
         c.close();
 
@@ -729,7 +696,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Restaurant._ID, Restaurant.COLUMN_NAME_RAZON_SOCIAL, Restaurant.COLUMN_NAME_USUARIO
+                Restaurant._ID, Restaurant.COLUMN_NAME_RAZON_SOCIAL, Restaurant.COLUMN_NAME_FOTO
         };
 
         String selection = Restaurant._ID + " = ?";
@@ -746,12 +713,12 @@ public class DataBase extends SQLiteOpenHelper {
         );
 
         String razonSocial = null;
-        Usuario usuario = null;
+        String foto = null;
         Integer id = null;
         while (c.moveToNext()) {
             id = c.getInt(c.getColumnIndexOrThrow(Restaurant._ID));
             razonSocial = c.getString(c.getColumnIndexOrThrow(Restaurant.COLUMN_NAME_RAZON_SOCIAL));
-            usuario = getUsuario(c.getInt(c.getColumnIndexOrThrow(Restaurant.COLUMN_NAME_USUARIO)));
+            foto = c.getString(c.getColumnIndexOrThrow(Restaurant.COLUMN_NAME_FOTO));
         }
 
         c.close();
@@ -760,7 +727,7 @@ public class DataBase extends SQLiteOpenHelper {
             restaurant = new Restaurant();
             restaurant.setId(id);
             restaurant.setRazonSocial(razonSocial);
-            restaurant.setUsuario(usuario);
+            restaurant.setFoto(foto);
         }
         return restaurant;
     }
@@ -769,7 +736,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Sucursal._ID, Sucursal.COLUMN_NAME_DIRECCION, Sucursal.COLUMN_NOMBRE, Sucursal.COLUMN_NAME_RESTAURANT
+                Sucursal._ID, Sucursal.COLUMN_NAME_DIRECCION, Sucursal.COLUMN_NAME_RESTAURANT
         };
 
         String selection = Sucursal._ID + " = ?";
@@ -791,7 +758,6 @@ public class DataBase extends SQLiteOpenHelper {
         Integer id = null;
         while (c.moveToNext()) {
             id = c.getInt(c.getColumnIndexOrThrow(Sucursal._ID));
-            nombre = c.getString(c.getColumnIndexOrThrow(Sucursal.COLUMN_NOMBRE));
             direccion = getDireccion(c.getInt(c.getColumnIndexOrThrow(Sucursal.COLUMN_NAME_DIRECCION)));
             restaurant = getRestaurant(c.getInt(c.getColumnIndexOrThrow(Sucursal.COLUMN_NAME_RESTAURANT)));
         }
@@ -801,7 +767,6 @@ public class DataBase extends SQLiteOpenHelper {
         if (id != null) {
             sucursal = new Sucursal();
             sucursal.setId(id);
-            sucursal.setNombre(nombre);
             sucursal.setDireccion(direccion);
             sucursal.setRestaurant(restaurant);
         }
@@ -895,5 +860,17 @@ public class DataBase extends SQLiteOpenHelper {
                 values,
                 selection,
                 selectionArgs);
+    }
+
+    public void guardarDatosPedidos(List<Pedido> pedidos) throws SQLiteException {
+        for (Pedido p : pedidos) {
+            insertarRestaurant(p.getViaje().getSucursal().getRestaurant());
+            insertarDireccion(p.getViaje().getSucursal().getDireccion());
+            insertarSucursal(p.getViaje().getSucursal());
+            insertarViaje(p.getViaje());
+            insertarDireccion(p.getCliente().getDireccion());
+            insertarCliente(p.getCliente());
+            insertarPedido(p);
+        }
     }
 }

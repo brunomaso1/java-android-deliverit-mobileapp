@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -27,10 +28,13 @@ import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
+import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class MessagingService extends FirebaseMessagingService {
+    DataBase DB;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
@@ -48,7 +52,9 @@ public class MessagingService extends FirebaseMessagingService {
             response = client.newCall(request).execute();
             Gson gson = new Gson();
             List<Pedido> pedidos = Arrays.asList(gson.fromJson(response.body().string(), Pedido[].class));
-            guardarDatosPedidos(pedidos);
+
+            DB = new DataBase(MessagingService.this);
+            DB.guardarDatosPedidos(pedidos);
 
             crearNotificacion(pedidos.get(0).getViaje());
 
@@ -57,23 +63,6 @@ public class MessagingService extends FirebaseMessagingService {
         } catch (SQLiteException e) {
             e.printStackTrace();
             Toast.makeText(MessagingService.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void guardarDatosPedidos(List<Pedido> pedidos) throws SQLiteException {
-        DataBase db = new DataBase(MessagingService.this);
-
-        for (int i = 0; i < pedidos.size(); i++) {
-            if (i == 0) {
-                db.insertarUsuario(pedidos.get(i).getViaje().getSucursal().getRestaurant().getUsuario());
-                db.insertarRestaurant(pedidos.get(i).getViaje().getSucursal().getRestaurant());
-                db.insertarDireccion(pedidos.get(i).getViaje().getSucursal().getDireccion());
-                db.insertarSucursal(pedidos.get(i).getViaje().getSucursal());
-                db.insertarViaje(pedidos.get(i).getViaje());
-            }
-            db.insertarDireccion(pedidos.get(i).getCliente().getDireccion());
-            db.insertarCliente(pedidos.get(i).getCliente());
-            db.insertarPedido(pedidos.get(i));
         }
     }
 

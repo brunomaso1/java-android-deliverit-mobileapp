@@ -10,14 +10,12 @@ public class Pedido implements BaseColumns {
     public static final String TABLE_NAME = "pedido";
     public static final String COLUMN_NAME_VIAJE = "viaje";
     public static final String COLUMN_NAME_DETALLE = "detalle";
-    public static final String COLUMN_NAME_FORMA_PAGO = "formaPago";
     public static final String COLUMN_NAME_CLIENTE = "cliente";
 
 
     private Integer id;
     private Viaje viaje;
     private String detalle;
-    private String formaPago;
     private Cliente cliente;
 
     public Viaje getViaje() {
@@ -34,14 +32,6 @@ public class Pedido implements BaseColumns {
 
     public void setDetalle(String detalle) {
         this.detalle = detalle;
-    }
-
-    public String getFormaPago() {
-        return formaPago;
-    }
-
-    public void setFormaPago(String formaPago) {
-        this.formaPago = formaPago;
     }
 
     public Cliente getCliente() {

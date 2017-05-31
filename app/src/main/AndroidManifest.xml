@@ -71,6 +71,10 @@
             android:name=".main.RecorridoActivity"
             android:label="@string/app_name"/>
 
+        <activity
+            android:name=".main.SucursalesMapActivity"
+            android:label="@string/app_name"/>
+
         <uses-feature android:name="android.hardware.camera" android:required="false" />
         <uses-feature android:name="android.hardware.camera.front" android:required="false" />
     </application>

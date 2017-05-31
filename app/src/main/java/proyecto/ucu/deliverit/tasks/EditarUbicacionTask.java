@@ -1,5 +1,6 @@
 package proyecto.ucu.deliverit.tasks;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -17,12 +18,9 @@ import proyecto.ucu.deliverit.inicializacion.HomeActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-/**
- * Created by DeliverIT on 04/03/2017.
- */
-
-public class EditarUbicacionTask extends AsyncTask<Void, Void, Void> {
+public class EditarUbicacionTask extends AsyncTask<Void, Void, RespuestaGeneral> {
     HomeActivity activityPadre;
+    ProgressDialog progressDialog;
     Ubicacion ubicacion;
 
     public EditarUbicacionTask (HomeActivity activityPadre, Ubicacion ubicacion) {
@@ -31,7 +29,16 @@ public class EditarUbicacionTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressDialog = new ProgressDialog(activityPadre);
+        progressDialog.setMessage(Valores.ACTUALIZANDO_UBICACION);
+        progressDialog.show();
+    }
+
+    @Override
+    protected RespuestaGeneral doInBackground(Void... params) {
+        RespuestaGeneral respuesta = null;
         OkHttpClient client = new OkHttpClient();
 
         String url = Valores.URL_WS + Ubicacion.TABLE_NAME + Valores.BARRA_DIAGONAL + ubicacion.getId();
@@ -48,14 +55,20 @@ public class EditarUbicacionTask extends AsyncTask<Void, Void, Void> {
         try {
             client.newCall(request).execute();
 
-            RespuestaGeneral respuesta = new RespuestaGeneral();
+            respuesta = new RespuestaGeneral();
             respuesta.setCodigo(RespuestaGeneral.CODIGO_OK);
             respuesta.setObjeto(objeto);
-            activityPadre.editarUbicacionTaskRetorno(respuesta);
+
         } catch (IOException e) {
             e.printStackTrace();
-            activityPadre.editarUbicacionTaskRetorno(null);
         }
-        return null;
+        return respuesta;
+    }
+
+    @Override
+    protected void onPostExecute(RespuestaGeneral respuestaGeneral) {
+        super.onPostExecute(respuestaGeneral);
+        progressDialog.dismiss();
+        activityPadre.editarUbicacionTaskRetorno(respuestaGeneral);
     }
 }

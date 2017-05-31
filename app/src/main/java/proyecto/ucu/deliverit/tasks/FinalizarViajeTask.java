@@ -1,5 +1,6 @@
 package proyecto.ucu.deliverit.tasks;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import java.io.IOException;
@@ -14,13 +15,10 @@ import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-/**
- * Created by DeliverIT on 09/03/2017.
- */
-
-public class FinalizarViajeTask extends AsyncTask<Void, Void, Void>  {
+public class FinalizarViajeTask extends AsyncTask<Void, Void, RespuestaGeneral>  {
 
     NotificacionActivity activityPadre;
+    ProgressDialog progressDialog;
     Integer idViaje;
 
     public FinalizarViajeTask(NotificacionActivity activityPadre, Integer idViaje) {
@@ -29,8 +27,16 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, Void>  {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-        RespuestaGeneral respuesta = new RespuestaGeneral();
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressDialog = new ProgressDialog(activityPadre);
+        progressDialog.setMessage(Valores.FINALIZAR_VIAJES);
+        progressDialog.show();
+    }
+
+    @Override
+    protected RespuestaGeneral doInBackground(Void... params) {
+        RespuestaGeneral respuesta = null;
 
         OkHttpClient client = new OkHttpClient();
 
@@ -54,7 +60,14 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, Void>  {
             respuesta.setCodigo(RespuestaGeneral.CODIGO_ERROR);
             e.printStackTrace();
         }
-        activityPadre.finalizarViajeTaskRetorno(respuesta);
-        return null;
+
+        return respuesta;
+    }
+
+    @Override
+    protected void onPostExecute(RespuestaGeneral respuestaGeneral) {
+        super.onPostExecute(respuestaGeneral);
+        progressDialog.dismiss();
+        activityPadre.finalizarViajeTaskRetorno(respuestaGeneral);
     }
 }

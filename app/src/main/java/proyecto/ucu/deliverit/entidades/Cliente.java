@@ -33,20 +33,20 @@ public class Cliente implements BaseColumns {
         this.telefono = telefono;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public Direccion getDireccion() {
         return direccion;
     }
 
     public void setDireccion(Direccion direccion) {
         this.direccion = direccion;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
 

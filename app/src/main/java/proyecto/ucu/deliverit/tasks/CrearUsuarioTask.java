@@ -1,5 +1,6 @@
 package proyecto.ucu.deliverit.tasks;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
@@ -16,12 +17,9 @@ import proyecto.ucu.deliverit.inicializacion.RegistroActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-/**
- * Created by DeliverIT on 03/03/2017.
- */
-
-public class CrearUsuarioTask extends AsyncTask<Void, Void, Void> {
+public class CrearUsuarioTask extends AsyncTask<Void, Void, RespuestaGeneral> {
     RegistroActivity activityPadre;
+    ProgressDialog progressDialog;
     Usuario usuario;
 
     public CrearUsuarioTask(RegistroActivity activityPadre, Usuario usuario) {
@@ -30,7 +28,17 @@ public class CrearUsuarioTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressDialog = new ProgressDialog(activityPadre);
+        progressDialog.setMessage(Valores.CREANDO_USUARIO);
+        progressDialog.show();
+    }
+
+    @Override
+    protected RespuestaGeneral doInBackground(Void... params) {
+        RespuestaGeneral respuesta = null;
+
         OkHttpClient client = new OkHttpClient();
 
         String url = Valores.URL_WS + Usuario.TABLE_NAME;
@@ -49,13 +57,17 @@ public class CrearUsuarioTask extends AsyncTask<Void, Void, Void> {
             response = client.newCall(request).execute();
 
             gson = new Gson();
-            RespuestaGeneral respuesta = gson.fromJson(response.body().string(), RespuestaGeneral.class);
-
-            activityPadre.crearUsuarioTaskRetorno(respuesta);
+            respuesta = gson.fromJson(response.body().string(), RespuestaGeneral.class);
         } catch (IOException e) {
             e.printStackTrace();
-            activityPadre.crearUsuarioTaskRetorno(null);
         }
-        return null;
+        return respuesta;
+    }
+
+    @Override
+    protected void onPostExecute(RespuestaGeneral respuestaGeneral) {
+        super.onPostExecute(respuestaGeneral);
+        progressDialog.dismiss();
+        activityPadre.crearUsuarioTaskRetorno(respuestaGeneral);
     }
 }

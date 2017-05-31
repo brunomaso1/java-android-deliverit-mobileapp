@@ -1,31 +1,23 @@
 package proyecto.ucu.deliverit.tasks;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
-
-import com.google.gson.Gson;
 
 import java.io.IOException;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
-import proyecto.ucu.deliverit.almacenamiento.SharedPref;
-import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
-import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-/**
- * Created by JMArtegoytia on 24/02/2017.
- */
-
-public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
+public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
     NotificacionActivity activityPadre;
+    ProgressDialog progressDialog;
     Integer idDelivery;
     Integer idViaje;
+
 
     public AceptarViajeTask(NotificacionActivity activityPadre, Integer idDelivery, Integer idViaje) {
         this.activityPadre = activityPadre;
@@ -34,7 +26,16 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressDialog = new ProgressDialog(activityPadre);
+        progressDialog.setMessage(Valores.SOLICITANDO_VIAJE);
+        progressDialog.show();
+    }
+
+    @Override
+    protected Integer doInBackground(Void... params) {
+        Integer retorno = null;
         OkHttpClient client = new OkHttpClient();
 
         String url = Valores.URL_ACEPAR_VIAJE + idViaje + Valores.BARRA_DIAGONAL + idDelivery;
@@ -47,13 +48,18 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Void> {
                 .build();
 
         try {
-            Response r = client.newCall(request).execute();
-
-            activityPadre.aceptarTaskRetorno(0);
+            client.newCall(request).execute();
+            retorno = 0;
         } catch (IOException e) {
             e.printStackTrace();
-            activityPadre.aceptarTaskRetorno(-1);
         }
-        return null;
+        return retorno;
+    }
+
+    @Override
+    protected void onPostExecute(Integer retorno) {
+        super.onPostExecute(retorno);
+        progressDialog.dismiss();
+        activityPadre.aceptarTaskRetorno(retorno);
     }
 }

@@ -37,15 +37,17 @@ public class LoginActivity extends AppCompatActivity {
         olvidoPassword_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, OlvidoPasswordActivity.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(LoginActivity.this, OlvidoPasswordActivity.class);
+                startActivity(intent);*/
             }
         });
 
         ingresar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              /*  if (!nombreUsuario_Et.getText().toString().equals("")) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                /*if (!nombreUsuario_Et.getText().toString().equals("")) {
                     DataBase db = new DataBase(LoginActivity.this);
                     long idDelivery = db.login(nombreUsuario_Et.getText().toString(), password_et.getText().toString());
 

@@ -64,25 +64,26 @@ public class NotificacionActivity extends AppCompatActivity {
 
         if (idViaje != 0) {
             try {
-                // Traigo los datos del Viaje para mostrar en pantalla
                 viaje = DB.getViaje(idViaje);
                 pedidos = DB.getPedidos(viaje.getId());
             } catch (SQLiteException e) {
-                Toast.makeText(NotificacionActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_SHORT).show();
+                Toast.makeText(NotificacionActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(NotificacionActivity.this, R.string.no_se_recibio_ningun_viaje, Toast.LENGTH_SHORT).show();
+            Toast.makeText(NotificacionActivity.this, R.string.no_se_recibio_ningun_viaje, Toast.LENGTH_LONG).show();
         }
 
-        List<String> pedidosString = new ArrayList<String>();
-        for (Pedido p : pedidos) {
-            String pedido = "Rest: " + p.getViaje().getSucursal().getNombre()
-                    + "  Cliente: " + p.getCliente().getDireccion().getCalle()
-                    + " " + p.getCliente().getDireccion().getNroPuerta();
+        List<String> pedidosString = new ArrayList<>();
+        for (int i = 0; i < pedidos.size(); i++) {
+            String pedido = "Dir. " + (i + 1) + ": " +  pedidos.get(i).getCliente().getDireccion().getCalle()
+                    + " " + pedidos.get(i).getCliente().getDireccion().getNroPuerta();
+            if (pedidos.get(i).getCliente().getDireccion().getApartamento() != null) {
+                pedido = pedido + " apto. " + pedidos.get(i).getCliente().getDireccion().getApartamento();
+            }
             pedidosString.add(pedido);
         }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
                 pedidosString);
@@ -90,7 +91,7 @@ public class NotificacionActivity extends AppCompatActivity {
         pedidos_lv.setAdapter(arrayAdapter);
 
         razonSocial_tv.setText("Local: " + viaje.getSucursal().getRestaurant().getRazonSocial());
-        precio_tv.setText("Precio: " + viaje.getPrecio());
+        precio_tv.setText("Precio: $" + viaje.getPrecio());
         direccion_tv.setText("Dirección: " + viaje.getSucursal().getDireccion().getCalle()
             + " " + viaje.getSucursal().getDireccion().getNroPuerta() + " esq. " + viaje.getSucursal().getDireccion().getEsquina());
 
@@ -98,7 +99,7 @@ public class NotificacionActivity extends AppCompatActivity {
         byte[] imgRestaurant = null;
 
         try {
-            imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getUsuario().getFoto());
+            imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getFoto());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,12 +114,11 @@ public class NotificacionActivity extends AppCompatActivity {
         rechazar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
                     eliminarPedidosEnCascada();
                     DB.eliminarViaje(viaje.getId());
                 } catch (SQLiteException e) {
-                    Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
                 }
 
                 finish();

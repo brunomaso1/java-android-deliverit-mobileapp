@@ -8,13 +8,11 @@
 
     <include layout="@layout/default_layout_con_icono_mapa"/>
 
-    <TextView
+    <ListView
+        android:id="@+id/viajes_lv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="Menú Principal"
-        android:textSize="20dp"
-        android:textColor="@color/black"/>
+        android:layout_height="match_parent"
+        android:divider="@color/black">
+    </ListView>
 </LinearLayout>
 

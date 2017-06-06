@@ -58,24 +58,19 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                   System.out.println("*** clickeo = " + position);
+                  switch (position) {
+                      case 6: // Salir
+                        finish();
+                  }
               }
         });
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawer_layout, R.string.sidebar_open, R.string.sidebar_close) {
-            public void onDrawerClosed(View view) {
-                System.out.println("*** sidebar close ***");
-                //getActionBar().setTitle(mTitle);
-                //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
+            public void onDrawerClosed(View view) {}
 
-            public void onDrawerOpened(View drawerView) {
-                System.out.println("*** sidebar open ***");
-                //getActionBar().setTitle(mDrawerTitle);
-                //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
+            public void onDrawerOpened(View drawerView) {}
         };
         drawer_layout.setDrawerListener(mDrawerToggle);
-
     }
 
     @Override

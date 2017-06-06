@@ -1,32 +1,31 @@
-<!--LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".main.MainActivity"-->
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/default_layout_con_icono_mapa"/>
-
-    <ListView
-        android:id="@+id/viajes_lv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/black">
-    </ListView>
+        android:layout_height="match_parent">
+
+        <include layout="@layout/default_layout_con_icono_mapa"/>
+
+        <ListView
+            android:id="@+id/viajes_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/black">
+        </ListView>
+
+    </LinearLayout>
+
     <ListView android:id="@+id/sidebar_lv"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#111"/>
+        android:dividerHeight="2dp"
+        android:background="@color/titlebar_bg"/>
 </android.support.v4.widget.DrawerLayout>
 

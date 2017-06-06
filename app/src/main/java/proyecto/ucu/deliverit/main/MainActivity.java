@@ -57,11 +57,10 @@ public class MainActivity extends AppCompatActivity {
         sidebar_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
               @Override
               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                  System.out.println("*** clickeo = " + position);
-                  switch (position) {
-                      case 6: // Salir
-                        finish();
-                  }
+              switch (position) {
+                  case 6: // Salir
+                    finish();
+              }
               }
         });
 
@@ -78,22 +77,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         new ViajesPublicadosTask(MainActivity.this).execute();
     }
-
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /* Called whenever we call invalidateOptionsMenu()
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = drawer_layout.isDrawerOpen(sidebar_lv);
-        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
-    }*/
 
     public void viajesPublicadosTaskRetorno (List<Viaje> viajesPublicados) {
         if (viajesPublicados == null) {
@@ -138,28 +121,4 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra(Valores.VIAJE, viaje.getId());
         startActivity(i);
     }
-
-   /* private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    private void selectItem(int position) {
-        System.out.println("*** clickeo = " + position);
-        // update the main content by replacing fragments
-        /*Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
-    } */
 }

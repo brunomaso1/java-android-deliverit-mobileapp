@@ -82,7 +82,7 @@ public class MessagingService extends FirebaseMessagingService {
         CharSequence contentText = Valores.VIAJE_PARA_TI;
         Notification notificacion = new NotificationCompat.Builder(this)
                 .setContentIntent(pendingIntent)
-                .setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/jingle"))
+                .setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/jingle.m4a"))
                 .setTicker(ticker)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)

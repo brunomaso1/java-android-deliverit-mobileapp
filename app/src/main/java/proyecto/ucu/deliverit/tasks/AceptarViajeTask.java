@@ -13,11 +13,10 @@ import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
-    NotificacionActivity activityPadre;
-    ProgressDialog progressDialog;
-    Integer idDelivery;
-    Integer idViaje;
-
+    private NotificacionActivity activityPadre;
+    private ProgressDialog progressDialog;
+    private Integer idDelivery;
+    private Integer idViaje;
 
     public AceptarViajeTask(NotificacionActivity activityPadre, Integer idDelivery, Integer idViaje) {
         this.activityPadre = activityPadre;

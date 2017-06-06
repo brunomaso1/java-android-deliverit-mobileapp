@@ -14,12 +14,9 @@ import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.servicios.InstanceIDService;
 
-/**
- * Created by DeliverIT on 31/01/2017.
- */
-
 public class SplashScreenActivity extends AppCompatActivity {
-    // Set the duration of the splash screen
+
+    // Duración del splah screen
     private static final long SPLASH_SCREEN_DELAY = 3000;
 
     @Override

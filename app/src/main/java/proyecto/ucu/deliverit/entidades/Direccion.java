@@ -2,10 +2,6 @@ package proyecto.ucu.deliverit.entidades;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by DeliverIT on 20/02/2017.
- */
-
 public class Direccion implements BaseColumns {
     public static final String TABLE_NAME = "direccion";
     public static final String COLUMN_NAME_CALLE = "calle";

@@ -18,9 +18,9 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class CrearUsuarioTask extends AsyncTask<Void, Void, RespuestaGeneral> {
-    RegistroActivity activityPadre;
-    ProgressDialog progressDialog;
-    Usuario usuario;
+    private RegistroActivity activityPadre;
+    private ProgressDialog progressDialog;
+    private Usuario usuario;
 
     public CrearUsuarioTask(RegistroActivity activityPadre, Usuario usuario) {
         this.activityPadre = activityPadre;

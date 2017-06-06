@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.entidades.Cliente;
 import proyecto.ucu.deliverit.entidades.Delivery;
 import proyecto.ucu.deliverit.entidades.Direccion;

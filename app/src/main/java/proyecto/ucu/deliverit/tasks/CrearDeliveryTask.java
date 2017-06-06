@@ -18,9 +18,9 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class CrearDeliveryTask extends AsyncTask<Void, Void, RespuestaGeneral> {
-    RegistroActivity activityPadre;
-    ProgressDialog progressDialog;
-    Delivery delivery;
+    private RegistroActivity activityPadre;
+    private ProgressDialog progressDialog;
+    private Delivery delivery;
 
     public CrearDeliveryTask(RegistroActivity activityPadre, Delivery delivery) {
         this.activityPadre = activityPadre;

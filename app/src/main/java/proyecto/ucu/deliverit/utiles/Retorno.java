@@ -1,9 +1,5 @@
 package proyecto.ucu.deliverit.utiles;
 
-/**
- * Created by DeliverIT on 31/01/2017.
- */
-
 public class Retorno {
     private String codigo;
     private String mensaje;

@@ -1,20 +1,6 @@
 package proyecto.ucu.deliverit.utiles;
 
-
-import android.content.Context;
-import android.database.sqlite.SQLiteException;
 import android.util.Base64;
-
-import java.util.List;
-
-import proyecto.ucu.deliverit.almacenamiento.DataBase;
-import proyecto.ucu.deliverit.entidades.Pedido;
-import proyecto.ucu.deliverit.servicios.MessagingService;
-
-
-/**
- * Created by DeliverIT on 31/01/2017.
- */
 
 public class Operaciones {
 

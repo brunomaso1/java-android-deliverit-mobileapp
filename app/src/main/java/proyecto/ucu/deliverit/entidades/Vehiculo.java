@@ -2,10 +2,6 @@ package proyecto.ucu.deliverit.entidades;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by JMArtegoytia on 03/03/2017.
- */
-
 public class Vehiculo implements BaseColumns {
     public static final String VEHICULO_POR_DEFECTO_SPINNER = "Automotor";
 

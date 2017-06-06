@@ -27,9 +27,9 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class RecorridoActivity extends FragmentActivity implements OnMapReadyCallback {
-    DataBase DB;
+    private DataBase DB;
 
-    Viaje viaje;
+    private Viaje viaje;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

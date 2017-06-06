@@ -18,4 +18,6 @@
     <string name="no_existen_viajes_disponibles">No existen viajes disponibles</string>
     <string name="problema_de_conexion_con_google">Se produjo un problema en la conexión con los servicios de Google</string>
     <string name="viaje_tomado">Este Viaje ya fue tomado</string>
+    <string name="sidebar_open">Open navigation drawer</string>
+    <string name="sidebar_close">Close navigation drawer</string>
 </resources>

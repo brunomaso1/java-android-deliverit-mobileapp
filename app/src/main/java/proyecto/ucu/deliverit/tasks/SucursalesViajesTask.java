@@ -18,8 +18,8 @@ import proyecto.ucu.deliverit.main.SucursalesMapActivity;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class SucursalesViajesTask extends AsyncTask<Void, Void, List<Sucursal>> {
-    SucursalesMapActivity activityPadre;
-    ProgressDialog progressDialog;
+    private SucursalesMapActivity activityPadre;
+    private ProgressDialog progressDialog;
 
     public SucursalesViajesTask(SucursalesMapActivity activityPadre) {
         this.activityPadre = activityPadre;

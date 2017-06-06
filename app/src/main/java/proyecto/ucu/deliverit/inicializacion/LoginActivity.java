@@ -14,14 +14,10 @@ import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.main.MainActivity;
 
-/**
- * Created by DeliverIT on 31/01/2017.
- */
-
 public class LoginActivity extends AppCompatActivity {
-    TextView olvidoPassword_tv;
-    EditText nombreUsuario_Et, password_et;
-    Button ingresar_btn;
+    private TextView olvidoPassword_tv;
+    private EditText nombreUsuario_Et, password_et;
+    private Button ingresar_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

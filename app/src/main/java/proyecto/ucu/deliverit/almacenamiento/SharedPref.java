@@ -6,10 +6,6 @@ import android.content.SharedPreferences;
 
 import static android.content.Context.MODE_PRIVATE;
 
-/**
- * Created by deliverIT on 31/01/2017.
- */
-
 public class SharedPref {
     private static final String SHARED_PREF_NAME = "SharedPreferencesDeliverIT";
 

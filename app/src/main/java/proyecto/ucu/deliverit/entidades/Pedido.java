@@ -2,16 +2,11 @@ package proyecto.ucu.deliverit.entidades;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by DeliverIT on 20/02/2017.
- */
-
 public class Pedido implements BaseColumns {
     public static final String TABLE_NAME = "pedido";
     public static final String COLUMN_NAME_VIAJE = "viaje";
     public static final String COLUMN_NAME_DETALLE = "detalle";
     public static final String COLUMN_NAME_CLIENTE = "cliente";
-
 
     private Integer id;
     private Viaje viaje;

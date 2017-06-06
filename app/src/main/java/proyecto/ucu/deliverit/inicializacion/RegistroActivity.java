@@ -33,19 +33,15 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Retorno;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-/**
- * Created by DeliverIT on 31/01/2017.
- */
-
 public class RegistroActivity extends AppCompatActivity {
-    EditText nombreUsuario_et, password_et, nombre_et, mail_et, telefono_et, cuentaRedPagos_et;
-    ImageButton camara_ibtn;
-    Button registrarse_btn;
-    Spinner vehiculos_sp;
+    private EditText nombreUsuario_et, password_et, nombre_et, mail_et, telefono_et, cuentaRedPagos_et;
+    private ImageButton camara_ibtn;
+    private Button registrarse_btn;
+    private Spinner vehiculos_sp;
 
     private Vehiculo vehiculoSeleccionado;
 
-    DataBase DB;
+    private DataBase DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

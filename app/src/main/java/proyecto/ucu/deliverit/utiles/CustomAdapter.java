@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import proyecto.ucu.deliverit.R;
@@ -21,7 +20,7 @@ import proyecto.ucu.deliverit.entidades.Viaje;
 public class CustomAdapter extends ArrayAdapter<Viaje> implements View.OnClickListener {
 
     private List<Viaje> viajes;
-    Context mContext;
+    private Context mContext;
 
     private int lastPosition = -1;
 

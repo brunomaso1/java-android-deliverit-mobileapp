@@ -31,16 +31,16 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class NotificacionActivity extends AppCompatActivity {
-    TextView razonSocial_tv, direccion_tv, precio_tv;
-    ImageView restaurant_iv;
-    Button aceptar_btn, rechazar_btn;
-    ImageButton mapa_ibtn;
-    ListView pedidos_lv;
+    private TextView razonSocial_tv, direccion_tv, precio_tv;
+    private ImageView restaurant_iv;
+    private Button aceptar_btn, rechazar_btn;
+    private ImageButton mapa_ibtn;
+    private ListView pedidos_lv;
 
-    DataBase DB;
+    private DataBase DB;
 
-    Viaje viaje;
-    List<Pedido> pedidos = null;
+    private Viaje viaje;
+    private List<Pedido> pedidos = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +157,6 @@ public class NotificacionActivity extends AppCompatActivity {
         } else {
             Toast.makeText(NotificacionActivity.this, R.string.viaje_tomado, Toast.LENGTH_LONG).show();
         }
-       // finish();
     }
 
     public void finalizarViajeTaskRetorno(RespuestaGeneral respuesta) {

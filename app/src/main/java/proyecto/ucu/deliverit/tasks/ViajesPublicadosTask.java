@@ -17,8 +17,8 @@ import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class ViajesPublicadosTask extends AsyncTask<Object, Object, List<Viaje>> {
-    MainActivity activityPadre;
-    ProgressDialog progressDialog;
+    private MainActivity activityPadre;
+    private ProgressDialog progressDialog;
 
     public ViajesPublicadosTask(MainActivity activityPadre) {
         this.activityPadre = activityPadre;

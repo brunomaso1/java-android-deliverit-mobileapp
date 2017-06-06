@@ -34,7 +34,7 @@ import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class MessagingService extends FirebaseMessagingService {
-    DataBase DB;
+    private DataBase DB;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {

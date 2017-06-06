@@ -1,9 +1,5 @@
 package proyecto.ucu.deliverit.utiles;
 
-/**
- * Created by JMArtegoytia on 03/03/2017.
- */
-
 public class RespuestaGeneral {
     public static final int CODIGO_OK = 0;
     public static final int CODIGO_ERROR = -1;

@@ -40,9 +40,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private DataBase DB;
 
-    Button registrarse_btn, ingresar_btn;
+    private Button registrarse_btn, ingresar_btn;
 
-    GoogleApiClient apiClient;
+    private GoogleApiClient apiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

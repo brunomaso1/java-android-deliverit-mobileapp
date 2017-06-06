@@ -17,9 +17,9 @@ import proyecto.ucu.deliverit.utiles.Valores;
 
 public class FinalizarViajeTask extends AsyncTask<Void, Void, RespuestaGeneral>  {
 
-    NotificacionActivity activityPadre;
-    ProgressDialog progressDialog;
-    Integer idViaje;
+    private NotificacionActivity activityPadre;
+    private ProgressDialog progressDialog;
+    private Integer idViaje;
 
     public FinalizarViajeTask(NotificacionActivity activityPadre, Integer idViaje) {
         this.activityPadre = activityPadre;

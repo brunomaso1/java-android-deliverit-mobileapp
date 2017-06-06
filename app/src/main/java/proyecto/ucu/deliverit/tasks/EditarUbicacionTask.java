@@ -19,9 +19,9 @@ import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class EditarUbicacionTask extends AsyncTask<Void, Void, RespuestaGeneral> {
-    HomeActivity activityPadre;
-    ProgressDialog progressDialog;
-    Ubicacion ubicacion;
+    private HomeActivity activityPadre;
+    private ProgressDialog progressDialog;
+    private Ubicacion ubicacion;
 
     public EditarUbicacionTask (HomeActivity activityPadre, Ubicacion ubicacion) {
         this.activityPadre = activityPadre;

@@ -17,9 +17,9 @@ import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class SolicitarPedidosTask extends AsyncTask<Void, Void, List<Pedido>> {
-    MainActivity activityPadre;
-    ProgressDialog progressDialog;
-    Integer idViaje;
+    private MainActivity activityPadre;
+    private ProgressDialog progressDialog;
+    private Integer idViaje;
 
     public SolicitarPedidosTask(MainActivity activityPadre, Integer idViaje) {
         this.activityPadre = activityPadre;

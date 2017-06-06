@@ -17,8 +17,8 @@ import proyecto.ucu.deliverit.tasks.SucursalesViajesTask;
 import proyecto.ucu.deliverit.utiles.MapUtils;
 
 public class SucursalesMapActivity extends FragmentActivity implements OnMapReadyCallback {
-    GoogleMap map;
-    DataBase DB;
+    private GoogleMap map;
+    private DataBase DB;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

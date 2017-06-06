@@ -1,9 +1,7 @@
 package proyecto.ucu.deliverit.main;
 
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -13,10 +11,8 @@ import java.util.List;
 
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
-import proyecto.ucu.deliverit.entidades.Direccion;
 import proyecto.ucu.deliverit.entidades.Sucursal;
 import proyecto.ucu.deliverit.entidades.Ubicacion;
-import proyecto.ucu.deliverit.tasks.DireccionesViajesTask;
 import proyecto.ucu.deliverit.tasks.SucursalesViajesTask;
 import proyecto.ucu.deliverit.utiles.MapUtils;
 

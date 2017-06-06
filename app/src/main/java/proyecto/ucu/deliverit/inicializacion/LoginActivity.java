@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 /*if (!nombreUsuario_Et.getText().toString().equals("")) {
                     DataBase db = new DataBase(LoginActivity.this);
                     long idDelivery = db.login(nombreUsuario_Et.getText().toString(), password_et.getText().toString());

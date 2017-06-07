@@ -2,12 +2,14 @@ package proyecto.ucu.deliverit.entidades;
 
 import android.provider.BaseColumns;
 
+import java.sql.Timestamp;
+
 public class Viaje implements BaseColumns {
     public static final String TABLE_NAME = "viaje";
     public static final String COLUMN_NAME_PRECIO = "precio";
-    public static final String COLUMN_NAME_DELIVERY = "delivery";
     public static final String COLUMN_NAME_SUCURSAL = "sucursal";
     public static final String COLUMN_NAME_ESTADO = "estado";
+    public static final String COLUMN_FECHA = "fecha";
 
     public static String ID = "id";
     public static String PRECIO = "precio";
@@ -17,6 +19,7 @@ public class Viaje implements BaseColumns {
     private Integer precio;
     private Sucursal sucursal;
     private EstadoViaje estado;
+    private Timestamp fecha;
 
     public Integer getId() {
         return id;
@@ -48,5 +51,13 @@ public class Viaje implements BaseColumns {
 
     public void setEstado(EstadoViaje estado) {
         this.estado = estado;
+    }
+
+    public Timestamp getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
     }
 }

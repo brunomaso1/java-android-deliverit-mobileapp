@@ -170,6 +170,8 @@ public class NotificacionActivity extends AppCompatActivity {
             DB.eliminarPedido(pedido.getId());
             DB.eliminarCliente(pedido.getCliente().getId());
             DB.eliminarDireccion(pedido.getCliente().getDireccion().getId());
+            DB.eliminarSucursal(pedido.getViaje().getSucursal().getId());
+            DB.eliminarDireccion(pedido.getViaje().getSucursal().getDireccion().getId());
         }
         this.pedidos.clear();
     }

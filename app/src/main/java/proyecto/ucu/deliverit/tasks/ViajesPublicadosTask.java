@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,10 +36,10 @@ public class ViajesPublicadosTask extends AsyncTask<Object, Object, List<Viaje>>
 
     @Override
     protected List<Viaje> doInBackground(Object... params) {
-        List<Viaje> viajes = null;
+        List<Viaje> viajes = new ArrayList<>();
 
         OkHttpClient client = new OkHttpClient();
-        String url = Valores.URL_VIAJES_PUBLICADOS;
+        String url = Valores.URL_VIAJES_PUBLICADOS + new Timestamp(System.currentTimeMillis());
 
         Request request = new Request.Builder()
                 .url(url)
@@ -46,11 +48,17 @@ public class ViajesPublicadosTask extends AsyncTask<Object, Object, List<Viaje>>
         Response response;
         try {
             response = client.newCall(request).execute();
-            Gson gson = new Gson();
-            viajes = Arrays.asList(gson.fromJson(response.body().string(), Viaje[].class));
+
+            if (response.isSuccessful()) {
+                Gson gson = new Gson();
+                viajes = Arrays.asList(gson.fromJson(response.body().string(), Viaje[].class));
+            } else {
+                viajes = null;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
+            viajes = null;
         }
         return viajes;
     }

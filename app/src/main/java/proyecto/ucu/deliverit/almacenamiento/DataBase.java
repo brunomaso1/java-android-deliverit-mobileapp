@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String TYPE_BIG_INT = " BIGINT";
     private static final String TYPE_SMALLINT = " SMALLINT";
     private static final String TYPE_DOUBLE = " DOUBLE";
+    private static final String TYPE_TIMESTAMP = " TIMESTAMP";
 
     private static final String PRIMARY_KEY = " PRIMARY KEY";
 
@@ -86,6 +88,7 @@ public class DataBase extends SQLiteOpenHelper {
                     Viaje._ID + TYPE_INTEGER + PRIMARY_KEY + ","
                     + Viaje.PRECIO + TYPE_SMALLINT + ","
                     + Viaje.COLUMN_NAME_SUCURSAL + TYPE_SMALLINT + ","
+                    + Viaje.COLUMN_FECHA + TYPE_TIMESTAMP + NOT_NULL + ","
                     + Viaje.COLUMN_NAME_ESTADO + TYPE_SMALLINT  + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_CLIENTE
@@ -286,6 +289,7 @@ public class DataBase extends SQLiteOpenHelper {
             values.put(Viaje._ID, viaje.getId());
             values.put(Viaje.COLUMN_NAME_PRECIO, viaje.getPrecio());
             values.put(Viaje.COLUMN_NAME_SUCURSAL, viaje.getSucursal().getId());
+            values.put(Viaje.COLUMN_FECHA, viaje.getFecha().toString());
             values.put(Viaje.COLUMN_NAME_ESTADO, viaje.getEstado().getId());
             db.insert(Viaje.TABLE_NAME, null, values);
         }
@@ -300,9 +304,22 @@ public class DataBase extends SQLiteOpenHelper {
             values.put(Pedido.COLUMN_NAME_CLIENTE, pedido.getCliente().getId());
             values.put(Pedido.COLUMN_NAME_DETALLE, pedido.getDetalle());
             values.put(Pedido.COLUMN_NAME_VIAJE, pedido.getViaje().getId());
-
             db.insert(Pedido.TABLE_NAME, null, values);
         }
+    }
+
+    public void eliminarSucursal(Integer idSucursal) throws SQLiteException {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = Sucursal._ID + " = ?";
+
+        // Specify arguments in placeholder order.
+        String[] selectionArgs = { String.valueOf(idSucursal) };
+
+        // Issue SQL statement.
+        db.delete(Sucursal.TABLE_NAME, selection, selectionArgs);
     }
 
     public void eliminarViaje(Integer idViaje) throws SQLiteException {
@@ -389,7 +406,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Viaje._ID, Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_SUCURSAL, Viaje.COLUMN_NAME_ESTADO
+                Viaje._ID, Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_SUCURSAL, Viaje.COLUMN_NAME_ESTADO, Viaje.COLUMN_FECHA
         };
 
         String selection = Viaje._ID + " = ?";
@@ -409,11 +426,13 @@ public class DataBase extends SQLiteOpenHelper {
         Integer idSucursal = null;
         Integer id = null;
         Integer estado = null;
+        Timestamp fecha = null;
         while (c.moveToNext()) {
             id = c.getInt(c.getColumnIndexOrThrow(Viaje._ID));
             precio = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
             idSucursal = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_SUCURSAL));
             estado = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_ESTADO));
+            fecha = Timestamp.valueOf(c.getString(c.getColumnIndexOrThrow(Viaje.COLUMN_FECHA)));
         }
         c.close();
 
@@ -425,6 +444,7 @@ public class DataBase extends SQLiteOpenHelper {
             viaje.setPrecio(precio);
             viaje.setSucursal(sucursal);
             viaje.setEstado(new EstadoViaje(estado));
+            viaje.setFecha(fecha);
         }
 
         return viaje;

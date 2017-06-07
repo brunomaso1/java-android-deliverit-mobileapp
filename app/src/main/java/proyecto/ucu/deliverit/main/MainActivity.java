@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer_layout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private CustomAdapter adapter;
+    public CustomAdapter adapter;
 
     private DataBase DB;
 
@@ -80,32 +80,36 @@ public class MainActivity extends AppCompatActivity {
 
     public void viajesPublicadosTaskRetorno (List<Viaje> viajesPublicados) {
         if (viajesPublicados == null) {
-            Toast.makeText(MainActivity.this, "No se pudieron obtener los viajes", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, R.string.no_se_pudo_obtener_viajes, Toast.LENGTH_LONG).show();
         } else {
             viajes = viajesPublicados;
 
-            adapter = new CustomAdapter(viajesPublicados, MainActivity.this);
-            viajes_lv.setAdapter(adapter);
+            if (viajes.size() == 0) {
+                Toast.makeText(MainActivity.this, R.string.no_hay_viajes, Toast.LENGTH_LONG).show();
+            } else {
+                adapter = new CustomAdapter(viajesPublicados, MainActivity.this);
+                viajes_lv.setAdapter(adapter);
 
-            viajes_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    viaje = viajes.get(position);
-                    new SolicitarPedidosTask(MainActivity.this, viaje.getId()).execute();
-                }
-            });
-
-            mapa_ibtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (viajes.size() > 0) {
-                        Intent intent = new Intent(MainActivity.this, SucursalesMapActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.no_existen_viajes_disponibles, Toast.LENGTH_LONG).show();
+                viajes_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        viaje = viajes.get(position);
+                        new SolicitarPedidosTask(MainActivity.this, viaje.getId()).execute();
                     }
-                }
-            });
+                });
+
+                mapa_ibtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (viajes.size() > 0) {
+                            Intent intent = new Intent(MainActivity.this, SucursalesMapActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.no_existen_viajes_disponibles, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
         }
     }
 

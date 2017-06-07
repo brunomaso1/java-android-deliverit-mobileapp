@@ -1,12 +1,15 @@
 package proyecto.ucu.deliverit.main;
 
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import proyecto.ucu.deliverit.R;
@@ -39,7 +42,14 @@ public class SucursalesMapActivity extends FragmentActivity implements OnMapRead
     }
 
     public void direccionesViajesTaskRetorno(List<Sucursal> sucursales) {
-        Ubicacion ubicacion = DB.getUbicacion();
+        Ubicacion ubicacion = null;
+
+        try {
+            ubicacion = DB.getUbicacion();
+        } catch (SQLiteException e) {
+            Toast.makeText(SucursalesMapActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_LONG).show();
+        }
+
         MapUtils.agregarMarkersMain(this.map, ubicacion, sucursales);
     }
 }

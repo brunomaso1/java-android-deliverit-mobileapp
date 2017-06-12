@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/icono_iv"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_vertical|center_horizontal"/>
+
+    <TextView
+        android:id="@+id/texto_sidebar_tv"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8"
+        android:textSize="25dp"
+        android:textColor="@color/black"/>
+</LinearLayout>

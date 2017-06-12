@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="icons_sidebar">
+        <item>@drawable/ic_sidebar_1</item>
+        <item>@drawable/ic_sidebar_2</item>
+        <item>@drawable/ic_sidebar_3</item>
+        <item>@drawable/ic_sidebar_4</item>
+        <item>@drawable/ic_sidebar_5</item>
+    </integer-array>
+</resources>

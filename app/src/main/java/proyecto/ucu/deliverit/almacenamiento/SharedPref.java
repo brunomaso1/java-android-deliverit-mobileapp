@@ -26,6 +26,12 @@ public class SharedPref {
         return idDelivery;
     }
 
+    public static void logout(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE).edit();
+        editor.putLong(ID_DELIVERY, 0);
+        editor.commit();
+    }
+
     public static void guardarIdDelivery (Context context, long idDelivery) {
         SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE).edit();
         editor.putLong(ID_DELIVERY, idDelivery);

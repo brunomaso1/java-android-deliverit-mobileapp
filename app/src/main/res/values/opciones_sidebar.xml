@@ -2,11 +2,9 @@
 <resources>
     <string-array name="opciones_sidebar_array">
         <item>Viajes</item>
-        <item>Restaurants</item>
+        <item>Restaurantes</item>
         <item>Ingresos</item>
         <item>Perfil</item>
-        <item></item>
-        <item></item>
         <item>Salir</item>
     </string-array>
 </resources>

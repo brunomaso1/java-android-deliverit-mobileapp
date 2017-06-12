@@ -1,4 +1,4 @@
-package proyecto.ucu.deliverit.utiles;
+package proyecto.ucu.deliverit.custom_adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,8 +16,9 @@ import java.util.List;
 
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.utiles.Operaciones;
 
-public class CustomAdapter extends ArrayAdapter<Viaje> implements View.OnClickListener {
+public class CustomAdapterForViajesPublicados extends ArrayAdapter<Viaje> {
 
     private List<Viaje> viajes;
     private Context mContext;
@@ -29,24 +30,10 @@ public class CustomAdapter extends ArrayAdapter<Viaje> implements View.OnClickLi
         ImageView foto_restaurant_iv;
     }
 
-    public CustomAdapter(List<Viaje> viajes, Context context) {
+    public CustomAdapterForViajesPublicados(List<Viaje> viajes, Context context) {
         super(context, R.layout.row, viajes);
         this.viajes = viajes;
         this.mContext = context;
-    }
-
-    @Override
-    public void onClick(View v) {
-        int position = (Integer) v.getTag();
-        Object object= getItem(position);
-        Viaje viaje = (Viaje)object;
-
-        switch (v.getId()) {
-           /* case R.id.item_info:
-                Snackbar.make(v, "Release date " +dataModel.getFeature(), Snackbar.LENGTH_LONG)
-                        .setAction("No action", null).show();
-                break; */
-        }
     }
 
     @Override

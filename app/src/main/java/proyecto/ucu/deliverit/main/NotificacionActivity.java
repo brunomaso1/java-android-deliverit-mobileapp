@@ -116,7 +116,6 @@ public class NotificacionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     eliminarPedidosEnCascada();
-                    DB.eliminarViaje(viaje.getId());
                 } catch (SQLiteException e) {
                     Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
                 }
@@ -147,7 +146,9 @@ public class NotificacionActivity extends AppCompatActivity {
         if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
             SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
 
+            aceptar_btn.setVisibility(View.INVISIBLE);
             Button finalizar_btn = (Button)findViewById(R.id.aceptar_btn);
+            finalizar_btn.setText("FINALIZAR");
             finalizar_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -159,7 +160,8 @@ public class NotificacionActivity extends AppCompatActivity {
         }
     }
 
-    public void finalizarViajeTaskRetorno(RespuestaGeneral respuesta) {
+    public void finalizarViajeTaskRetorno() {
+
         finish();
     }
 
@@ -170,9 +172,16 @@ public class NotificacionActivity extends AppCompatActivity {
             DB.eliminarPedido(pedido.getId());
             DB.eliminarCliente(pedido.getCliente().getId());
             DB.eliminarDireccion(pedido.getCliente().getDireccion().getId());
-            DB.eliminarSucursal(pedido.getViaje().getSucursal().getId());
-            DB.eliminarDireccion(pedido.getViaje().getSucursal().getDireccion().getId());
+
+            // La sucursal se elimina sólo si el delivery nunca realizó un viaje proveniente de ella
+            if (DB.getViajeSucursal(pedido.getViaje().getId(), pedido.getViaje().getSucursal().getId()) == 0) {
+                DB.eliminarSucursal(pedido.getViaje().getSucursal().getId());
+                DB.eliminarDireccion(pedido.getViaje().getSucursal().getDireccion().getId());
+            }
+
         }
+
+        DB.eliminarViaje(viaje.getId());
         this.pedidos.clear();
     }
 }

@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer_layout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-
     public CustomAdapterForSidebar sidebarAdapter;
     public CustomAdapterForViajesPublicados adapter;
 
@@ -142,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
+                    case 0: // Viajes aceptados
+                        Intent intent = new Intent(MainActivity.this, ViajesActivity.class);
+                        startActivity(intent);
                     case 4: // Salir
                         SharedPref.logout(MainActivity.this);
                         finish();

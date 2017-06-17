@@ -450,6 +450,82 @@ public class DataBase extends SQLiteOpenHelper {
         return viaje;
     }
 
+    public List<Viaje> getViajes() throws SQLiteException {
+        List<Viaje> retorno = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Viaje._ID, Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_SUCURSAL, Viaje.COLUMN_FECHA
+        };
+
+        String selection = Viaje.COLUMN_NAME_ESTADO + " = 4";
+
+        Cursor c = db.query(
+                Viaje.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                Viaje.COLUMN_FECHA + " DESC"                                      // The sort order
+        );
+
+        while (c.moveToNext()) {
+            Integer id = c.getInt(c.getColumnIndexOrThrow(Viaje._ID));
+            Integer precio = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
+            Integer idSucursal = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_SUCURSAL));
+            Timestamp fecha = Timestamp.valueOf(c.getString(c.getColumnIndexOrThrow(Viaje.COLUMN_FECHA)));
+
+            if (id != null) {
+                Viaje v = new Viaje();
+                v.setId(id);
+                v.setPrecio(precio);
+                v.setFecha(fecha);
+
+                Sucursal sucursal = getSucursal(idSucursal);
+                v.setSucursal(sucursal);
+                retorno.add(v);
+            }
+        }
+        c.close();
+
+        return retorno;
+    }
+
+    public int getViajeSucursal(Integer idViaje, Integer idSucursal) throws SQLiteException {
+        int retorno = 0;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Viaje._ID
+        };
+
+        String selection = Viaje._ID + " <> ? AND " + Viaje.COLUMN_NAME_SUCURSAL + " = ?";
+        String[] selectionArgs = { String.valueOf(idViaje), String.valueOf(idSucursal) };
+
+        Cursor c = db.query(
+                Viaje.TABLE_NAME,                         // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        while (c.moveToNext()) {
+            retorno = c.getInt(c.getColumnIndexOrThrow(Viaje._ID));
+            if (retorno != 0) {
+                break;
+            }
+        }
+        c.close();
+
+        return retorno;
+    }
+
     public Usuario getUsuario(Integer idUsuario) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -891,5 +967,23 @@ public class DataBase extends SQLiteOpenHelper {
             insertarCliente(p.getCliente());
             insertarPedido(p);
         }
+    }
+
+    public void finalizarViaje(Integer idViaje) throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(Viaje.COLUMN_NAME_ESTADO, 4);
+
+        // Which row to update, based on the title
+        String selection = Viaje._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(idViaje) };
+
+        db.update(
+                Viaje.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
     }
 }

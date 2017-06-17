@@ -57,7 +57,6 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, RespuestaGeneral> 
                 respuesta.setCodigo(RespuestaGeneral.CODIGO_ERROR);
             }
         } catch (IOException e) {
-            respuesta.setCodigo(RespuestaGeneral.CODIGO_ERROR);
             e.printStackTrace();
         }
 
@@ -68,6 +67,6 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, RespuestaGeneral> 
     protected void onPostExecute(RespuestaGeneral respuestaGeneral) {
         super.onPostExecute(respuestaGeneral);
         progressDialog.dismiss();
-        activityPadre.finalizarViajeTaskRetorno(respuestaGeneral);
+        activityPadre.finalizarViajeTaskRetorno();
     }
 }

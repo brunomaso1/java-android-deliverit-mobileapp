@@ -161,6 +161,11 @@ public class NotificacionActivity extends AppCompatActivity {
     }
 
     public void finalizarViajeTaskRetorno() {
+        try {
+            DB.finalizarViaje(viaje.getId());
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        }
 
         finish();
     }

@@ -26,4 +26,6 @@
     <string name="viaje_tomado">Este Viaje ya fue tomado</string>
     <string name="sidebar_open">Open navigation drawer</string>
     <string name="sidebar_close">Close navigation drawer</string>
+    <string name="ingrese_usuario_login">Debe ingresar un usuario para loguearse</string>
+    <string name="ingrese_password_login">Debe ingresar una contraseña para loguearse</string>
 </resources>

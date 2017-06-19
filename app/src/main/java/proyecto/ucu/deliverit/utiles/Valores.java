@@ -30,6 +30,7 @@ public class Valores {
     public static final String URL_VIAJES_PUBLICADOS = URL_WS + "viaje/findPublicados/";
     public static final String URL_SOLICITAR_PEDIDOS = URL_WS + "pedido/solicitarPedidos/";
     public static final String URL_FINALIZAR_VIAJE = URL_WS + "viaje/finalizarViaje/";
+    public static final String URL_LOGIN = URL_WS + "delivery/login/";
     public static final String URL_DIRECCIONES_VIAJES = URL_WS + "viaje/findSucursales";
     public static final String BARRA_DIAGONAL = "/";
 
@@ -39,6 +40,7 @@ public class Valores {
     public static final String CARGANDO_VIAJES = "Cargando Viajes" + POR_FAVOR_ESPERE;
     public static final String SOLICITANDO_VIAJE = "Solicitando Viaje" + POR_FAVOR_ESPERE;
     public static final String FINALIZAR_VIAJES = "Finalizando Viaje" + POR_FAVOR_ESPERE;
+    public static final String LOGIN = "Ingresando" + POR_FAVOR_ESPERE;
     public static final String ACTUALIZANDO_UBICACION = "Actualizando ubicación" + POR_FAVOR_ESPERE;
     public static final String CREANDO_USUARIO = "Creando Usuario" + POR_FAVOR_ESPERE;
     public static final String OBTENIENDO_PEDIDOS = "Obteniendo pedidos" + POR_FAVOR_ESPERE;

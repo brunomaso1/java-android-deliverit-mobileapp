@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="opciones_sidebar_array">
+        <item>Ingresos</item>
         <item>Viajes</item>
         <item>Restaurantes</item>
-        <item>Ingresos</item>
         <item>Perfil</item>
         <item>Salir</item>
     </string-array>

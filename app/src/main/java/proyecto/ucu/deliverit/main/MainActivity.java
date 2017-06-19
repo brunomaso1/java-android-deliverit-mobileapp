@@ -142,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = null;
                 switch (position) {
-                    case 0: // Viajes aceptados
-                        intent = new Intent(MainActivity.this, ViajesActivity.class);
-                        intent.putExtra(Valores.ACTIVITY_PADRE, Valores.ACTIVITY_PADRE_MAIN);
+                    case 0: // Ingresos
+                        intent = new Intent(MainActivity.this, IngresosActivity.class);
                         startActivity(intent);
                         break;
-                    case 2:
-                        intent = new Intent(MainActivity.this, IngresosActivity.class);
+                    case 1: // Viajes aceptados
+                        intent = new Intent(MainActivity.this, ViajesActivity.class);
+                        intent.putExtra(Valores.ACTIVITY_PADRE, Valores.ACTIVITY_PADRE_MAIN);
                         startActivity(intent);
                         break;
                     case 4: // Salir

@@ -12,7 +12,10 @@ import android.widget.Toast;
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
 import proyecto.ucu.deliverit.almacenamiento.SharedPref;
+import proyecto.ucu.deliverit.entidades.Usuario;
 import proyecto.ucu.deliverit.main.MainActivity;
+import proyecto.ucu.deliverit.tasks.LoginTask;
+import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 
 public class LoginActivity extends AppCompatActivity {
     private TextView olvidoPassword_tv;
@@ -41,24 +44,29 @@ public class LoginActivity extends AppCompatActivity {
         ingresar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                /*if (!nombreUsuario_Et.getText().toString().equals("")) {
-                    DataBase db = new DataBase(LoginActivity.this);
-                    long idDelivery = db.login(nombreUsuario_Et.getText().toString(), password_et.getText().toString());
-
-                    if (idDelivery == 0) {
-                        Toast.makeText(LoginActivity.this, R.string.no_existe_delivery, Toast.LENGTH_SHORT).show();
-                    } else {
-                        SharedPref.guardarIdDelivery(getApplicationContext(), idDelivery);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
+                if (nombreUsuario_Et.getText().toString().isEmpty()) {
+                    Toast.makeText(LoginActivity.this, R.string.ingrese_usuario_login, Toast.LENGTH_LONG).show();
+                } else if (password_et.getText().toString().isEmpty()) {
+                    Toast.makeText(LoginActivity.this, R.string.ingrese_password_login, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(LoginActivity.this, R.string.nombre_usuario_vacio, Toast.LENGTH_SHORT).show();
-                }*/
+                    new LoginTask(LoginActivity.this, nombreUsuario_Et.getText().toString(), password_et.getText().toString()).execute();
+                }
             }
         });
+    }
+
+    public void loginTaskRetorno(RespuestaGeneral respuestaGeneral) {
+        if (respuestaGeneral == null) {
+            Toast.makeText(LoginActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
+        } else {
+            if (respuestaGeneral.getCodigo() == RespuestaGeneral.CODIGO_OK) {
+                SharedPref.guardarIdDelivery(LoginActivity.this, Integer.parseInt(respuestaGeneral.getObjeto()));
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(LoginActivity.this, respuestaGeneral.getMensaje(), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

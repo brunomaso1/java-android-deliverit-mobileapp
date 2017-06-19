@@ -75,12 +75,19 @@ public class NotificacionActivity extends AppCompatActivity {
 
         List<String> pedidosString = new ArrayList<>();
         for (int i = 0; i < pedidos.size(); i++) {
-            String pedido = "Dir. " + (i + 1) + ": " +  pedidos.get(i).getCliente().getDireccion().getCalle()
-                    + " " + pedidos.get(i).getCliente().getDireccion().getNroPuerta();
+            StringBuilder sb = new StringBuilder();
+            sb.append("Dir. ");
+            sb.append(i + 1);
+            sb.append(": ");
+            sb.append(pedidos.get(i).getCliente().getDireccion().getCalle());
+            sb.append(" ");
+            sb.append(pedidos.get(i).getCliente().getDireccion().getNroPuerta());
+
             if (pedidos.get(i).getCliente().getDireccion().getApartamento() != null) {
-                pedido = pedido + " apto. " + pedidos.get(i).getCliente().getDireccion().getApartamento();
+                sb.append(" apto. ");
+                sb.append(pedidos.get(i).getCliente().getDireccion().getApartamento());
             }
-            pedidosString.add(pedido);
+            pedidosString.add(sb.toString());
         }
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
@@ -143,12 +150,13 @@ public class NotificacionActivity extends AppCompatActivity {
     }
 
     public void aceptarTaskRetorno(Integer retorno) {
-        if (retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
+        if (retorno != null && retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
             SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
 
+            Button finalizar_btn = aceptar_btn;
             aceptar_btn.setVisibility(View.INVISIBLE);
-            Button finalizar_btn = (Button)findViewById(R.id.aceptar_btn);
             finalizar_btn.setText("FINALIZAR");
+            finalizar_btn.setVisibility(View.VISIBLE);
             finalizar_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -160,13 +168,14 @@ public class NotificacionActivity extends AppCompatActivity {
         }
     }
 
-    public void finalizarViajeTaskRetorno() {
-        try {
-            DB.finalizarViaje(viaje.getId());
-        } catch (SQLiteException e) {
-            e.printStackTrace();
+    public void finalizarViajeTaskRetorno(RespuestaGeneral respuestaGeneral) {
+        if (respuestaGeneral.getCodigo() == RespuestaGeneral.CODIGO_OK) {
+            try {
+                DB.finalizarViaje(viaje.getId());
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+            }
         }
-
         finish();
     }
 

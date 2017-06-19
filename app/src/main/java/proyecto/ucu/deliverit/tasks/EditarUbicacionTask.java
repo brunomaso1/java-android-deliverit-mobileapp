@@ -13,6 +13,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.inicializacion.HomeActivity;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
@@ -53,11 +54,12 @@ public class EditarUbicacionTask extends AsyncTask<Void, Void, RespuestaGeneral>
                 .build();
 
         try {
-            client.newCall(request).execute();
-
-            respuesta = new RespuestaGeneral();
-            respuesta.setCodigo(RespuestaGeneral.CODIGO_OK);
-            respuesta.setObjeto(objeto);
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                respuesta = new RespuestaGeneral();
+                respuesta.setCodigo(RespuestaGeneral.CODIGO_OK);
+                respuesta.setObjeto(objeto);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

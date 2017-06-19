@@ -57,6 +57,7 @@ public class DataBase extends SQLiteOpenHelper {
             = "CREATE TABLE " + Delivery.TABLE_NAME + " (" +
                     Delivery._ID + TYPE_INTEGER + PRIMARY_KEY + ","
                     + Delivery.COLUMN_NAME_USUARIO + TYPE_INTEGER + NOT_NULL + ","
+                    + Delivery.COLUMN_NAME_NOMBRE + TYPE_TEXT + NOT_NULL + ","
                     + Delivery.COLUMN_NAME_TOKEN + TYPE_TEXT + ","
                     + Delivery.COLUMN_NAME_UBICACION + TYPE_INTEGER + ","
                     + Delivery.COLUMN_NAME_VEHICULO + TYPE_SMALLINT + ")";
@@ -216,6 +217,7 @@ public class DataBase extends SQLiteOpenHelper {
 
         values.put(Delivery._ID, delivery.getId());
         values.put(Delivery.COLUMN_NAME_USUARIO, delivery.getUsuario().getId());
+        values.put(Delivery.COLUMN_NAME_NOMBRE, delivery.getNombre());
         values.put(Delivery.COLUMN_NAME_TOKEN, delivery.getToken());
         values.put(Delivery.COLUMN_NAME_UBICACION, delivery.getUbicacion().getId());
         values.put(Delivery.COLUMN_NAME_VEHICULO, delivery.getVehiculo().getId());
@@ -752,7 +754,7 @@ public class DataBase extends SQLiteOpenHelper {
         return cliente;
     }
 
-    public List<Vehiculo> getVehiculos() throws SQLiteException {
+  /*  public List<Vehiculo> getVehiculos() throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
@@ -785,7 +787,7 @@ public class DataBase extends SQLiteOpenHelper {
         c.close();
 
         return vehiculos;
-    }
+    } */
 
     public Restaurant getRestaurant(Integer idRestaurant) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -939,7 +941,43 @@ public class DataBase extends SQLiteOpenHelper {
                 selectionArgs);
     }
 
-    public void actualizarFoto(Integer id, String fotoBase64) throws SQLiteException {
+    public int getIngresosMensuales() throws SQLiteException {
+        int retorno = 0;
+
+        Timestamp primerDiaMes = new Timestamp(System.currentTimeMillis());
+        primerDiaMes.setDate(1);
+        System.out.println("**** primer día del mes = " + primerDiaMes);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Viaje.COLUMN_NAME_PRECIO
+        };
+
+        String selection = Viaje.COLUMN_FECHA + " >= ? AND " + Viaje.COLUMN_FECHA + " <= ?";
+        String[] selectionArgs = { String.valueOf(primerDiaMes), String.valueOf(new Timestamp(System.currentTimeMillis())) };
+
+        Cursor c = db.query(
+                Viaje.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        while (c.moveToNext()) {
+            retorno += c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
+        }
+        c.close();
+
+        return retorno;
+    }
+
+
+
+    /*public void actualizarFoto(Integer id, String fotoBase64) throws SQLiteException {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // New value for one column
@@ -955,7 +993,7 @@ public class DataBase extends SQLiteOpenHelper {
                 values,
                 selection,
                 selectionArgs);
-    }
+    }*/
 
     public void guardarDatosPedidos(List<Pedido> pedidos) throws SQLiteException {
         for (Pedido p : pedidos) {

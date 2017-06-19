@@ -52,12 +52,12 @@ public class CrearDeliveryTask extends AsyncTask<Void, Void, RespuestaGeneral> {
                 .post(body)
                 .build();
 
-        Response response;
         try {
-            response = client.newCall(request).execute();
-
-            gson = new Gson();
-            respuesta = gson.fromJson(response.body().string(), RespuestaGeneral.class);
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                gson = new Gson();
+                respuesta = gson.fromJson(response.body().string(), RespuestaGeneral.class);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

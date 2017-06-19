@@ -144,9 +144,11 @@ public class MainActivity extends AppCompatActivity {
                     case 0: // Viajes aceptados
                         Intent intent = new Intent(MainActivity.this, ViajesActivity.class);
                         startActivity(intent);
+                        break;
                     case 4: // Salir
                         SharedPref.logout(MainActivity.this);
                         finish();
+                        break;
                 }
             }
         });
@@ -160,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                 Class res = R.drawable.class;
                 Field field = res.getField("ic_sidebar_" + i);
                 iconos[i - 1] = field.getInt(null);
-                System.out.println("*** field get int = " + field.getInt(null));
             }
             catch (Exception e) {
                 e.printStackTrace();

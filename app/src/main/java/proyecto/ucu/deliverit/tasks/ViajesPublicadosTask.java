@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -16,6 +18,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.MainActivity;
+import proyecto.ucu.deliverit.utiles.DateDeserializer;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class ViajesPublicadosTask extends AsyncTask<Object, Object, List<Viaje>> {
@@ -45,12 +48,13 @@ public class ViajesPublicadosTask extends AsyncTask<Object, Object, List<Viaje>>
                 .url(url)
                 .build();
 
-        Response response;
         try {
-            response = client.newCall(request).execute();
+            Response response = client.newCall(request).execute();
 
             if (response.isSuccessful()) {
-                Gson gson = new Gson();
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
+                Gson gson = gsonBuilder.create();
                 viajes = Arrays.asList(gson.fromJson(response.body().string(), Viaje[].class));
             } else {
                 viajes = null;

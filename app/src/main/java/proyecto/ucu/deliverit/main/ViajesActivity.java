@@ -42,6 +42,13 @@ public class ViajesActivity extends AppCompatActivity {
     private void getViajes() throws NegocioException {
         try {
             viajes = DB.getViajes();
+
+            if (viajes.size() == 0) {
+                Toast.makeText(ViajesActivity.this, R.string.no_finalizo_viaje, Toast.LENGTH_LONG).show();
+            } else {
+                adapter = new CustomAdapterForViajesPublicados(viajes, ViajesActivity.this);
+                viajes_lv.setAdapter(adapter);
+            }
         } catch (SQLiteException e) {
             e.printStackTrace();
             throw new NegocioException(e.getMessage());

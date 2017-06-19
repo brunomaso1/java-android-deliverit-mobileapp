@@ -72,7 +72,7 @@ public class CustomAdapterForViajesPublicados extends ArrayAdapter<Viaje> {
         byte[] imgRestaurant = null;
 
         try {
-            imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getUsuario().getFoto());
+            imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getFoto());
         } catch (Exception e) {
             e.printStackTrace();
         }

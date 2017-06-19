@@ -9,6 +9,7 @@ public class Delivery implements BaseColumns {
     public static final String COLUMN_NAME_VEHICULO = "vehiculo";
     public static final String COLUMN_NAME_USUARIO = "usuario";
     public static final String COLUMN_NAME_UBICACION = "ubicacion";
+    public static final String COLUMN_NAME_NOMBRE = "nombre";
 
     private Integer id;
     private String token;
@@ -16,6 +17,7 @@ public class Delivery implements BaseColumns {
     private Usuario usuario;
     private Ubicacion ubicacion;
     private Short calificacion;
+    private String nombre;
 
     public Integer getId() {
         return id;
@@ -63,5 +65,13 @@ public class Delivery implements BaseColumns {
 
     public void setCalificacion(Short calificacion) {
         this.calificacion = calificacion;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

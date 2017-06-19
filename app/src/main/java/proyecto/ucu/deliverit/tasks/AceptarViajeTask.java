@@ -3,13 +3,21 @@ package proyecto.ucu.deliverit.tasks;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
+import proyecto.ucu.deliverit.utiles.DateDeserializer;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
@@ -47,8 +55,11 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
                 .build();
 
         try {
-            client.newCall(request).execute();
-            retorno = 0;
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                Gson gson = new Gson();
+                retorno = gson.fromJson(response.body().string(), Integer.class);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -14,6 +16,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.main.MainActivity;
+import proyecto.ucu.deliverit.utiles.DateDeserializer;
 import proyecto.ucu.deliverit.utiles.Valores;
 
 public class SolicitarPedidosTask extends AsyncTask<Void, Void, List<Pedido>> {
@@ -45,11 +48,15 @@ public class SolicitarPedidosTask extends AsyncTask<Void, Void, List<Pedido>> {
                 .url(url)
                 .build();
 
-        Response response;
         try {
-            response = client.newCall(request).execute();
-            Gson gson = new Gson();
-            resultado = Arrays.asList(gson.fromJson(response.body().string(), Pedido[].class));
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
+                Gson gson = gsonBuilder.create();
+                resultado = Arrays.asList(gson.fromJson(response.body().string(), Pedido[].class));
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

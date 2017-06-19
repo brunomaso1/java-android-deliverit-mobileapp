@@ -51,11 +51,15 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, RespuestaGeneral> 
 
         try {
             Response response = client.newCall(request).execute();
-            if (response.body().string().equals("")) {
-                respuesta.setCodigo(RespuestaGeneral.CODIGO_OK);
-            } else {
-                respuesta.setCodigo(RespuestaGeneral.CODIGO_ERROR);
+            if (response.isSuccessful()) {
+                respuesta = new RespuestaGeneral();
+                if (response.body().string().equals("")) {
+                    respuesta.setCodigo(RespuestaGeneral.CODIGO_OK);
+                } else {
+                    respuesta.setCodigo(RespuestaGeneral.CODIGO_ERROR);
+                }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,6 +71,6 @@ public class FinalizarViajeTask extends AsyncTask<Void, Void, RespuestaGeneral> 
     protected void onPostExecute(RespuestaGeneral respuestaGeneral) {
         super.onPostExecute(respuestaGeneral);
         progressDialog.dismiss();
-        activityPadre.finalizarViajeTaskRetorno();
+        activityPadre.finalizarViajeTaskRetorno(respuestaGeneral);
     }
 }

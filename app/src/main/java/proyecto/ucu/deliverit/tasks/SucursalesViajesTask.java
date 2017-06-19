@@ -44,11 +44,13 @@ public class SucursalesViajesTask extends AsyncTask<Void, Void, List<Sucursal>> 
                 .url(url)
                 .build();
 
-        Response response;
         try {
-            response = client.newCall(request).execute();
-            Gson gson = new Gson();
-            resultado = Arrays.asList(gson.fromJson(response.body().string(), Sucursal[].class));
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                Gson gson = new Gson();
+                resultado = Arrays.asList(gson.fromJson(response.body().string(), Sucursal[].class));
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

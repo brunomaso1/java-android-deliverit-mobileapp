@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -468,6 +469,53 @@ public class DataBase extends SQLiteOpenHelper {
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                Viaje.COLUMN_FECHA + " DESC"                                      // The sort order
+        );
+
+        while (c.moveToNext()) {
+            Integer id = c.getInt(c.getColumnIndexOrThrow(Viaje._ID));
+            Integer precio = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
+            Integer idSucursal = c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_SUCURSAL));
+            Timestamp fecha = Timestamp.valueOf(c.getString(c.getColumnIndexOrThrow(Viaje.COLUMN_FECHA)));
+
+            if (id != null) {
+                Viaje v = new Viaje();
+                v.setId(id);
+                v.setPrecio(precio);
+                v.setFecha(fecha);
+
+                Sucursal sucursal = getSucursal(idSucursal);
+                v.setSucursal(sucursal);
+                retorno.add(v);
+            }
+        }
+        c.close();
+
+        return retorno;
+    }
+
+    public List<Viaje> getViajesMensuales() throws SQLiteException {
+        Timestamp primerDiaMes = new Timestamp(System.currentTimeMillis());
+        primerDiaMes.setDate(1);
+
+        List<Viaje> retorno = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Viaje._ID, Viaje.COLUMN_NAME_PRECIO, Viaje.COLUMN_NAME_SUCURSAL, Viaje.COLUMN_FECHA
+        };
+
+        String selection = Viaje.COLUMN_NAME_ESTADO + " = 4 AND " + Viaje.COLUMN_FECHA + " >= ? AND " + Viaje.COLUMN_FECHA + " <= ?";
+        String[] selectionArgs = { String.valueOf(primerDiaMes), String.valueOf(new Timestamp(System.currentTimeMillis())) };
+
+        Cursor c = db.query(
+                Viaje.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 Viaje.COLUMN_FECHA + " DESC"                                      // The sort order

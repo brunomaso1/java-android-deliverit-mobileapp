@@ -1,8 +1,6 @@
 package proyecto.ucu.deliverit.utiles;
 
 public class Valores {
-    public static long TIMEOUT_WS = 20;
-    public static long TIMER_VIAJES = 60000;
 
     public static final String CODIGO_EXITO = "0";
     public static final String CODIGO_ERROR_NULO_O_VACIO = "-1";
@@ -24,31 +22,6 @@ public class Valores {
     public static final int NOTIFICATION_ID = 1;
     public static final String NOTIFICATOIN_ID_TEXTO = "notificationID";
     public static final String VIAJE = "viaje";
-    public static final String VIAJE_ID = "id";
-
-    public static final String PEDIDOS = "pedidos";
-
-    public static final String DIRECCION_ID = "id";
-    public static final String DIRECCION_CALLE = "calle";
-    public static final String DIRECCION_NRO_PUERTA = "nroPuerta";
-    public static final String DIRECCION_ESQUINA = "esquina";
-    public static final String DIRECCION_LATITUD = "latitud";
-    public static final String DIRECCION_LONGITUD = "longitud";
-    public static final String DIRECCION_APARTAMENTO = "apartamento";
-
-    public static final String RESTARURAN_ID = "id";
-    public static final String RESTAURANT_RUT = "rut";
-    public static final String RESTAURANT_RAZON_SOCIAL = "razonSocial";
-
-    public static final String SUCURSAL_ID = "id";
-    public static final String SUCURSAL_DIRECCION = "direccion";
-    public static final String SUCURSAL_RESTAURANT = "restaurant";
-    public static final String RESTAURANT_USUARIO = "usuario";
-    public static final String SUCURSAL_SUCURSAL_PK = "sucursalPK";
-
-    public static final String USUARIO_ID = "id";
-    public static final String USUARIO_TELEFONO = "telefono";
-    public static final String USUARIO_FOTO = "foto";
 
     public static final String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
 
@@ -70,4 +43,8 @@ public class Valores {
     public static final String CREANDO_USUARIO = "Creando Usuario" + POR_FAVOR_ESPERE;
     public static final String OBTENIENDO_PEDIDOS = "Obteniendo pedidos" + POR_FAVOR_ESPERE;
     public static final String OBTENIENDO_SUCURSALES = "Obteniendo direcciones" + POR_FAVOR_ESPERE;
+
+    public static final String ACTIVITY_PADRE = "activityPadre";
+    public static final String ACTIVITY_PADRE_MAIN = "mainActivity";
+    public static final String ACTIVITY_PADRE_INGRESOS = "ingresosActivity";
 }

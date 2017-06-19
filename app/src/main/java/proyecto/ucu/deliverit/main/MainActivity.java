@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0: // Viajes aceptados
                         intent = new Intent(MainActivity.this, ViajesActivity.class);
+                        intent.putExtra(Valores.ACTIVITY_PADRE, Valores.ACTIVITY_PADRE_MAIN);
                         startActivity(intent);
                         break;
                     case 2:

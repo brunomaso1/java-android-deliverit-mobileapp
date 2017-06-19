@@ -14,6 +14,7 @@ import java.util.Date;
 
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
+import proyecto.ucu.deliverit.utiles.Valores;
 
 public class IngresosActivity extends AppCompatActivity {
 
@@ -44,8 +45,9 @@ public class IngresosActivity extends AppCompatActivity {
                 detalle_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(IngresosActivity.this, ViajesActivity.class);
-                        startActivity(intent);
+                        Intent i = new Intent(IngresosActivity.this, ViajesActivity.class);
+                        i.putExtra(Valores.ACTIVITY_PADRE, Valores.ACTIVITY_PADRE_INGRESOS);
+                        startActivity(i);
                     }
                 });
             } else {

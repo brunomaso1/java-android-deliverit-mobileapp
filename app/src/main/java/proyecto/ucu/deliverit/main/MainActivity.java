@@ -140,9 +140,14 @@ public class MainActivity extends AppCompatActivity {
         sidebar_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = null;
                 switch (position) {
                     case 0: // Viajes aceptados
-                        Intent intent = new Intent(MainActivity.this, ViajesActivity.class);
+                        intent = new Intent(MainActivity.this, ViajesActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        intent = new Intent(MainActivity.this, IngresosActivity.class);
                         startActivity(intent);
                         break;
                     case 4: // Salir

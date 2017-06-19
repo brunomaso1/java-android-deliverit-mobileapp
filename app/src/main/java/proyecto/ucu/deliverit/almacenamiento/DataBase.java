@@ -946,7 +946,6 @@ public class DataBase extends SQLiteOpenHelper {
 
         Timestamp primerDiaMes = new Timestamp(System.currentTimeMillis());
         primerDiaMes.setDate(1);
-        System.out.println("**** primer día del mes = " + primerDiaMes);
 
         SQLiteDatabase db = this.getReadableDatabase();
 

@@ -66,6 +66,9 @@
         <activity android:name=".main.ViajesActivity"
             android:label="@string/app_name" />
 
+        <activity android:name=".main.IngresosActivity"
+            android:label="@string/app_name" />
+
         <activity
             android:name=".main.NotificacionActivity"
             android:label="@string/app_name"/>

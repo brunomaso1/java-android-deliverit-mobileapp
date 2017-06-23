@@ -72,12 +72,22 @@ public class CustomAdapterForViajesPublicados extends ArrayAdapter<Viaje> {
         byte[] imgRestaurant = null;
 
         try {
-            imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getFoto());
+            if (viaje.getSucursal().getRestaurant().getFoto() != null) {
+                imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getFoto());
+
+                Bitmap imgBitmap = BitmapFactory.decodeByteArray(imgRestaurant, 0, imgRestaurant.length);
+                viewHolder.foto_restaurant_iv.setImageBitmap(imgBitmap);
+            } else if (viaje.getSucursal().getRestaurant().getUsuario().getFoto() != null) {
+                imgRestaurant = Operaciones.decodeImage(viaje.getSucursal().getRestaurant().getUsuario().getFoto());
+
+                Bitmap imgBitmap = BitmapFactory.decodeByteArray(imgRestaurant, 0, imgRestaurant.length);
+                viewHolder.foto_restaurant_iv.setImageBitmap(imgBitmap);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Bitmap imgBitmap = BitmapFactory.decodeByteArray(imgRestaurant, 0, imgRestaurant.length);
-        viewHolder.foto_restaurant_iv.setImageBitmap(imgBitmap);
+
 
         return convertView;
     }

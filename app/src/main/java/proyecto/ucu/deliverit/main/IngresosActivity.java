@@ -1,27 +1,42 @@
 package proyecto.ucu.deliverit.main;
 
-import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.annotation.FloatRange;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.sql.Array;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import proyecto.ucu.deliverit.R;
 import proyecto.ucu.deliverit.almacenamiento.DataBase;
-import proyecto.ucu.deliverit.utiles.Valores;
+import proyecto.ucu.deliverit.entidades.Viaje;
 
 public class IngresosActivity extends AppCompatActivity {
 
-    private TextView texto_tv, ingresos_tv;
-    private Button detalle_btn;
+    private Spinner opciones_ingresos_sp;
+    private LinearLayout grafica_ll;
 
     private DataBase DB;
+
+    private List<Viaje> viajes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +44,28 @@ public class IngresosActivity extends AppCompatActivity {
         this.getSupportActionBar().hide();
         setContentView(R.layout.ingresos);
 
-        texto_tv = (TextView) findViewById(R.id.texto_tv);
+        agregarSpinner();
+
+        grafica_ll = (LinearLayout) findViewById(R.id.grafica_ll);
+
+        DB = new DataBase(IngresosActivity.this);
+
+        try {
+            viajes = DB.getIngresosMensuales();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            Toast.makeText(IngresosActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_LONG).show();
+        }
+
+        if (viajes.size() > 0) {
+            armarGrafica(true);
+        } else {
+            Toast.makeText(IngresosActivity.this, R.string.no_tiene_ingresos, Toast.LENGTH_LONG).show();
+        }
+
+
+
+        /*texto_tv = (TextView) findViewById(R.id.texto_tv);
         ingresos_tv = (TextView) findViewById(R.id.ingresos_tv);
 
         DB = new DataBase(IngresosActivity.this);
@@ -56,36 +92,83 @@ public class IngresosActivity extends AppCompatActivity {
         } catch (SQLiteException e) {
             e.printStackTrace();
             Toast.makeText(IngresosActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_LONG).show();
+        }*/
+    }
+
+    private void agregarSpinner() {
+        opciones_ingresos_sp = (Spinner) findViewById(R.id.opciones_ingresos_sp);
+        opciones_ingresos_sp.setSelection(0);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.opciones_ingresos_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        opciones_ingresos_sp.setAdapter(adapter);
+
+        opciones_ingresos_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //vehiculoSeleccionado = DB.getVehiculo(String.valueOf(parent.getItemAtPosition(position)));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void armarGrafica(boolean mensual) {
+        ArrayList<String> columnas = getColumnas(mensual);
+        Map<Integer, Integer> valoresColumnas = getValoresColumnas();
+        consolidatGrafica(columnas, valoresColumnas);
+    }
+
+    private ArrayList<String> getColumnas(boolean mensual) {
+        ArrayList<String> columnas = new ArrayList<>();
+        if (mensual) {
+            for (int i = 0; i < cantDiasHastaHoy(); i++) {
+                columnas.add(String.valueOf(i + 1));
+            }
+        } else {
+
         }
+        return columnas;
     }
 
-    private String completarTexto() {
-        Date primerDiaMes = new Date();
-        primerDiaMes.setDate(1);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String primerDiaMesString = sdf.format(primerDiaMes);
+    private Map<Integer, Integer> getValoresColumnas() {
+        Map<Integer, Integer> ingresos = new HashMap<>();
 
-        Date hoy = new Date();
-        sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String hoyString = sdf.format(hoy);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Desde el día ");
-        sb.append(primerDiaMesString);
-        sb.append("\n");
-        sb.append("hasta ");
-        sb.append(hoyString);
-        sb.append(" sus ingresos son de:");
-
-        return sb.toString();
+        for (Viaje v : viajes) {
+            if (!ingresos.containsKey(v.getFecha())) {
+                ingresos.put(v.getFecha().getDate(), v.getPrecio());
+            } else {
+                ingresos.put(v.getFecha().getDate(), ingresos.get(v.getFecha()) + v.getPrecio());
+            }
+        }
+        return ingresos;
     }
 
-    private String completarIngresos(int ingresos) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("$");
-        sb.append(ingresos);
+    private ArrayList<BarEntry> consolidatGrafica(ArrayList<String> columnas, Map<Integer, Integer> valoresColumnas) {
+        ArrayList<BarEntry> grafica = new ArrayList<>();
 
-        return sb.toString();
+        for (int i = 0; i < columnas.size(); i++) {
+            if (valoresColumnas.containsKey(i + 1)) {
+                grafica.add(new BarEntry(valoresColumnas.get(i + 1), i));
+            }
+        }
+
+        BarDataSet dataset = new BarDataSet(grafica, "$ de ingresos");
+        dataset.setColors(ColorTemplate.LIBERTY_COLORS);
+        BarChart chart = new BarChart(IngresosActivity.this);
+        BarData data = new BarData(columnas, dataset);
+        chart.setData(data);
+        chart.animateXY(5000, 5000);
+        grafica_ll.addView(chart);
+
+        return grafica;
+    }
+
+    private int cantDiasHastaHoy() {
+        return new Timestamp(System.currentTimeMillis()).getDate();
     }
 
     @Override

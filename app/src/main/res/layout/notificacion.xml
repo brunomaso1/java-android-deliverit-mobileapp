@@ -6,7 +6,7 @@
     android:background="@color/background"
     tools:context=".main.NotificacionActivity">
 
-    <include layout="@layout/default_layout_con_icono_mapa"/>
+    <include layout="@layout/notificacion_header"/>
 
     <ScrollView
         android:layout_width="match_parent"

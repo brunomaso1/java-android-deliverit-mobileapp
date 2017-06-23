@@ -13,9 +13,11 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -30,6 +32,7 @@ import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.main.NotificacionActivity;
+import proyecto.ucu.deliverit.utiles.DateDeserializer;
 import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Valores;
 
@@ -50,19 +53,26 @@ public class MessagingService extends FirebaseMessagingService {
         Response response;
         try {
             response = client.newCall(request).execute();
-            Gson gson = new Gson();
-            List<Pedido> pedidos = Arrays.asList(gson.fromJson(response.body().string(), Pedido[].class));
 
-            DB = new DataBase(MessagingService.this);
-            DB.guardarDatosPedidos(pedidos);
+            if (response.isSuccessful()) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
+                Gson gson = gsonBuilder.create();
+                List<Pedido> pedidos = Arrays.asList(gson.fromJson(response.body().string(), Pedido[].class));
 
-            crearNotificacion(pedidos.get(0).getViaje());
+                DB = new DataBase(MessagingService.this);
+                DB.guardarDatosPedidos(pedidos);
+
+                crearNotificacion(pedidos.get(0).getViaje());
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLiteException e) {
             e.printStackTrace();
             Toast.makeText(MessagingService.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

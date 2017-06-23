@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/default_layout_con_icono_mapa"/>
+        <include layout="@layout/activity_main_header"/>
         <ListView
             android:id="@+id/viajes_lv"
             android:layout_width="match_parent"

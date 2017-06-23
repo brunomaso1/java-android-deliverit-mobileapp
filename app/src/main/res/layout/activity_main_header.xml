@@ -12,9 +12,19 @@
 
         <ImageView android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.9"
+            android:layout_weight="0.1"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:src="@drawable/nombrelogo" />
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:text="Menú Principal"
+            android:textSize="23dp"
+            android:textColor="@color/background"
+            android:textStyle="bold"/>
 
         <ImageButton
             android:id="@+id/mapa_ibtn"

@@ -30,10 +30,6 @@ import proyecto.ucu.deliverit.tasks.EditarUbicacionTask;
 import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.RespuestaGeneral;
 
-/**
- * Created by DeliverIT on 01/02/2017.
- */
-
 public class HomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, LocationListener {
     private final int PETICION_PERMISO_LOCALIZACION = 1000;
@@ -58,6 +54,11 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
         registrarse_btn = (Button) findViewById(R.id.registrarse_btn);
         ingresar_btn = (Button) findViewById(R.id.ingresar_btn);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         // Si nadie se logueó
         if (SharedPref.getIdDelivery(getApplicationContext()) == 0) {

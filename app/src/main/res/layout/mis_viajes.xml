@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <include layout="@layout/default_layout"/>
+    <include layout="@layout/mis_viajes_header"/>
 
     <ListView
         android:id="@+id/viajes_lv"

@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import proyecto.ucu.deliverit.entidades.Cliente;
@@ -989,8 +991,8 @@ public class DataBase extends SQLiteOpenHelper {
                 selectionArgs);
     }
 
-    public int getIngresosMensuales() throws SQLiteException {
-        int retorno = 0;
+    public List<Viaje> getIngresosMensuales() throws SQLiteException {
+        List<Viaje> retorno = new ArrayList<>();
 
         Timestamp primerDiaMes = new Timestamp(System.currentTimeMillis());
         primerDiaMes.setDate(1);
@@ -998,7 +1000,7 @@ public class DataBase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] projection = {
-                Viaje.COLUMN_NAME_PRECIO
+                Viaje.COLUMN_FECHA, Viaje.COLUMN_NAME_PRECIO
         };
 
         String selection = Viaje.COLUMN_FECHA + " >= ? AND " + Viaje.COLUMN_FECHA + " <= ?";
@@ -1015,10 +1017,22 @@ public class DataBase extends SQLiteOpenHelper {
         );
 
         while (c.moveToNext()) {
-            retorno += c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO));
-        }
-        c.close();
+            Viaje v = new Viaje();
+            String fecha = c.getString(c.getColumnIndexOrThrow(Viaje.COLUMN_FECHA)).substring(0, 10);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+            try {
+                Date parsedDate = dateFormat.parse(fecha);
+                v.setFecha(new java.sql.Timestamp(parsedDate.getTime()));
+                v.setPrecio(c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO)));
+                retorno.add(v);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                throw new SQLiteException(e.getMessage());
+            } finally {
+                c.close();
+            }
+        }
         return retorno;
     }
 

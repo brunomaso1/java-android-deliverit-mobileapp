@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="opciones_ingresos_array">
+        <item>Este mes</item>
+        <item>Este año</item>
+    </string-array>
+</resources>

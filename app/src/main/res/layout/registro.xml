@@ -6,7 +6,7 @@
     android:background="@color/background"
     tools:context=".inicializacion.RegistroActivity">
 
-    <include layout="@layout/default_layout"/>
+    <include layout="@layout/default_header"/>
 
     <LinearLayout
         android:layout_width="match_parent"

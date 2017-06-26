@@ -28,4 +28,6 @@
     <string name="sidebar_close">Close navigation drawer</string>
     <string name="ingrese_usuario_login">Debe ingresar un usuario para loguearse</string>
     <string name="ingrese_password_login">Debe ingresar una contraseña para loguearse</string>
+    <string name="ubicacion_actual">El marker seleccionado muestra tu ubicación actual</string>
+    <string name="mensaje_viaje">¿Desea aceptar este viaje?</string>
 </resources>

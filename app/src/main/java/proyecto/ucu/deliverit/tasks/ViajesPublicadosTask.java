@@ -42,7 +42,7 @@ public class ViajesPublicadosTask extends AsyncTask<Object, Object, List<Viaje>>
         List<Viaje> viajes = new ArrayList<>();
 
         OkHttpClient client = new OkHttpClient();
-        String url = Valores.URL_VIAJES_PUBLICADOS + new Timestamp(System.currentTimeMillis());
+        String url = Valores.URL_VIAJES_PUBLICADOS;
 
         Request request = new Request.Builder()
                 .url(url)

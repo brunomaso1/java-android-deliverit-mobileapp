@@ -35,9 +35,9 @@ public class DataBase extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "DeliverIT.db";
 
+    private static final String CREATE_TABLE = "CREATE TABLE ";
     private static final String TYPE_TEXT = " TEXT";
     private static final String TYPE_INTEGER = " INTEGER";
-    private static final String TYPE_BIG_INT = " BIGINT";
     private static final String TYPE_SMALLINT = " SMALLINT";
     private static final String TYPE_DOUBLE = " DOUBLE";
     private static final String TYPE_TIMESTAMP = " TIMESTAMP";
@@ -47,7 +47,7 @@ public class DataBase extends SQLiteOpenHelper {
     private static final String NOT_NULL = " NOT NULL";
 
     private static final String SQL_CREATE_TABLE_USUARIO
-            = "CREATE TABLE " + Usuario.TABLE_NAME + " (" +
+            = CREATE_TABLE + Usuario.TABLE_NAME + " (" +
                     Usuario._ID + TYPE_INTEGER + PRIMARY_KEY + ","
                     + Usuario.COLUMN_NAME_NOMBRE_USUARIO + TYPE_TEXT + NOT_NULL + ","
                     + Usuario.COLUMN_NAME_PASSWORD + TYPE_TEXT + NOT_NULL + ","
@@ -57,7 +57,7 @@ public class DataBase extends SQLiteOpenHelper {
                     + Usuario.COLUMN_NAME_FOTO_PERFIL + TYPE_TEXT + ")";
 
     private static final String SQL_CREATE_TABLE_DELIVERY
-            = "CREATE TABLE " + Delivery.TABLE_NAME + " (" +
+            = CREATE_TABLE + Delivery.TABLE_NAME + " (" +
                     Delivery._ID + TYPE_INTEGER + PRIMARY_KEY + ","
                     + Delivery.COLUMN_NAME_USUARIO + TYPE_INTEGER + NOT_NULL + ","
                     + Delivery.COLUMN_NAME_NOMBRE + TYPE_TEXT + NOT_NULL + ","
@@ -66,7 +66,7 @@ public class DataBase extends SQLiteOpenHelper {
                     + Delivery.COLUMN_NAME_VEHICULO + TYPE_SMALLINT + ")";
 
     private static final String SQL_CREATE_TABLE_DIRECCION
-            = "CREATE TABLE " + Direccion.TABLE_NAME + " (" +
+            = CREATE_TABLE + Direccion.TABLE_NAME + " (" +
             Direccion._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Direccion.COLUMN_NAME_CALLE + TYPE_TEXT + NOT_NULL + ","
             + Direccion.COLUMN_NAME_NRO_PUERTA + TYPE_SMALLINT + NOT_NULL + ","
@@ -76,19 +76,19 @@ public class DataBase extends SQLiteOpenHelper {
             + Direccion.COLUMN_NAME_LONGITUD + TYPE_DOUBLE + ")";
 
     private static final String SQL_CREATE_TABLE_RESTAURANT
-            = "CREATE TABLE " + Restaurant.TABLE_NAME + " (" +
+            = CREATE_TABLE + Restaurant.TABLE_NAME + " (" +
             Restaurant._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Restaurant.COLUMN_NAME_RAZON_SOCIAL + TYPE_TEXT + ","
             + Restaurant.COLUMN_NAME_FOTO + TYPE_TEXT + ")";
 
     private static final String SQL_CREATE_TABLE_SUCURSAL
-            = "CREATE TABLE " + Sucursal.TABLE_NAME + " (" +
+            = CREATE_TABLE + Sucursal.TABLE_NAME + " (" +
             Sucursal._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Sucursal.COLUMN_NAME_DIRECCION + TYPE_INTEGER + NOT_NULL + ","
             + Sucursal.COLUMN_NAME_RESTAURANT + TYPE_INTEGER + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_VIAJE
-            = "CREATE TABLE " + Viaje.TABLE_NAME + " (" +
+            = CREATE_TABLE + Viaje.TABLE_NAME + " (" +
                     Viaje._ID + TYPE_INTEGER + PRIMARY_KEY + ","
                     + Viaje.PRECIO + TYPE_SMALLINT + ","
                     + Viaje.COLUMN_NAME_SUCURSAL + TYPE_SMALLINT + ","
@@ -96,32 +96,31 @@ public class DataBase extends SQLiteOpenHelper {
                     + Viaje.COLUMN_NAME_ESTADO + TYPE_SMALLINT  + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_CLIENTE
-            = "CREATE TABLE " + Cliente.TABLE_NAME + " (" +
+            = CREATE_TABLE + Cliente.TABLE_NAME + " (" +
             Cliente._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Cliente.COLUMN_NAME_NOMBRE + TYPE_TEXT + ","
             + Cliente.COLUMN_NAME_DIRECCION + TYPE_INTEGER + NOT_NULL + ","
             + Cliente.COLUMN_NAME_TELEFONO + TYPE_TEXT + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_PEDIDO
-            = "CREATE TABLE " + Pedido.TABLE_NAME + " (" +
+            = CREATE_TABLE + Pedido.TABLE_NAME + " (" +
             Pedido._ID + TYPE_INTEGER + PRIMARY_KEY + ","
             + Pedido.COLUMN_NAME_VIAJE + TYPE_INTEGER + ","
             + Pedido.COLUMN_NAME_DETALLE + TYPE_TEXT + ","
             + Pedido.COLUMN_NAME_CLIENTE + TYPE_INTEGER + NOT_NULL + ")";
 
     private static final String SQL_CREATE_TABLE_VEHICULO
-            = "CREATE TABLE " + Vehiculo.TABLE_NAME + " (" +
+            = CREATE_TABLE + Vehiculo.TABLE_NAME + " (" +
             Vehiculo._ID + TYPE_SMALLINT + ","
             + Vehiculo.COLUMN_NAME_DESCRIPCION + TYPE_TEXT + ")";
 
     private static final String SQL_CREATE_TABLE_UBICACION
-            = "CREATE TABLE " + Ubicacion.TABLE_NAME + " (" +
+            = CREATE_TABLE + Ubicacion.TABLE_NAME + " (" +
             Ubicacion._ID + TYPE_SMALLINT + PRIMARY_KEY + ","
             + Ubicacion.COLUMN_NAME_LATITUD + TYPE_DOUBLE + NOT_NULL + ","
             + Ubicacion.COLUMN_NAME_LONGITUD + TYPE_DOUBLE + NOT_NULL + ")";
 
     public DataBase(Context context) {
-
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -166,9 +165,7 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     public void insertarUbicacion (Ubicacion ubicacion) throws SQLiteException {
 

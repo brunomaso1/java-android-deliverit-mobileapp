@@ -149,8 +149,11 @@ public class NotificacionActivity extends AppCompatActivity {
         });
     }
 
-    public void aceptarTaskRetorno(Integer retorno) {
-        if (retorno != null && retorno == Integer.parseInt(Valores.CODIGO_EXITO)) {
+    public void aceptarTaskRetorno(Boolean retorno) {
+        if (retorno == null) {
+            Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
+            finish();
+        } else if (retorno) {
             SharedPref.guardarViajeEnCurso(NotificacionActivity.this, viaje.getId());
 
             Button finalizar_btn = aceptar_btn;
@@ -165,6 +168,7 @@ public class NotificacionActivity extends AppCompatActivity {
             });
         } else {
             Toast.makeText(NotificacionActivity.this, R.string.viaje_tomado, Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 

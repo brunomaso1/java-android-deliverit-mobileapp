@@ -20,7 +20,7 @@ import proyecto.ucu.deliverit.main.NotificacionActivity;
 import proyecto.ucu.deliverit.utiles.DateDeserializer;
 import proyecto.ucu.deliverit.utiles.Valores;
 
-public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
+public class AceptarViajeTask extends AsyncTask<Void, Void, Boolean> {
     private NotificacionActivity activityPadre;
     private ProgressDialog progressDialog;
     private Integer idDelivery;
@@ -41,8 +41,8 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(Void... params) {
-        Integer retorno = null;
+    protected Boolean doInBackground(Void... params) {
+        Boolean retorno = null;
         OkHttpClient client = new OkHttpClient();
 
         String url = Valores.URL_ACEPAR_VIAJE + idViaje + Valores.BARRA_DIAGONAL + idDelivery;
@@ -58,7 +58,7 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 Gson gson = new Gson();
-                retorno = gson.fromJson(response.body().string(), Integer.class);
+                retorno = gson.fromJson(response.body().string(), Boolean.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,7 +67,7 @@ public class AceptarViajeTask extends AsyncTask<Void, Void, Integer> {
     }
 
     @Override
-    protected void onPostExecute(Integer retorno) {
+    protected void onPostExecute(Boolean retorno) {
         super.onPostExecute(retorno);
         progressDialog.dismiss();
         activityPadre.aceptarTaskRetorno(retorno);

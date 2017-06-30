@@ -99,6 +99,9 @@ public class RegistroActivity extends AppCompatActivity {
                     usuario.setPassword(password_et.getText().toString());
                     usuario.setTelefono(telefono_et.getText().toString());
 
+                    // foto de Obama hardcodeada
+                    usuario.setFoto(Valores.FOTO);
+
                     new CrearUsuarioTask(RegistroActivity.this, usuario).execute();
                 } else {
                     Toast.makeText(RegistroActivity.this, retorno.getDescripcion(), Toast.LENGTH_SHORT).show();

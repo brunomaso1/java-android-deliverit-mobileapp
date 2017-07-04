@@ -25,6 +25,7 @@ import proyecto.ucu.deliverit.entidades.Ubicacion;
 import proyecto.ucu.deliverit.entidades.Usuario;
 import proyecto.ucu.deliverit.entidades.Vehiculo;
 import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.entidades.ViajeRechazado;
 import proyecto.ucu.deliverit.utiles.Operaciones;
 import proyecto.ucu.deliverit.utiles.Retorno;
 import proyecto.ucu.deliverit.utiles.Valores;
@@ -95,6 +96,10 @@ public class DataBase extends SQLiteOpenHelper {
                     + Viaje.COLUMN_FECHA + TYPE_TIMESTAMP + NOT_NULL + ","
                     + Viaje.COLUMN_NAME_ESTADO + TYPE_SMALLINT  + NOT_NULL + ")";
 
+    private static final String SQL_CREATE_TABLE_VIAJE_RECHAZADO
+            = CREATE_TABLE + ViajeRechazado.TABLE_NAME + " (" +
+            ViajeRechazado._ID + TYPE_INTEGER + PRIMARY_KEY + ")";
+
     private static final String SQL_CREATE_TABLE_CLIENTE
             = CREATE_TABLE + Cliente.TABLE_NAME + " (" +
             Cliente._ID + TYPE_INTEGER + PRIMARY_KEY + ","
@@ -126,6 +131,7 @@ public class DataBase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(SQL_CREATE_TABLE_VIAJE_RECHAZADO);
         db.execSQL(SQL_CREATE_TABLE_USUARIO);
         db.execSQL(SQL_CREATE_TABLE_DELIVERY);
         db.execSQL(SQL_CREATE_TABLE_DIRECCION);
@@ -297,6 +303,16 @@ public class DataBase extends SQLiteOpenHelper {
         }
     }
 
+    public void insertarViajeRechazado(Integer id) throws SQLiteException {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        if (getViajeRechazado(id) == null) {
+            ContentValues values = new ContentValues();
+            values.put(ViajeRechazado._ID, id);
+            db.insert(ViajeRechazado.TABLE_NAME, null, values);
+        }
+    }
+
     public void insertarPedido(Pedido pedido) throws SQLiteException {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -450,6 +466,63 @@ public class DataBase extends SQLiteOpenHelper {
         }
 
         return viaje;
+    }
+
+    public Integer getViajeRechazado(Integer id) throws SQLiteException {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                ViajeRechazado._ID
+        };
+
+        String selection = ViajeRechazado._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(id) };
+
+        Cursor c = db.query(
+                ViajeRechazado.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        Integer idViaje = null;
+        while (c.moveToNext()) {
+            idViaje = c.getInt(c.getColumnIndexOrThrow(ViajeRechazado._ID));
+        }
+        c.close();
+
+        return idViaje;
+    }
+
+    public List<Integer> getViajesRechazados() throws SQLiteException {
+        List<Integer> retorno = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                ViajeRechazado._ID
+        };
+
+        Cursor c = db.query(
+                ViajeRechazado.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        while (c.moveToNext()) {
+            Integer id = c.getInt(c.getColumnIndexOrThrow(ViajeRechazado._ID));
+            retorno.add(id);
+        }
+        c.close();
+
+        return retorno;
     }
 
     public List<Viaje> getViajes() throws SQLiteException {

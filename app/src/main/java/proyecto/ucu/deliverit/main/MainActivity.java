@@ -78,12 +78,16 @@ public class MainActivity extends AppCompatActivity {
         if (viajesPublicados == null) {
             Toast.makeText(MainActivity.this, R.string.no_se_pudo_obtener_viajes, Toast.LENGTH_LONG).show();
         } else {
-            viajes = viajesPublicados;
-
-            if (viajes.size() == 0) {
+            if (viajesPublicados.size() == 0) {
                 Toast.makeText(MainActivity.this, R.string.no_hay_viajes, Toast.LENGTH_LONG).show();
             } else {
-                adapter = new CustomAdapterForViajesPublicados(viajesPublicados, MainActivity.this);
+                try {
+                    viajes = eliminarRechazados(viajesPublicados);
+                } catch (SQLiteException e) {
+                    viajes = viajesPublicados;
+                    Toast.makeText(MainActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_LONG).show();
+                }
+                adapter = new CustomAdapterForViajesPublicados(viajes, MainActivity.this);
                 viajes_lv.setAdapter(adapter);
 
                 viajes_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -172,5 +176,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return iconos;
+    }
+
+    private List<Viaje> eliminarRechazados(List<Viaje> publicados) throws SQLiteException {
+        List<Viaje> retorno = new ArrayList<>();
+
+        List<Integer> rechazados = DB.getViajesRechazados();
+        for (Viaje v : publicados) {
+            if (!rechazados.contains(v.getId())) {
+                retorno.add(v);
+            }
+        }
+
+        return retorno;
     }
 }

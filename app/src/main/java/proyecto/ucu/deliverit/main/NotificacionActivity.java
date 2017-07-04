@@ -122,6 +122,7 @@ public class NotificacionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    DB.insertarViajeRechazado(viaje.getId());
                     eliminarPedidosEnCascada();
                 } catch (SQLiteException e) {
                     Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();

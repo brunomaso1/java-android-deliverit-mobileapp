@@ -12,7 +12,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import proyecto.ucu.deliverit.R;
@@ -71,16 +70,16 @@ public class SucursalesMapActivity extends FragmentActivity implements OnMapRead
     private void crearDialogAceptarViaje() {
         AlertDialog.Builder builder = new AlertDialog.Builder(SucursalesMapActivity.this);
         builder.setMessage(R.string.mensaje_viaje)
-            .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            })
-            .setNegativeButton(R.string.rechazar, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+                .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.rechazar, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
 
         AlertDialog dialog = builder.create();
         dialog.show();

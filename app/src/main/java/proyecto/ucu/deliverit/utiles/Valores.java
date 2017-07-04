@@ -2,6 +2,7 @@ package proyecto.ucu.deliverit.utiles;
 
 public class Valores {
 
+    public static final String OK = "ok";
     public static final String CODIGO_EXITO = "0";
     public static final String CODIGO_ERROR_NULO_O_VACIO = "-1";
     public static final String CODIGO_ERROR_PASSWORD = "-2";

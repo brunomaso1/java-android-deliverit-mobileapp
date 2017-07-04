@@ -1,5 +1,6 @@
 package proyecto.ucu.deliverit.main;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
@@ -145,10 +146,22 @@ public class NotificacionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(NotificacionActivity.this, RecorridoActivity.class);
                 intent.putExtra(Valores.VIAJE, viaje.getId());
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                new AceptarViajeTask(NotificacionActivity.this,
+                        (int)SharedPref.getIdDelivery(NotificacionActivity.this), viaje.getId()).execute();
+            } else {
+                finish();
+            }
+        }
+    }//onActivityResult
 
     public void aceptarTaskRetorno(Boolean retorno) {
         if (retorno == null) {
@@ -197,7 +210,6 @@ public class NotificacionActivity extends AppCompatActivity {
                 DB.eliminarSucursal(pedido.getViaje().getSucursal().getId());
                 DB.eliminarDireccion(pedido.getViaje().getSucursal().getDireccion().getId());
             }
-
         }
 
         DB.eliminarViaje(viaje.getId());

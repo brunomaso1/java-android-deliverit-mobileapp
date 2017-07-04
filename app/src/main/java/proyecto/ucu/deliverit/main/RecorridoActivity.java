@@ -1,5 +1,6 @@
 package proyecto.ucu.deliverit.main;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
@@ -83,12 +84,20 @@ public class RecorridoActivity extends FragmentActivity implements OnMapReadyCal
         builder.setMessage(R.string.mensaje_viaje)
                 .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("result", Valores.OK);
+                        setResult(Activity.RESULT_OK, returnIntent);
                         dialog.dismiss();
+                        finish();
+
                     }
                 })
                 .setNegativeButton(R.string.rechazar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_CANCELED, returnIntent);
                         dialog.dismiss();
+                        finish();
                     }
                 });
 

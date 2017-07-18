@@ -16,6 +16,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import proyecto.ucu.deliverit.almacenamiento.SharedPref;
 import proyecto.ucu.deliverit.entidades.Viaje;
 import proyecto.ucu.deliverit.main.MainActivity;
 import proyecto.ucu.deliverit.utiles.DateDeserializer;
@@ -42,7 +43,7 @@ public class ViajesPublicadosTask extends AsyncTask<Object, Object, List<Viaje>>
         List<Viaje> viajes = new ArrayList<>();
 
         OkHttpClient client = new OkHttpClient();
-        String url = Valores.URL_VIAJES_PUBLICADOS;
+        String url = Valores.URL_VIAJES_PUBLICADOS + SharedPref.getIdDelivery(activityPadre);
 
         Request request = new Request.Builder()
                 .url(url)

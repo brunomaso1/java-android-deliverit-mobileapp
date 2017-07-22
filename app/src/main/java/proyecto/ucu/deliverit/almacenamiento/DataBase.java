@@ -1099,13 +1099,54 @@ public class DataBase extends SQLiteOpenHelper {
             } catch (ParseException e) {
                 e.printStackTrace();
                 throw new SQLiteException(e.getMessage());
-            } finally {
-                c.close();
             }
         }
         return retorno;
     }
 
+    public List<Viaje> getIngresosAnuales() throws SQLiteException {
+        List<Viaje> retorno = new ArrayList<>();
+
+        Timestamp primerDiaAnio = new Timestamp(System.currentTimeMillis());
+        primerDiaAnio.setDate(1);
+        primerDiaAnio.setMonth(1);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                Viaje.COLUMN_FECHA, Viaje.COLUMN_NAME_PRECIO
+        };
+
+        String selection = Viaje.COLUMN_FECHA + " >= ? AND " + Viaje.COLUMN_FECHA + " <= ?";
+        String[] selectionArgs = { String.valueOf(primerDiaAnio), String.valueOf(new Timestamp(System.currentTimeMillis())) };
+
+        Cursor c = db.query(
+                Viaje.TABLE_NAME,                      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        while (c.moveToNext()) {
+            Viaje v = new Viaje();
+            String fecha = c.getString(c.getColumnIndexOrThrow(Viaje.COLUMN_FECHA)).substring(0, 10);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            try {
+                Date parsedDate = dateFormat.parse(fecha);
+                v.setFecha(new java.sql.Timestamp(parsedDate.getTime()));
+                v.setPrecio(c.getInt(c.getColumnIndexOrThrow(Viaje.COLUMN_NAME_PRECIO)));
+                retorno.add(v);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                throw new SQLiteException(e.getMessage());
+            }
+        }
+        return retorno;
+    }
 
 
     /*public void actualizarFoto(Integer id, String fotoBase64) throws SQLiteException {

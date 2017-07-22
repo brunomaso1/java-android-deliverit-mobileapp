@@ -2,7 +2,6 @@ package proyecto.ucu.deliverit.main;
 
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.support.annotation.FloatRange;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,11 +16,10 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +48,7 @@ public class IngresosActivity extends AppCompatActivity {
 
         DB = new DataBase(IngresosActivity.this);
 
-        try {
+        /*try {
             viajes = DB.getIngresosMensuales();
         } catch (SQLiteException e) {
             e.printStackTrace();
@@ -61,37 +59,6 @@ public class IngresosActivity extends AppCompatActivity {
             armarGrafica(true);
         } else {
             Toast.makeText(IngresosActivity.this, R.string.no_tiene_ingresos, Toast.LENGTH_LONG).show();
-        }
-
-
-
-        /*texto_tv = (TextView) findViewById(R.id.texto_tv);
-        ingresos_tv = (TextView) findViewById(R.id.ingresos_tv);
-
-        DB = new DataBase(IngresosActivity.this);
-
-        try {
-            int ingresos = DB.getIngresosMensuales();
-
-            if (ingresos != 0) {
-                detalle_btn = (Button) findViewById(R.id.detalle_btn);
-                texto_tv.setText(completarTexto());
-                ingresos_tv.setText(completarIngresos(ingresos));
-
-                detalle_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(IngresosActivity.this, ViajesActivity.class);
-                        i.putExtra(Valores.ACTIVITY_PADRE, Valores.ACTIVITY_PADRE_INGRESOS);
-                        startActivity(i);
-                    }
-                });
-            } else {
-                Toast.makeText(IngresosActivity.this, R.string.no_tiene_ingresos, Toast.LENGTH_LONG).show();
-            }
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-            Toast.makeText(IngresosActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_LONG).show();
         }*/
     }
 
@@ -106,7 +73,20 @@ public class IngresosActivity extends AppCompatActivity {
         opciones_ingresos_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //vehiculoSeleccionado = DB.getVehiculo(String.valueOf(parent.getItemAtPosition(position)));
+                String seleccionado = String.valueOf(parent.getItemAtPosition(position));
+                try {
+                    grafica_ll.removeAllViewsInLayout();
+                    if (seleccionado.equals("Este mes")) {
+                        viajes = DB.getIngresosMensuales();
+                        armarGrafica(true);
+                    } else {
+                        viajes = DB.getIngresosAnuales();
+                        armarGrafica(false);
+                    }
+                } catch (SQLiteException e) {
+                    e.printStackTrace();
+                    Toast.makeText(IngresosActivity.this, R.string.no_se_pudieron_obtener_datos_base, Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -118,7 +98,7 @@ public class IngresosActivity extends AppCompatActivity {
 
     private void armarGrafica(boolean mensual) {
         ArrayList<String> columnas = getColumnas(mensual);
-        Map<Integer, Integer> valoresColumnas = getValoresColumnas();
+        Map<Integer, Integer> valoresColumnas = getValoresColumnas(mensual);
         consolidatGrafica(columnas, valoresColumnas);
     }
 
@@ -129,28 +109,39 @@ public class IngresosActivity extends AppCompatActivity {
                 columnas.add(String.valueOf(i + 1));
             }
         } else {
-
+            int mesActual = Calendar.getInstance().get(Calendar.MONTH) + 1;
+            for (int i = 0; i < mesActual; i++) {
+                columnas.add(String.valueOf(i + 1));
+            }
         }
         return columnas;
     }
 
-    private Map<Integer, Integer> getValoresColumnas() {
+    private Map<Integer, Integer> getValoresColumnas(boolean mensual) {
         Map<Integer, Integer> ingresos = new HashMap<>();
 
         for (Viaje v : viajes) {
-            if (!ingresos.containsKey(v.getFecha())) {
-                ingresos.put(v.getFecha().getDate(), v.getPrecio());
+            if (mensual) {
+                if (!ingresos.containsKey(v.getFecha().getDate() + 1)) {
+                    ingresos.put(v.getFecha().getDate() + 1, v.getPrecio());
+                } else {
+                    ingresos.put(v.getFecha().getDate() + 1, ingresos.get(v.getFecha().getDate() + 1) + v.getPrecio());
+                }
             } else {
-                ingresos.put(v.getFecha().getDate(), ingresos.get(v.getFecha()) + v.getPrecio());
+                if (!ingresos.containsKey(v.getFecha().getMonth() + 1)) {
+                    ingresos.put(v.getFecha().getMonth() + 1, v.getPrecio());
+                } else {
+                    ingresos.put(v.getFecha().getMonth() + 1, ingresos.get(v.getFecha().getMonth() + 1) + v.getPrecio());
+                }
             }
         }
         return ingresos;
     }
 
-    private ArrayList<BarEntry> consolidatGrafica(ArrayList<String> columnas, Map<Integer, Integer> valoresColumnas) {
+    private ArrayList<BarEntry> consolidatGrafica(ArrayList<String> nombreColumnas, Map<Integer, Integer> valoresColumnas) {
         ArrayList<BarEntry> grafica = new ArrayList<>();
 
-        for (int i = 0; i < columnas.size(); i++) {
+        for (int i = 0; i < nombreColumnas.size(); i++) {
             if (valoresColumnas.containsKey(i + 1)) {
                 grafica.add(new BarEntry(valoresColumnas.get(i + 1), i));
             }
@@ -159,7 +150,7 @@ public class IngresosActivity extends AppCompatActivity {
         BarDataSet dataset = new BarDataSet(grafica, "$ de ingresos");
         dataset.setColors(ColorTemplate.LIBERTY_COLORS);
         BarChart chart = new BarChart(IngresosActivity.this);
-        BarData data = new BarData(columnas, dataset);
+        BarData data = new BarData(nombreColumnas, dataset);
         chart.setData(data);
         chart.animateXY(5000, 5000);
         grafica_ll.addView(chart);

@@ -172,6 +172,7 @@ public class NotificacionActivity extends AppCompatActivity {
 
             Button finalizar_btn = aceptar_btn;
             aceptar_btn.setVisibility(View.INVISIBLE);
+            rechazar_btn.setVisibility(View.INVISIBLE);
             finalizar_btn.setText("FINALIZAR");
             finalizar_btn.setVisibility(View.VISIBLE);
             finalizar_btn.setOnClickListener(new View.OnClickListener() {

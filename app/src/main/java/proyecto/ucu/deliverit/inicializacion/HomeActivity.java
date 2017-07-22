@@ -133,7 +133,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
         try {
             DB.actualizarUbicacion(ubicacion);
-
             new EditarUbicacionTask(HomeActivity.this, ubicacion).execute();
         } catch (SQLiteException e) {
             Toast.makeText(HomeActivity.this, R.string.no_se_pudo_insertar_en_la_base, Toast.LENGTH_SHORT).show();

@@ -26,8 +26,9 @@ public class Valores {
 
     public static final String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
 
-    public static final String URL_WS = "http://192.168.1.44:8080/BackCore/ws/";
+    public static final String URL_WS = "http://192.168.1.41:8080/BackCore/ws/";
     public static final String URL_ACEPAR_VIAJE = URL_WS + "viaje/aceptarViaje/";
+    public static final String URL_ACTUALIZAR_TOKEN = URL_WS + "delivery/actualizarToken/";
     public static final String URL_VIAJES_PUBLICADOS = URL_WS + "viaje/findPublicados/";
     public static final String URL_SOLICITAR_PEDIDOS = URL_WS + "pedido/solicitarPedidos/";
     public static final String URL_FINALIZAR_VIAJE = URL_WS + "viaje/finalizarViaje/";
@@ -44,6 +45,7 @@ public class Valores {
     public static final String LOGIN = "Ingresando" + POR_FAVOR_ESPERE;
     public static final String ACTUALIZANDO_UBICACION = "Actualizando ubicación" + POR_FAVOR_ESPERE;
     public static final String CREANDO_USUARIO = "Creando Usuario" + POR_FAVOR_ESPERE;
+    public static final String ACTUALIZANDO_TOKEN = "Actualizando token" + POR_FAVOR_ESPERE;
     public static final String OBTENIENDO_PEDIDOS = "Obteniendo pedidos" + POR_FAVOR_ESPERE;
     public static final String OBTENIENDO_SUCURSALES = "Obteniendo direcciones" + POR_FAVOR_ESPERE;
 

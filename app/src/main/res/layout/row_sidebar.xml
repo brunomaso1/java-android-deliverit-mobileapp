@@ -20,5 +20,5 @@
         android:layout_height="match_parent"
         android:layout_weight="0.8"
         android:textSize="25dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/background"/>
 </LinearLayout>

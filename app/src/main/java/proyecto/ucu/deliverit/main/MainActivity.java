@@ -1,7 +1,11 @@
 package proyecto.ucu.deliverit.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteException;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +28,7 @@ import proyecto.ucu.deliverit.custom_adapters.CustomAdapterForViajesPublicados;
 import proyecto.ucu.deliverit.custom_adapters.Sidebar;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.tasks.ActualizarTokenTask;
 import proyecto.ucu.deliverit.tasks.SolicitarPedidosTask;
 import proyecto.ucu.deliverit.tasks.ViajesPublicadosTask;
 import proyecto.ucu.deliverit.utiles.Valores;
@@ -66,7 +71,22 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerOpened(View drawerView) {}
         };
         drawer_layout.setDrawerListener(mDrawerToggle);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver,
+                new IntentFilter("tokenReceiver"));
     }
+
+    BroadcastReceiver tokenReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String token = intent.getStringExtra("token");
+            if(token != null) {
+                SharedPref.guardarToken(MainActivity.this, token);
+                System.out.println("token = " + token);
+                new ActualizarTokenTask(MainActivity.this, token, (int) SharedPref.getIdDelivery(MainActivity.this)).execute();
+            }
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -112,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void actualizarTokenTaskRetorno() {}
 
     public void solicitarPedidosTaskRetorno(List<Pedido> pedidos) {
         try {

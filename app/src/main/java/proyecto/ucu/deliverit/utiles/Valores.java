@@ -26,7 +26,7 @@ public class Valores {
 
     public static final String VIAJE_PARA_TI = "Tiene un nuevo viaje para ti!!";
 
-    public static final String URL_WS = "http://192.168.1.41:8080/BackCore/ws/";
+    public static final String URL_WS = "http://192.168.1.44:8080/BackCore/ws/";
     public static final String URL_ACEPAR_VIAJE = URL_WS + "viaje/aceptarViaje/";
     public static final String URL_ACTUALIZAR_TOKEN = URL_WS + "delivery/actualizarToken/";
     public static final String URL_VIAJES_PUBLICADOS = URL_WS + "viaje/findPublicados/";

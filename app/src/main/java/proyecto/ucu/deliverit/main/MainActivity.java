@@ -1,5 +1,6 @@
 package proyecto.ucu.deliverit.main;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import proyecto.ucu.deliverit.custom_adapters.CustomAdapterForViajesPublicados;
 import proyecto.ucu.deliverit.custom_adapters.Sidebar;
 import proyecto.ucu.deliverit.entidades.Pedido;
 import proyecto.ucu.deliverit.entidades.Viaje;
+import proyecto.ucu.deliverit.tasks.AceptarViajeTask;
 import proyecto.ucu.deliverit.tasks.ActualizarTokenTask;
 import proyecto.ucu.deliverit.tasks.SolicitarPedidosTask;
 import proyecto.ucu.deliverit.tasks.ViajesPublicadosTask;
@@ -93,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         new ViajesPublicadosTask(MainActivity.this).execute();
     }
+
+
 
     public void viajesPublicadosTaskRetorno (List<Viaje> viajesPublicados) {
         if (viajesPublicados == null) {

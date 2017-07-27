@@ -158,6 +158,13 @@ public class NotificacionActivity extends AppCompatActivity {
                 new AceptarViajeTask(NotificacionActivity.this,
                         (int)SharedPref.getIdDelivery(NotificacionActivity.this), viaje.getId()).execute();
             } else {
+                try {
+                    DB.insertarViajeRechazado(viaje.getId());
+                    eliminarPedidosEnCascada();
+                } catch (SQLiteException e) {
+                    Toast.makeText(NotificacionActivity.this, R.string.no_se_pudo_realizar_la_operacion, Toast.LENGTH_LONG).show();
+                }
+
                 finish();
             }
         }
